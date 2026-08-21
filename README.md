@@ -2,13 +2,13 @@
 
 [![ci](https://github.com/398894496-arch/runtime36/actions/workflows/ci.yml/badge.svg)](https://github.com/398894496-arch/runtime36/actions/workflows/ci.yml)
 
-**DeepSeek Harness memory system · Agent second brain · Obsidian knowledge base · optional self-evolution · Cursor / Codex / Claude Code.**
+**DeepSeek Harness memory system · Agent second brain · Obsidian knowledge base · sub-second SHA routing · optional self-evolution · Cursor / Codex / Claude Code.**
 
-Deterministic knowledge routing for AI agents that already live in [Obsidian](https://obsidian.md).
+One short noun hits the page that should change this action. You get a SHA-256 receipt. On the author’s **8 GB M2** that call is **tens of milliseconds** — `python3` + `rg`, no GPU, no embedding daemon, no vector store.
 
-Not a notes app. Not a generic memory SDK. Not an MCP vector store. One short noun hits the page that should change this action. You get a SHA-256 receipt. Wrong-neighbor cites are a protocol violation, not a retrieval quirk.
+Not a notes app. Not a generic memory SDK. Not an MCP vector store. Wrong-neighbor cites are a protocol violation, not a retrieval quirk.
 
-**Try it in fifteen minutes** on the bundled template. No GPU. No Docker. No embedding daemon. The author runs the live vault on an **8 GB M2 Mac** with `python3` + `rg` only.
+**Try it in fifteen minutes** on the bundled template. No Docker. The speed is local routing, not a memory API round-trip.
 
 ```bash
 git clone https://github.com/398894496-arch/runtime36.git
@@ -39,8 +39,9 @@ Adding embeddings, a graph, or auto-injection requires proof it beats Markdown +
 
 | | KRouter | Typical agent memory stack |
 |---|---|---|
+| Retrieval | Tens of ms on the author’s 8 GB M2 (`status` ~45 ms, alias hit ~90 ms) | Embed + ANN, or a network hop to a memory host |
 | Always-on services | None | Vector DB, embedder, often a graph or API |
-| Machine | Author: 8 GB M2, no GPU | Often a server or a paid memory host |
+| Machine | 8 GB M2, no GPU | Often a server or a paid memory host |
 | What you maintain | Markdown + one alias table | Indexes, sync, prompt injection, expiry jobs |
 | After a correction | Edit the canonical page. Next call hits it | Re-embed, hope the old chunk decays |
 
@@ -83,6 +84,8 @@ Or a local checkout: `dsh plugin add /path/to/runtime36/extras/dsh`. Set `OBSIDI
 | Agent second brain | `template/Agent第二大脑.md` — the only home page |
 | Obsidian knowledge base | `template/` five zones + alias table `canonical_sources.psv` |
 | optional self-evolution | `extras/host-daily-evolution/` (`check.sh`, `PROMPT.md`, launchd/cron examples). Clone lamp is `unused`. `first_run.sh` proves the extra; it does not start a timer. |
+| sub-second routing | `scripts/krouter` / the same `route_knowledge.sh` contract. Author vault, 2026-08-21: tens of ms. DSH chat round-trip is extra and not this number. |
+| SHA receipt | Dual SHA-256 on source + alias map. `canonical_match: true` → open `canonical_source`. |
 | Cursor | `extras/cursor/krouter-obsidian.mdc` via `./scripts/install.sh` |
 | Codex | `extras/codex/AGENTS.snippet.md` |
 | Claude Code | `extras/claude-code/CLAUDE.snippet.md` (same skill path `~/.agents/skills/krouter-obsidian`) |
@@ -105,7 +108,7 @@ flowchart LR
 | L1 Full logs | `05` — one note per day. Episodic, not a result |
 | L2 Distillation | Daily evolution and reviews. Summaries never replace originals |
 | L3 Promotion | Five gates into `provisional`; adopt + accepted task → `active` |
-| L4 Retrieval | Short noun, SHA receipt. No vector store |
+| L4 Retrieval | Short noun, SHA receipt, tens of ms locally. No vector store |
 
 Full protocol: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md). Invariants: [`PROTOCOL.md`](PROTOCOL.md). MIT. Chinese: [`README.zh.md`](README.zh.md). Changelog: [`CHANGELOG.md`](CHANGELOG.md).
 
