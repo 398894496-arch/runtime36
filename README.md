@@ -1,16 +1,65 @@
 # KRouter Obsidian
 
-Author-vault results (2026-08-21): retrieval blind test **25/25**, canonical routing 26/26 topics · 156/156 aliases, **72** consecutive sealed days, **30** real tasks, execution gate passed, host daily evolution running.
+Deterministic knowledge routing for AI agents that already live in [Obsidian](https://obsidian.md).
 
-Obsidian knowledge routing for agents. One short noun hits the page that should change this action, and returns a SHA-256 receipt. Corrections are written to canonical pages and retrieved on the next similar task. The vault gets sharper; the agent gets steadier. No vector index.
+Not a notes app. Not a generic memory SDK. Not an MCP vector store. One short noun hits the page that should change this action. You get a SHA-256 receipt. Wrong-neighbor cites are a protocol violation, not a retrieval quirk.
 
-This repository is an installable protocol. Details: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md). Invariants: [`PROTOCOL.md`](PROTOCOL.md). MIT.
+**Try it in fifteen minutes** on the bundled template. No GPU. No Docker. No embedding daemon. The author runs the live vault on an **8 GB M2 Mac** with `python3` + `rg` only.
 
-GitHub repo: `runtime36`. Product: **KRouter Obsidian**. Vault folder names stay in Chinese (`01 项目` …); that is the on-disk layout, not the docs language. Chinese overview: [`README.zh.md`](README.zh.md).
+```bash
+git clone https://github.com/398894496-arch/runtime36.git
+cd runtime36
+python3 -m pip install -r requirements.txt   # PyYAML, for validate_vault.py
+./scripts/first_run.sh
+```
+
+Pass: `search home` returns `canonical_id: Q01`, a path to `template/Agent第二大脑.md`, plus `source_sha256` and `canonical_map_sha256`. That check is in this repo. You do not have to trust a README score to see the router work.
+
+Then copy `template/` to your vault, `export OBSIDIAN_VAULT`, run `./scripts/install.sh`, and rewrite `canonical_sources.psv` with **your** nouns. The template ships eight sample topics. Coverage is the alias table you maintain, not a model.
+
+## Why this exists
+
+Semantic search is good at “close enough.” Agents then cite a nearby preferences note, an old log, or a candidate that was never accepted. KRouter makes that failure mode illegal:
+
+- Alias table first (`canonical_lookup.py`). Ties that point at different files are a miss.
+- Literal `rg` only after a miss. No vector fallback.
+- Dual SHA receipt. If `canonical_match` is true, the agent **must** open `canonical_source`.
+- Logs are clues. Action cites an `active` method, a current correction, or the receipt page.
+- Same-day work becomes `provisional`. The next similar task asks to adopt. Accepted task → `active`.
+
+Adding embeddings, a graph, or auto-injection requires proof it beats Markdown + this router + `rg`, and explicit host authorization.
+
+## Cost to run and keep
+
+| | KRouter | Typical agent memory stack |
+|---|---|---|
+| Always-on services | None | Vector DB, embedder, often a graph or API |
+| Machine | Author: 8 GB M2, no GPU | Often a server or a paid memory host |
+| What you maintain | Markdown + one alias table | Indexes, sync, prompt injection, expiry jobs |
+| After a correction | Edit the canonical page. Next call hits it | Re-embed, hope the old chunk decays |
+
+Maintenance is low because there is nothing to reindex. It is not zero: you still write aliases and promote methods. That work is the product.
+
+## Who should clone this
+
+You use Obsidian **and** Cursor / Codex / Claude Code (or another local agent). You care that the agent cites the *right* page, not a similar one.
+
+Skip this if you want a cloud memory API, hybrid semantic search, or a filled knowledge base. This repo is the protocol and an empty vault. The author’s notes stay private.
+
+## Install
+
+Requires `python3`, `rg` (ripgrep), and PyYAML (`requirements.txt`).
+
+```bash
+export OBSIDIAN_VAULT=/path/to/YourVault
+./scripts/install.sh
+```
+
+Installs to `~/.agents/skills/krouter-obsidian` and `~/.cursor/rules/krouter-obsidian.mdc`. Pass `--force` to replace. This path does not overwrite `obsidian-knowledge-router`.
 
 ## Four layers
 
-Write-up maturity, then retrieval. The five folders are storage. They do not replace these layers.
+Write-up maturity, then retrieval. Five Chinese folder names (`01 项目` …) are the on-disk layout, not the docs language.
 
 ```mermaid
 flowchart LR
@@ -19,64 +68,15 @@ flowchart LR
 
 | Layer | Rule |
 |---|---|
-| L1 Full logs | `05` — one note per day. Episodic memory, not a result |
+| L1 Full logs | `05` — one note per day. Episodic, not a result |
 | L2 Distillation | Daily evolution and reviews. Summaries never replace originals |
-| L3 Promotion | Five gates into `provisional`; host adopts and the task is accepted → `active` |
-| L4 Retrieval | One short noun hits one page. Receipt includes SHA-256. No vector store |
+| L3 Promotion | Five gates into `provisional`; adopt + accepted task → `active` |
+| L4 Retrieval | Short noun, SHA receipt. No vector store |
 
-Full ladder, trust rules, receipts, and write-back: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+Full protocol: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md). Invariants: [`PROTOCOL.md`](PROTOCOL.md). MIT. Chinese: [`README.zh.md`](README.zh.md).
 
-## Invariants
+## Author vault (not a clone score)
 
-- The host sets `OBSIDIAN_VAULT`. This repo hard-codes nobody’s home directory.
-- Queries are one contiguous noun. Do not send a full question as if spaces were AND.
-- If the receipt has `canonical_match: true`, the agent **must** cite `canonical_source`. Nearby notes are not substitutes.
-- Clippings originals are copied only. Do not move, edit, or delete them.
-- `status` reads `Agent第二大脑.md`.
-- Daily evolution and the execution hook live under `extras/` and are off by default.
+The protocol was used in the author’s own vault. Measured 2026-08-21: retrieval blind test 25/25 (answer and specified source); 26/26 topics, 156/156 aliases; 72 consecutive sealed days (2026-06-10 → 2026-08-20); 30 real tasks; execution gate passed; host daily evolution running.
 
-Alias scoring: exact match, then alias-in-query, then query-in-alias (length ≥ 2). Tied scores resolve to the lowest id only when they point at the same file; otherwise there is no hit.
-
-## Install
-
-Requires `python3` and `rg`.
-
-```bash
-git clone https://github.com/398894496-arch/runtime36.git
-cd runtime36
-chmod +x scripts/*.sh skill/krouter-obsidian/scripts/*.sh
-./scripts/first_run.sh
-```
-
-`first_run.sh` validates the bundled `template/` only. It does not inherit a host `OBSIDIAN_VAULT`. Set `KROUTER_FIRST_RUN_VAULT` to aim it elsewhere.
-
-Pass criterion: `search home` yields `canonical_id: Q01`, `source` at `template/Agent第二大脑.md`, plus `source_sha256` and `canonical_map_sha256`.
-
-```bash
-cp -R template /path/to/YourVault
-export OBSIDIAN_VAULT=/path/to/YourVault
-./scripts/install.sh
-```
-
-Installs to `~/.agents/skills/krouter-obsidian` and `~/.cursor/rules/krouter-obsidian.mdc`. Pass `--force` to replace an existing skill. This path does not overwrite `obsidian-knowledge-router`. Then rewrite `canonical_sources.psv` with the host’s own nouns.
-
-## Layout
-
-| Path | Role |
-|---|---|
-| `docs/ARCHITECTURE.md` | Four-layer architecture and promotion |
-| `template/` | Empty five zones; home `Agent第二大脑.md`; provisional index |
-| `skill/krouter-obsidian/` | `route_knowledge.sh`, `canonical_lookup.py`, alias table |
-| `scripts/install.sh` | Install into the agent runtime |
-| `scripts/first_run.sh` | Mechanical check |
-| `scripts/validate_vault.py` | YAML, Clippings ledger, log continuity |
-| `extras/cursor/` | Cursor always-on rule |
-| `extras/codex/` | Codex handbook snippet |
-| `extras/hooks/` | Optional: block Clippings mutation and Obsidian restart |
-| `extras/host-daily-evolution/` | Optional host daily evolution |
-
-## Proven in the author’s vault
-
-As of 2026-08-21: retrieval blind test 25/25; canonical routing 26/26 topics, 156/156 aliases; 72 consecutive sealed days; 30 real tasks; execution gate passed; host daily evolution running.
-
-Retrieval hits the canonical page with a SHA receipt. Corrections are written in and retrieved next time.
+Those numbers describe that vault after aliases and promotions existed. `./scripts/first_run.sh` is what this repository can prove on your machine today.

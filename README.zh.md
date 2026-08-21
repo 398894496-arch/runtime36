@@ -1,24 +1,22 @@
 # KRouter Obsidian（中文）
 
-GitHub 默认页是英文 [`README.md`](README.md)。本页是中文对照。
+英文主页：[`README.md`](README.md)。
 
-作者活库实测（2026-08-21）：检索盲测 **25/25**，权威路由 26/26 主题 · 156/156 别名，连续封账 **72** 天，**30** 条真实任务，执行门禁已通过，本机日更持续运行。
+给已经在用 Obsidian 的 AI Agent 做确定性知识路由。不是笔记应用，不是通用记忆 SDK，不是向量 MCP。一个短名词打到会影响这次行动的那一页，并留下 SHA-256 回执。
 
-面向 Agent 的 Obsidian 知识路由。准备做事时命中会影响行为的那一页，并留下 SHA 回执。纠错写入权威页后，下次同类任务自动找回。库越用越准，Agent 越用越稳。不引入向量库。
+**十五分钟**可在仓库自带 `template/` 上跑通。不需要 GPU、Docker、嵌入进程。作者活库跑在 **8GB M2** 上，运行时就是 `python3` + `rg`。
 
-本仓库是可安装协议。详情页：[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)。不变量：[`PROTOCOL.md`](PROTOCOL.md)。许可 MIT。
+```bash
+git clone https://github.com/398894496-arch/runtime36.git
+cd runtime36
+python3 -m pip install -r requirements.txt
+./scripts/first_run.sh
+```
 
-GitHub 仓名 `runtime36`。产品名 **KRouter Obsidian**。五区目录名保持中文（`01 项目` 等），那是库内路径，不是 GitHub 文档语言。
+通过标准：`search home` 得到 `canonical_id: Q01`、首页路径、双 SHA。这是仓库里能当场复现的检查，不必先信自测分数。
 
-## 四层
+维护成本低，是因为没有向量库要重建索引。你要维护的是 Markdown 和一张别名表，不是记忆服务器。不是零成本：别名和晋升还是要写，那就是这套协议本身。
 
-写入走成熟度，读取必须走检索。空间五区是存放位置，不替代这四层。
+作者活库（2026-08-21）有盲测 25/25、26/26 主题、156/156 别名、72 天封账、30 条真实任务。那是作者库的成绩。clone 空模板请先跑 `first_run.sh`。
 
-| Layer | Rule |
-|---|---|
-| L1 Full logs | `05` one note per day. Episodic, not a result |
-| L2 Distillation | Daily evolution and reviews. Summaries never replace originals |
-| L3 Promotion | Five gates into provisional; ask + accepted task → `active` |
-| L4 Retrieval | One short noun, SHA-256 receipt. No vector index |
-
-完整梯子见 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)。
+详情：[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)。
