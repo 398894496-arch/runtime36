@@ -1,9 +1,9 @@
 # id|aliases separated by ;|Vault-relative source|evidence anchor
 Q01|home;homepage;only entrance;唯一总入口;第二大脑入口;总入口;入口|Agent第二大脑.md|The only home page
-Q02|clippings;clippings originals;how to handle clippings;剪藏;Clippings原件|02 经验与方法/Agent/用户偏好与工作约束.md|Do not move Clippings originals
+Q02|clippings;clippings originals;how to handle clippings;preference;preferences;剪藏;Clippings原件;用户偏好|02 经验与方法/Agent/用户偏好与工作约束.md|Do not move Clippings originals
 Q03|folder names;readable names;名称直接看懂用途|02 经验与方法/Agent/用户偏好与工作约束.md|Names must show what the file is for
 Q04|daily log filename;log naming;时间日志命名|02 经验与方法/Agent/用户偏好与工作约束.md|Daily logs use DD｜one-line summary
 Q05|correction;conflict;supersedes;latest correction;纠错;最新纠正|90 系统文件/Agent记忆/纠错与取代记录.md|Latest correction wins
 Q06|promotion;provisional;when can a method enter;晋升;准经验|02 经验与方法/经验与方法.md|Only verified methods enter this folder
-Q07|high trust;action basis;reliable memory;高可信记忆|90 系统文件/Agent记忆/可靠记忆索引.md|High-trust: may be used as action basis
+Q07|high trust;action basis;reliable memory;memory;memory index;高可信记忆|90 系统文件/Agent记忆/可靠记忆索引.md|High-trust: may be used as action basis
 Q08|daily evolution health;automation status;日更健康|90 系统文件/自动化/日更健康.md|Health on this page is authoritative

@@ -32,6 +32,17 @@ check("search home exit 0", home.ok, home.stderr);
 check("search home Q01", homeFields.canonical_id === "Q01", home.stdout);
 check("search home match true", homeFields.canonical_match === "true", home.stdout);
 
+const correction = runRoute({
+  route: "correction",
+  query: "correction",
+  vault: VAULT,
+  router: ROUTER,
+});
+check("correction Q05", parseReceipt(correction.stdout).canonical_id === "Q05", correction.stdout);
+
+const memory = runRoute({ route: "memory", query: "memory", vault: VAULT, router: ROUTER });
+check("memory Q07", parseReceipt(memory.stdout).canonical_id === "Q07", memory.stdout);
+
 const suggest = runRoute({ route: "suggest", query: "homz", vault: VAULT, router: ROUTER });
 check("suggest homz mentions Q01", suggest.stdout.includes("Q01"), suggest.stdout);
 check(

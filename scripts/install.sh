@@ -38,6 +38,8 @@ cp "$ROOT/extras/cursor/krouter-obsidian.mdc" "$RULE_DST"
 printf '%s\n' "skill: $SKILL_DST"
 printf '%s\n' "cursor rule: $RULE_DST"
 printf '%s\n' "Codex snippet: $ROOT/extras/codex/AGENTS.snippet.md"
+printf '%s\n' "Claude Code snippet: $ROOT/extras/claude-code/CLAUDE.snippet.md"
+printf '%s\n' "self-evolution extra: $ROOT/extras/host-daily-evolution (not scheduled; run check.sh)"
 printf '%s\n' "next: export OBSIDIAN_VAULT to your vault (or $ROOT/template) then run ./scripts/first_run.sh"
 
 if [ "$WITH_HOOKS" -eq 1 ]; then

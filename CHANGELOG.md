@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.0 — 2026-08-21
+
+- Memory-system tools on the DSH mount: `preference`, `correction`, `memory`, `project` in addition to `status` / `search` / `suggest`.
+- Claude Code mount: `extras/claude-code/CLAUDE.snippet.md`.
+- Self-evolution extra is now files plus `check.sh`. Template lamp defaults to `unused`. `first_run.sh` proves the extra without starting a timer.
+- README maps each listing word to a path in this repo.
+
 ## 0.3.1 — 2026-08-21
 
 - Public listing: **DSH-KRouter**. Keyword subtitle: DeepSeek Harness memory system, Agent second brain, Obsidian knowledge base, optional self-evolution, Cursor / Codex / Claude Code.

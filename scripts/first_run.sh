@@ -53,6 +53,7 @@ printf '%s\n' "== short-noun routing =="
 assert_match "home" "Q01" "Agent第二大脑.md"
 assert_match "clippings" "Q02" "用户偏好与工作约束.md"
 assert_match "correction" "Q05" "纠错与取代记录.md"
+assert_match "memory" "Q07" "可靠记忆索引.md"
 
 printf '%s\n' "== suggest on miss =="
 suggest=$("$ROUTER" suggest "homz") || true
@@ -77,6 +78,14 @@ if python3 -c "import yaml" 2>/dev/null; then
   fi
 else
   printf '%s\n' "skip validate_vault.py (install PyYAML to run it)"
+fi
+
+printf '%s\n' "== self-evolution extra =="
+if sh "$ROOT/extras/host-daily-evolution/check.sh"; then
+  printf '%s\n' "ok extras/host-daily-evolution/check.sh"
+else
+  printf '%s\n' "FAIL extras/host-daily-evolution/check.sh" >&2
+  fail=1
 fi
 
 printf '%s\n' "== DSH bridge =="

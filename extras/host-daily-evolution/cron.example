@@ -1,0 +1,2 @@
+# Replace WRITER and VAULT. Pin the binary. Do not use PATH-level agent.
+10 9 * * * OBSIDIAN_VAULT=VAULT WRITER --print /absolute/path/to/runtime36/extras/host-daily-evolution/PROMPT.md

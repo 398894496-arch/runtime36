@@ -17,7 +17,7 @@ python3 -m pip install -r requirements.txt
 
 维护成本低，是因为没有向量库要重建索引。你要维护的是 Markdown 和一张别名表，不是记忆服务器。不是零成本：别名和晋升还是要写，那就是这套协议本身。
 
-Cursor / Codex / Claude Code / DeepSeek Harness 共用同一座 Obsidian 库和同一张别名表。DSH 插件只读：`krouter_status`、`krouter_search`、`krouter_suggest`。卸插件不删库。**装插件不会挂每日自动化。** 自进化见 [`extras/host-daily-evolution/`](extras/host-daily-evolution/)。
+Cursor / Codex / Claude Code / DeepSeek Harness 共用同一座 Obsidian 库和同一张别名表。DSH 记忆系统只读工具：`krouter_status`、`krouter_preference`、`krouter_correction`、`krouter_memory`、`krouter_project`、`krouter_search`、`krouter_suggest`。卸插件不删库。**装插件不会挂每日自动化。** Claude Code 挂载：[`extras/claude-code/CLAUDE.snippet.md`](extras/claude-code/CLAUDE.snippet.md)。自进化 extra 带 `check.sh` / `PROMPT.md`，clone 默认 `lamp: unused`：[`extras/host-daily-evolution/`](extras/host-daily-evolution/)。
 
 ```bash
 node extras/dsh/test-bridge.mjs

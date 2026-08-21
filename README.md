@@ -65,14 +65,27 @@ Installs to `~/.agents/skills/krouter-obsidian` and `~/.cursor/rules/krouter-obs
 
 ## DeepSeek Harness
 
-Same vault. Third mount. Read-only tools. Uninstalling the plugin does not delete notes. **`dsh plugin add` does not create a daily job.**
+Same vault. Memory-system tools are read-only: `krouter_status`, `krouter_preference`, `krouter_correction`, `krouter_memory`, `krouter_project`, `krouter_search`, `krouter_suggest`. Uninstalling the plugin does not delete notes. **`dsh plugin add` does not create a daily job.**
 
 ```bash
 node extras/dsh/test-bridge.mjs
 dsh plugin add github:398894496-arch/runtime36
 ```
 
-Or a local checkout: `dsh plugin add /path/to/runtime36/extras/dsh`. Tools: `krouter_status`, `krouter_search`, `krouter_suggest`. Set `OBSIDIAN_VAULT` (or `vaultPath` in the plugin config). Details: [`extras/dsh/README.md`](extras/dsh/README.md).
+Or a local checkout: `dsh plugin add /path/to/runtime36/extras/dsh`. Set `OBSIDIAN_VAULT` (or `vaultPath`). Details: [`extras/dsh/README.md`](extras/dsh/README.md).
+
+## What each word maps to
+
+| Word on the listing | What this repo actually ships |
+|---|---|
+| DSH-KRouter | This repository. `dsh plugin add github:398894496-arch/runtime36` |
+| DeepSeek Harness memory system | `extras/dsh` tools above. Routes: status, preference, correction, memory, project, search, suggest. No vector store. |
+| Agent second brain | `template/Agent第二大脑.md` — the only home page |
+| Obsidian knowledge base | `template/` five zones + alias table `canonical_sources.psv` |
+| optional self-evolution | `extras/host-daily-evolution/` (`check.sh`, `PROMPT.md`, launchd/cron examples). Clone lamp is `unused`. `first_run.sh` proves the extra; it does not start a timer. |
+| Cursor | `extras/cursor/krouter-obsidian.mdc` via `./scripts/install.sh` |
+| Codex | `extras/codex/AGENTS.snippet.md` |
+| Claude Code | `extras/claude-code/CLAUDE.snippet.md` (same skill path `~/.agents/skills/krouter-obsidian`) |
 
 ## Optional self-evolution
 

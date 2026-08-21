@@ -29,6 +29,18 @@ def test_clippings(rows):
     assert hit[0] == "Q02"
 
 
+def test_preference_alias(rows):
+    hit = lookup("preference", rows)
+    assert hit is not None
+    assert hit[0] == "Q02"
+
+
+def test_memory_alias(rows):
+    hit = lookup("memory", rows)
+    assert hit is not None
+    assert hit[0] == "Q07"
+
+
 def test_ambiguous_different_files_is_miss(tmp_path):
     from canonical_lookup import load_rows, lookup
 

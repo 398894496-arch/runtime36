@@ -32,7 +32,7 @@ Local checkout:
 dsh plugin add /absolute/path/to/runtime36/extras/dsh
 ```
 
-Tools: `krouter_status`, `krouter_search`, `krouter_suggest`.
+Tools: `krouter_status`, `krouter_preference`, `krouter_correction`, `krouter_memory`, `krouter_project`, `krouter_search`, `krouter_suggest`.
 
 If `canonical_match` is true, open `canonical_source`. Suggestions are hints, not hits.
 
