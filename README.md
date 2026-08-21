@@ -2,127 +2,109 @@
 
 [![ci](https://github.com/398894496-arch/runtime36/actions/workflows/ci.yml/badge.svg)](https://github.com/398894496-arch/runtime36/actions/workflows/ci.yml)
 
-**DeepSeek Harness memory system · Agent second brain · Obsidian knowledge base · sub-second SHA routing · optional self-evolution · Cursor / Codex / Claude Code.**
+**Self-evolution. Gated promotion. Correction-first.**  
+One [Obsidian](https://obsidian.md) vault for Cursor, Codex, Claude Code, and DeepSeek Harness.
 
-One short noun hits the page that should change this action. You get a SHA-256 receipt. On the author’s **8 GB M2** that call is **tens of milliseconds** — `python3` + `rg`, no GPU, no embedding daemon, no vector store.
+An agent that works for months should leave **methods and corrections in the vault**, not in the chat. Yesterday is sealed and distilled. Reusable practice starts as `provisional`; the next similar task asks to adopt; only then → `active`. A correction page beats the old note. Retrieval is only the lock: one short noun, SHA-256 receipt, no neighbor cite, no vector store. If the agent cannot hit that page, the evolution did not happen.
 
-Not a notes app. Not a generic memory SDK. Not an MCP vector store. Wrong-neighbor cites are a protocol violation, not a retrieval quirk.
+Not a notes app. Not Mem0. Not “compress the session and inject it next time.”
 
-**Try it in fifteen minutes** on the bundled template. No Docker. The speed is local routing, not a memory API round-trip.
+```mermaid
+flowchart LR
+  L1[L1 Seal the day] --> L2[L2 Distill]
+  L2 --> L3[L3 Promote gated]
+  L3 --> L4[L4 Hit that page]
+```
+
+| Layer | What it does | What it must not do |
+|---|---|---|
+| L1 Logs | One note per day under `05` | Treat a log as a reusable method |
+| L2 Distill | Self-evolution: seal + distill. Summaries never replace originals | Auto-write `active` methods |
+| L3 Promote | Five gates into `provisional`. Next similar task asks. Adopt + accepted task → `active` | Silent promotion |
+| L4 Lock | Short noun → that page + dual SHA. Tens of ms on an 8 GB M2 (`python3` + `rg`) | Vector fallback, neighbor cite |
+
+Full rules: [`PROTOCOL.md`](PROTOCOL.md). Architecture: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+
+## What clone can prove vs what you turn on
+
+| | This repository (CI / `first_run.sh`) | Your vault |
+|---|---|---|
+| Lock | `search home` → `canonical_id: Q01` + dual SHA | Same contract, **your** nouns |
+| Extra present | `extras/host-daily-evolution/check.sh` — lamp may be `unused` | You pin a writer + OS timer, then `lamp: running` |
+| Daily seal / distill | Not started. Plugin install does not create a cron | Host extra: [`extras/host-daily-evolution/`](extras/host-daily-evolution/) |
+| Promotion / correction | Protocol + template pages | You write them. Next route must open that source |
+
+The clone is an empty vault plus the protocol. Coverage is the alias table you maintain, not a model.
+
+## Fifteen minutes — prove the lock
+
+No GPU. No Docker. No embedding daemon.
 
 ```bash
 git clone https://github.com/398894496-arch/runtime36.git
 cd runtime36
-python3 -m pip install -r requirements.txt   # PyYAML, for validate_vault.py
+python3 -m pip install -r requirements.txt   # PyYAML
 ./scripts/first_run.sh
 ```
 
-Pass: `search home` returns `canonical_id: Q01`, a path to `template/Agent第二大脑.md`, plus `source_sha256` and `canonical_map_sha256`. CI runs that check, the unit tests, and the DSH bridge on every push. You do not have to trust a README score to see the router work.
+Pass: `search home` returns `Q01`, `template/Agent第二大脑.md`, `source_sha256`, `canonical_map_sha256`. CI runs pytest, this script, and the DSH bridge on every push.
 
-A miss is not a dead end. `./scripts/krouter suggest homz` prints nearest aliases. Those lines are **hints**, not hits. Add the noun to `canonical_sources.psv` or retry the suggested alias. There is still no vector fallback.
+A miss is not a hit. `./scripts/krouter suggest homz` prints nearest aliases as **hints**. Retry one noun or add it to `canonical_sources.psv`. There is no vector fallback.
 
-Then copy `template/` to your vault, `export OBSIDIAN_VAULT`, run `./scripts/install.sh`, and rewrite `canonical_sources.psv` with **your** nouns. The template ships eight sample topics. Coverage is the alias table you maintain, not a model.
+## Self-evolution — the writer
 
-## Why this exists
+This is the product loop. The files are in the repo. **A timer is not.** Pin a local agent CLI (absolute path, not a PATH-level `agent`) and schedule it with launchd or cron. Examples: [`extras/host-daily-evolution/`](extras/host-daily-evolution/).
 
-Semantic search is good at “close enough.” Agents then cite a nearby preferences note, an old log, or a candidate that was never accepted. KRouter makes that failure mode illegal:
+- Same-day reusable practice is `provisional` only.
+- On failure, leave a to-summarize note. Do not skip the day.
+- **`dsh plugin add` does not start this job.** Uninstalling a mount does not stop it either — you disable the OS schedule, then set `lamp: unused`.
 
-- Alias table first (`canonical_lookup.py`). Ties that point at different files are a miss.
-- Literal `rg` only after a miss. No vector fallback.
-- Dual SHA receipt. If `canonical_match` is true, the agent **must** open `canonical_source`.
-- Logs are clues. Action cites an `active` method, a current correction, or the receipt page.
-- Same-day work becomes `provisional`. The next similar task asks to adopt. Accepted task → `active`.
+## Four mounts, one vault
 
-Adding embeddings, a graph, or auto-injection requires proof it beats Markdown + this router + `rg`, and explicit host authorization.
-
-## Cost to run and keep
-
-| | KRouter | Typical agent memory stack |
-|---|---|---|
-| Retrieval | Tens of ms on the author’s 8 GB M2 (`status` ~45 ms, alias hit ~90 ms) | Embed + ANN, or a network hop to a memory host |
-| Always-on services | None | Vector DB, embedder, often a graph or API |
-| Machine | 8 GB M2, no GPU | Often a server or a paid memory host |
-| What you maintain | Markdown + one alias table | Indexes, sync, prompt injection, expiry jobs |
-| After a correction | Edit the canonical page. Next call hits it | Re-embed, hope the old chunk decays |
-
-Maintenance is low because there is nothing to reindex. It is not zero: you still write aliases and promote methods. That work is the product.
-
-## Who should clone this
-
-You use Obsidian **and** Cursor / Codex / Claude Code / DeepSeek Harness (or another local agent). You care that the agent cites the *right* page, not a similar one.
-
-Skip this if you want a cloud memory API, hybrid semantic search, or a filled knowledge base. This repo is the protocol and an empty vault. The author’s notes stay private.
-
-## Install
-
-Requires `python3`, `rg` (ripgrep), and PyYAML (`requirements.txt`). Tests: `python3 -m pip install -r requirements-dev.txt && python3 -m pytest -q`.
+Sharing is the vault and `canonical_sources.psv`, not a second protocol.
 
 ```bash
 export OBSIDIAN_VAULT=/path/to/YourVault
 ./scripts/install.sh
 ```
 
-Installs to `~/.agents/skills/krouter-obsidian` and `~/.cursor/rules/krouter-obsidian.mdc`. Pass `--force` to replace. This path does not overwrite `obsidian-knowledge-router`.
+Installs `~/.agents/skills/krouter-obsidian` and `~/.cursor/rules/krouter-obsidian.mdc`. Pass `--force` to replace. Does not overwrite a live `obsidian-knowledge-router`. Copy `template/` first; rewrite the alias table with **your** nouns (the template ships eight samples).
 
-## DeepSeek Harness
-
-Same vault. Memory-system tools are read-only: `krouter_status`, `krouter_preference`, `krouter_correction`, `krouter_memory`, `krouter_project`, `krouter_search`, `krouter_suggest`. Uninstalling the plugin does not delete notes. **`dsh plugin add` does not create a daily job.**
+| Mount | What ships |
+|---|---|
+| Cursor | `extras/cursor/krouter-obsidian.mdc` via `install.sh` |
+| Codex | `extras/codex/AGENTS.snippet.md` |
+| Claude Code | `extras/claude-code/CLAUDE.snippet.md` |
+| DeepSeek Harness | `dsh plugin add github:398894496-arch/runtime36` — read-only tools: status, preference, **correction**, memory, project, search, suggest. Uninstall does not delete notes. |
 
 ```bash
 node extras/dsh/test-bridge.mjs
 dsh plugin add github:398894496-arch/runtime36
 ```
 
-Or a local checkout: `dsh plugin add /path/to/runtime36/extras/dsh`. Set `OBSIDIAN_VAULT` (or `vaultPath`). Details: [`extras/dsh/README.md`](extras/dsh/README.md).
+Requires `python3`, `rg`, PyYAML. Tests: `python3 -m pip install -r requirements-dev.txt && python3 -m pytest -q`.
 
-## What each word maps to
+## After a day, after a correction
 
-| Word on the listing | What this repo actually ships |
-|---|---|
-| DSH-KRouter | This repository. `dsh plugin add github:398894496-arch/runtime36` |
-| DeepSeek Harness memory system | `extras/dsh` tools above. Routes: status, preference, correction, memory, project, search, suggest. No vector store. |
-| Agent second brain | `template/Agent第二大脑.md` — the only home page |
-| Obsidian knowledge base | `template/` five zones + alias table `canonical_sources.psv` |
-| optional self-evolution | `extras/host-daily-evolution/` (`check.sh`, `PROMPT.md`, launchd/cron examples). Clone lamp is `unused`. `first_run.sh` proves the extra; it does not start a timer. |
-| sub-second routing | `scripts/krouter` / the same `route_knowledge.sh` contract. Author vault, 2026-08-21: tens of ms. DSH chat round-trip is extra and not this number. |
-| SHA receipt | Dual SHA-256 on source + alias map. `canonical_match: true` → open `canonical_source`. |
-| Cursor | `extras/cursor/krouter-obsidian.mdc` via `./scripts/install.sh` |
-| Codex | `extras/codex/AGENTS.snippet.md` |
-| Claude Code | `extras/claude-code/CLAUDE.snippet.md` (same skill path `~/.agents/skills/krouter-obsidian`) |
+| | This protocol | Typical agent memory |
+|---|---|---|
+| After a good day | Distill → `provisional` → ask next time → maybe `active` | Auto-inject a summary into the next prompt |
+| After a correction | Edit the canonical page. Next call must open it | Re-embed, hope the old chunk decays |
+| Always-on | None | Vector DB, embedder, often an API |
+| What you maintain | Markdown + one alias table + promotions | Indexes, sync, injection, expiry |
 
-## Optional self-evolution
+Maintenance is the product: aliases and gates. There is nothing to reindex.
 
-Daily seal / distillation is an extra: [`extras/host-daily-evolution/`](extras/host-daily-evolution/). Pin a local agent CLI and an OS scheduler. If you skip it, set `template/90 系统文件/自动化/日更健康.md` to `unused`.
+## Who should clone this
 
-## Four layers
+You already use Obsidian with a local agent, and you want **fewer repeats of the same mistake** across sessions and shells.
 
-Write-up maturity, then retrieval. Five Chinese folder names (`01 项目` …) are the on-disk layout, not the docs language.
-
-```mermaid
-flowchart LR
-  L1[L1 Full logs] --> L2[L2 Distillation] --> L3[L3 Promotion] --> L4[L4 Retrieval]
-```
-
-| Layer | Rule |
-|---|---|
-| L1 Full logs | `05` — one note per day. Episodic, not a result |
-| L2 Distillation | Daily evolution and reviews. Summaries never replace originals |
-| L3 Promotion | Five gates into `provisional`; adopt + accepted task → `active` |
-| L4 Retrieval | Short noun, SHA receipt, tens of ms locally. No vector store |
-
-Full protocol: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md). Invariants: [`PROTOCOL.md`](PROTOCOL.md). MIT. Chinese: [`README.zh.md`](README.zh.md). Changelog: [`CHANGELOG.md`](CHANGELOG.md).
-
-## Public checks
-
-| Path | Role |
-|---|---|
-| `scripts/krouter` | CLI: `status`, `search`, `suggest`, … |
-| `tests/` | Lookup, tie-break, suggestion unit tests |
-| `.github/workflows/ci.yml` | pytest + first run + DSH bridge on every push |
-| `CHANGELOG.md` | What shipped |
+Skip this if you want auto-inject memory, a cloud memory API, or a filled knowledge base on clone.
 
 ## Author vault (not a clone score)
 
-The protocol was used in the author’s own vault. Measured 2026-08-21: retrieval blind test 25/25 (answer and specified source); 26/26 topics, 156/156 aliases; 72 consecutive sealed days (2026-06-10 → 2026-08-20); 30 real tasks; execution gate passed; host daily evolution running.
+Measured 2026-08-21 on the author’s live vault: 72 consecutive sealed days (2026-06-10 → 2026-08-20); host daily evolution running; 30 real tasks; retrieval blind test 25/25; 26/26 topics, 156/156 aliases.
 
-Those numbers describe that vault after aliases and promotions existed. `./scripts/first_run.sh` is what this repository can prove on your machine today.
+Those numbers exist because aliases and promotions already existed. `./scripts/first_run.sh` is what this repository can prove on your machine today.
+
+MIT. Chinese: [`README.zh.md`](README.zh.md). Changelog: [`CHANGELOG.md`](CHANGELOG.md).
