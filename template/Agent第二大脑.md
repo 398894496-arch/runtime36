@@ -11,6 +11,15 @@ verified_at: 2026-01-01
 > [!important] The only home page
 > Enter the vault from here. There is no second dashboard.
 
+This template is an **empty skeleton**. The product is the loop, not a filled library:
+
+1. **Self-evolution** — seal the day, distill. Summaries never replace logs.
+2. **Two-step promotion** — five gates → auto `provisional` the same day; next similar task asks; adopt + accepted task → `active`.
+3. **Correction-first** — correction page beats the old note.
+4. **Retrieval lock** — one short noun, SHA receipt, no neighbor, no vector.
+
+See [[02 经验与方法/准经验/准经验入口|provisional index]] and the repo `PROTOCOL.md`.
+
 ## Five zones
 
 1. [[01 项目/项目|Projects]]

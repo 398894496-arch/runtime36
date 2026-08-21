@@ -2,7 +2,7 @@
 
 This is the protocol detail. README is the entry; [`PROTOCOL.md`](../PROTOCOL.md) is the invariant list. The author’s private notes are not in this repository.
 
-Author-vault results (home `verified_at: 2026-08-21`): retrieval blind test **25/25**, canonical routing **26/26** topics and **156/156** aliases, **72** consecutive sealed days (2026-06-10 → 2026-08-20), **30** real tasks, execution gate passed, host daily evolution running. See **Proven in the author’s vault** at the end.
+**Product (do not skip):** self-evolution (seal → distill) → two-step promotion (auto `provisional` the same day when five gates pass; `active` only after ask + adopt + accepted task) → correction-first → retrieval as the lock. `lamp: unused` is the timer, not “evolution is optional.” Author-vault scores below are not clone scores.
 
 KRouter splits knowledge into **four write-up maturity layers** and **five spatial zones**. Layers answer how far this claim can be trusted. Zones answer where the file lives. Agents must read the vault through layer 4. Chat memory and vector indexes are not a second source of truth.
 
@@ -13,7 +13,7 @@ flowchart TB
   subgraph write ["Write-up maturity"]
     L1["L1 Full logs<br/>05 时间日志"]
     L2["L2 Distillation<br/>daily evolution / 04 reviews"]
-    L3["L3 Promotion<br/>candidate → provisional → active"]
+    L3["L3 Promotion<br/>auto provisional → ask → active"]
     L1 --> L2 --> L3
   end
   L4["L4 Retrieval<br/>short noun + alias table + SHA receipt"]

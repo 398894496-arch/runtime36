@@ -1,8 +1,8 @@
-# Host daily evolution (optional extra)
+# Host daily evolution (the writer)
 
-Self-evolution for an **agent second brain**: seal yesterday’s log, distill, and propose `provisional` methods.
+This is the **product loop**, not a side plugin. Self-evolution for an agent second brain: seal yesterday’s log, distill, **write `provisional` the same day when the five gates pass**.
 
-This extra **ships runnable files**. It still does **not** start a timer by itself:
+`lamp: unused` means the OS **timer is off**. It does not mean this loop is optional. This extra **ships the contract and examples**. It still does **not** start launchd/cron by itself.
 
 | File | Role |
 |---|---|
@@ -27,7 +27,7 @@ export OBSIDIAN_VAULT=/path/to/runtime36/template
 1. Set `OBSIDIAN_VAULT` to your vault root (the knowledge base).
 2. Pin the writer binary by absolute path. Do not use a PATH-level `agent`.
 3. Schedule with the OS. Cloud chat automations are not the unattended writer.
-4. Write L1 logs and L2 distillation. Same-day reusable practice is `provisional` only. Do not auto-promote to `active`.
+4. Write L1 logs and L2 distillation. When the five gates pass, write `provisional` the same day (no ask). Do not auto-promote to `active`.
 5. Do not edit `canonical_sources.psv`.
 6. On failure, leave a to-summarize note.
 7. Uninstalling a Cursor / Codex / Claude Code / DSH mount does not stop this job. Disable the OS schedule yourself, then set `lamp: unused`.
