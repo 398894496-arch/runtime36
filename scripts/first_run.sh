@@ -54,6 +54,19 @@ assert_match "home" "Q01" "Agent第二大脑.md"
 assert_match "clippings" "Q02" "用户偏好与工作约束.md"
 assert_match "correction" "Q05" "纠错与取代记录.md"
 
+printf '%s\n' "== suggest on miss =="
+suggest=$("$ROUTER" suggest "homz") || true
+printf '%s\n' "$suggest" | grep -q "Q01" || {
+  printf '%s\n' "FAIL suggest homz expected Q01" >&2
+  printf '%s\n' "$suggest" >&2
+  fail=1
+}
+printf '%s\n' "$suggest" | grep -q "canonical_match: true" && {
+  printf '%s\n' "FAIL suggest must not be a canonical hit" >&2
+  fail=1
+}
+printf '%s\n' "ok suggest homz -> Q01 hint"
+
 printf '%s\n' "== validate template day =="
 if python3 -c "import yaml" 2>/dev/null; then
   if python3 "$ROOT/scripts/validate_vault.py" --from-date 2026-01-01 --through-date 2026-01-01; then

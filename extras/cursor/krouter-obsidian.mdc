@@ -8,4 +8,4 @@ When a question depends on durable preferences, corrections, project history, re
 1. Set `OBSIDIAN_VAULT` to the vault root.
 2. Follow `~/.agents/skills/krouter-obsidian/SKILL.md`.
 3. Run `~/.agents/skills/krouter-obsidian/scripts/route_knowledge.sh`.
-4. If the receipt has `canonical_match: true`, cite that `canonical_source`. Do not invent a parallel dashboard note.
+4. If the receipt has `canonical_match: true`, cite that `canonical_source`. Do not invent a parallel dashboard note. If it is a miss with `suggestions:`, retry one suggested alias once.

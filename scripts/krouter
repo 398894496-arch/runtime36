@@ -1,0 +1,4 @@
+#!/bin/sh
+set -eu
+ROOT=$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)
+exec "$ROOT/skill/krouter-obsidian/scripts/route_knowledge.sh" "$@"

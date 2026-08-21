@@ -13,7 +13,7 @@ python3 -m pip install -r requirements.txt
 ./scripts/first_run.sh
 ```
 
-通过标准：`search home` 得到 `canonical_id: Q01`、首页路径、双 SHA。这是仓库里能当场复现的检查，不必先信自测分数。
+通过标准：`search home` 得到 `canonical_id: Q01`、首页路径、双 SHA。CI 每次 push 都会跑 `pytest` 和 `first_run.sh`。未命中时 `suggest homz` 只给别名提示，不是命中，也没有向量回退。
 
 维护成本低，是因为没有向量库要重建索引。你要维护的是 Markdown 和一张别名表，不是记忆服务器。不是零成本：别名和晋升还是要写，那就是这套协议本身。
 

@@ -131,6 +131,7 @@ The agent does not dump a full question into the vault. It sends one contiguous 
 | `memory` | High-trust memory index |
 | `project` | Literal search under `01 项目` |
 | `search` | Alias hit first; otherwise vault-wide literal search |
+| `suggest` | Nearest aliases on a miss. Hints only; not a hit |
 
 The host sets `OBSIDIAN_VAULT`.
 

@@ -4,3 +4,7 @@
 *.pem
 .obsidian/
 template/.obsidian/
+__pycache__/
+.pytest_cache/
+.venv/
+

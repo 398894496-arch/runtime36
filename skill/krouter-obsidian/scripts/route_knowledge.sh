@@ -17,7 +17,7 @@ PROJECTS="$VAULT/01 项目"
 CANONICAL_MAP="$(dirname "$0")/canonical_sources.psv"
 
 usage() {
-  printf '%s\n' "usage: route_knowledge.sh {status|preference|correction|memory|project|search} [literal query]" >&2
+  printf '%s\n' "usage: route_knowledge.sh {status|preference|correction|memory|project|search|suggest} [literal query]" >&2
   exit 2
 }
 
@@ -71,10 +71,21 @@ bounded_search() {
   scope=$1
   [ -n "$QUERY" ] || usage
   emit_receipt "$scope" bounded-literal-search-complete
+  emit_suggestions
   printf 'route: %s\n' "$ROUTE"
   printf 'scope: %s\n' "$scope"
   rg -L -F -n -i -C 1 -m 4 --glob '*.md' --glob '!Clippings/**' -- "$QUERY" "$scope" \
     | awk 'NR <= 24 { print } NR == 25 { print "[truncated after 24 lines]"; exit }' || true
+}
+
+emit_suggestions() {
+  lookup_py="$(dirname "$0")/canonical_lookup.py"
+  [ -f "$CANONICAL_MAP" ] || return 0
+  [ -n "$QUERY" ] || return 0
+  hits=$(python3 "$lookup_py" --map "$CANONICAL_MAP" --vault "$VAULT" --query "$QUERY" --suggest --limit 5) || true
+  [ -n "$hits" ] || return 0
+  printf 'canonical_match: false\nsuggestions:\n'
+  printf '%s\n' "$hits" | awk -F'|' '{ printf "- %s alias=%s source=%s score=%s\n", $1, $2, $3, $4 }'
 }
 
 canonical_lookup() {
@@ -126,6 +137,11 @@ case "$ROUTE" in
     ;;
   search)
     bounded_search "$VAULT"
+    ;;
+  suggest)
+    [ -n "$QUERY" ] || usage
+    emit_receipt "$CANONICAL_MAP" alias-suggestions
+    emit_suggestions
     ;;
   *)
     usage

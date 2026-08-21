@@ -15,7 +15,7 @@ Router script (after install): `$HOME/.agents/skills/krouter-obsidian/scripts/ro
 2. Send one contiguous distinguishing noun or short phrase. Do not send the full question. Do not join several words with spaces as if they were AND.
 3. Run the router script: `route_knowledge.sh <route> [query]`.
 4. If the receipt has `canonical_match: true`, cite `canonical_source` as the source. Do not substitute the preferences note unless that is the mapped source.
-5. Answer and stop when complete. Otherwise retry one alternate noun, then open that one receipt source. Report any remaining gap or conflict.
+5. Answer and stop when complete. If the receipt has no `canonical_match: true` but lists `suggestions:`, retry **one** suggested alias. Do not treat a suggestion as a hit until the next receipt says `canonical_match: true`. Then open that source. Report any remaining gap.
 
 ## Boundaries
 

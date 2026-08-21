@@ -49,6 +49,28 @@ def alias_score(query: str, alias: str) -> int:
     return 0
 
 
+def near_score(query: str, alias: str) -> int:
+    """Weaker overlap for suggestions only. Never used as a canonical hit."""
+    hit = alias_score(query, alias)
+    if hit:
+        return hit
+    q = normalize(query)
+    a = normalize(alias)
+    if len(q) < 2 or len(a) < 2:
+        return 0
+    n = 0
+    for left, right in zip(q, a):
+        if left != right:
+            break
+        n += 1
+    if n >= 2:
+        return 40 + n
+    overlap = len(set(q) & set(a))
+    if overlap >= 2:
+        return 20 + overlap
+    return 0
+
+
 def scores_for(query: str, rows: list[tuple[str, list[str], str, str]]) -> dict[str, int]:
     scores: dict[str, int] = {}
     for case_id, aliases, _source, _anchor in rows:
@@ -89,18 +111,54 @@ def lookup(query: str, rows: list[tuple[str, list[str], str, str]]) -> tuple[str
     return None
 
 
+def suggestions(
+    query: str,
+    rows: list[tuple[str, list[str], str, str]],
+    limit: int = 5,
+) -> list[tuple[int, str, str, str]]:
+    ranked: list[tuple[int, str, str, str]] = []
+    for case_id, aliases, source, _anchor in rows:
+        best = 0
+        best_alias = aliases[0] if aliases else ""
+        for alias in aliases:
+            score = near_score(query, alias)
+            if score > best:
+                best = score
+                best_alias = alias
+        if best:
+            ranked.append((best, case_id, best_alias, source))
+    ranked.sort(key=lambda item: (-item[0], item[1]))
+    return ranked[:limit]
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--map", required=True)
     parser.add_argument("--vault", required=True)
-    parser.add_argument("--query", required=True)
+    parser.add_argument("--query", default="")
+    parser.add_argument("--suggest", action="store_true")
+    parser.add_argument("--limit", type=int, default=5)
     args = parser.parse_args()
     rows = load_rows(Path(args.map))
+    vault = Path(args.vault)
+
+    if args.suggest:
+        if not args.query:
+            return 2
+        for score, case_id, alias, relative_source in suggestions(args.query, rows, args.limit):
+            source = vault / relative_source
+            if not source.is_file():
+                continue
+            sys.stdout.write(f"{case_id}|{alias}|{relative_source}|{score}\n")
+        return 0
+
+    if not args.query:
+        return 2
     hit = lookup(args.query, rows)
     if hit is None:
         return 1
     case_id, relative_source, anchor = hit
-    source = Path(args.vault) / relative_source
+    source = vault / relative_source
     if not source.is_file():
         print(f"Canonical source missing: {source}", file=sys.stderr)
         return 1

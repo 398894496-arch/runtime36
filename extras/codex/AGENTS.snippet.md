@@ -7,4 +7,5 @@ Knowledge-dependent tasks: set OBSIDIAN_VAULT, then follow
 ~/.agents/skills/krouter-obsidian/SKILL.md
 and run ~/.agents/skills/krouter-obsidian/scripts/route_knowledge.sh.
 If canonical_match is true, cite canonical_source.
+If the receipt lists suggestions, retry one suggested alias once.
 ```
