@@ -67,7 +67,7 @@ Landings:
 
 1. **Derived notes keep source, time, scope, trust, and limits.**
 2. **The daily writer is a pinned local CLI binary.** Do not use a PATH-level `agent`. Schedule with the OS. An in-vault chat plugin is not the unattended writer. On failure, leave a to-summarize note. Do not switch shells and rewrite.
-3. **Daily evolution is an extra** (`extras/host-daily-evolution/`). Not installing it does not delete the protocol.
+3. **Daily evolution is an extra** (`extras/host-daily-evolution/`). Not installing it does not delete the protocol. DSH (`extras/dsh`) is an extra mount on the same `OBSIDIAN_VAULT`. Uninstalling that plugin does not delete notes.
 4. Distillation may propose candidates. **It must not write formal `02`.**
 
 ---
@@ -200,6 +200,6 @@ Home page `verified_at: 2026-08-21`.
 
 **Corrections:** written to canonical pages (`supersedes` / quasi-correction → formal correction). The next similar task hits the new page through L4. Old wording is not current rule. Provisional methods become `active` after adopt + accept. The vault gets sharper; the agent gets steadier.
 
-Daily evolution and the execution hook ship as extras. The author’s vault already runs them under this protocol.
+Daily evolution and the execution hook ship as extras. The DSH plugin (`extras/dsh`) is a third mount on the same vault; it is not a second knowledge base. The author’s vault already runs daily evolution and the execution hook under this protocol.
 
 Chinese overview: [`README.zh.md`](../README.zh.md).

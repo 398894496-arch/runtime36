@@ -79,6 +79,18 @@ else
   printf '%s\n' "skip validate_vault.py (install PyYAML to run it)"
 fi
 
+printf '%s\n' "== DSH bridge =="
+if command -v node >/dev/null 2>&1; then
+  if node "$ROOT/extras/dsh/test-bridge.mjs" && node "$ROOT/extras/dsh/test-apply.mjs"; then
+    printf '%s\n' "ok extras/dsh bridge+apply"
+  else
+    printf '%s\n' "FAIL extras/dsh tests" >&2
+    fail=1
+  fi
+else
+  printf '%s\n' "skip extras/dsh/test-bridge.mjs (node required)"
+fi
+
 printf '%s\n' ""
 printf '%s\n' "First run passed on $OBSIDIAN_VAULT"
 printf '%s\n' "Next: copy template/ to your Obsidian vault, rewrite skill/krouter-obsidian/scripts/canonical_sources.psv with your own topics, keep OBSIDIAN_VAULT pointed at that vault."

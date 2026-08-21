@@ -15,7 +15,7 @@ python3 -m pip install -r requirements.txt   # PyYAML, for validate_vault.py
 ./scripts/first_run.sh
 ```
 
-Pass: `search home` returns `canonical_id: Q01`, a path to `template/Agent第二大脑.md`, plus `source_sha256` and `canonical_map_sha256`. CI runs that check and the unit tests on every push. You do not have to trust a README score to see the router work.
+Pass: `search home` returns `canonical_id: Q01`, a path to `template/Agent第二大脑.md`, plus `source_sha256` and `canonical_map_sha256`. CI runs that check, the unit tests, and the DSH bridge on every push. You do not have to trust a README score to see the router work.
 
 A miss is not a dead end. `./scripts/krouter suggest homz` prints nearest aliases. Those lines are **hints**, not hits. Add the noun to `canonical_sources.psv` or retry the suggested alias. There is still no vector fallback.
 
@@ -46,7 +46,7 @@ Maintenance is low because there is nothing to reindex. It is not zero: you stil
 
 ## Who should clone this
 
-You use Obsidian **and** Cursor / Codex / Claude Code (or another local agent). You care that the agent cites the *right* page, not a similar one.
+You use Obsidian **and** Cursor / Codex / Claude Code / DeepSeek Harness (or another local agent). You care that the agent cites the *right* page, not a similar one.
 
 Skip this if you want a cloud memory API, hybrid semantic search, or a filled knowledge base. This repo is the protocol and an empty vault. The author’s notes stay private.
 
@@ -60,6 +60,17 @@ export OBSIDIAN_VAULT=/path/to/YourVault
 ```
 
 Installs to `~/.agents/skills/krouter-obsidian` and `~/.cursor/rules/krouter-obsidian.mdc`. Pass `--force` to replace. This path does not overwrite `obsidian-knowledge-router`.
+
+## DeepSeek Harness
+
+Same vault. Third mount. Read-only tools. Uninstalling the plugin does not delete notes.
+
+```bash
+node extras/dsh/test-bridge.mjs
+dsh plugin add github:398894496-arch/runtime36
+```
+
+Or a local checkout: `dsh plugin add /path/to/runtime36/extras/dsh`. Tools: `krouter_status`, `krouter_search`, `krouter_suggest`. Set `OBSIDIAN_VAULT` (or `vaultPath` in the plugin config). Details: [`extras/dsh/README.md`](extras/dsh/README.md).
 
 ## Four layers
 
@@ -85,7 +96,7 @@ Full protocol: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md). Invariants: [`PRO
 |---|---|
 | `scripts/krouter` | CLI: `status`, `search`, `suggest`, … |
 | `tests/` | Lookup, tie-break, suggestion unit tests |
-| `.github/workflows/ci.yml` | pytest + first run on every push |
+| `.github/workflows/ci.yml` | pytest + first run + DSH bridge on every push |
 | `CHANGELOG.md` | What shipped |
 
 ## Author vault (not a clone score)

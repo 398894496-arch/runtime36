@@ -1,0 +1,38 @@
+{
+  "name": "dsh-krouter",
+  "version": "0.3.0",
+  "description": "Hot-pluggable KRouter for DeepSeek Harness. Same Obsidian vault as Cursor and Codex. No vector store.",
+  "type": "module",
+  "main": "extras/dsh/lib/index.js",
+  "exports": {
+    ".": "./extras/dsh/lib/index.js"
+  },
+  "files": [
+    "extras/dsh/lib",
+    "extras/dsh/cordis.patch.yml",
+    "extras/dsh/README.md",
+    "skill/krouter-obsidian"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./extras/dsh/cordis.patch.yml"
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "*",
+    "@deepseek-ai/dsh-tools": "*",
+    "@deepseek-ai/schemastery": "*"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "obsidian",
+    "krouter",
+    "deepseek-harness"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/398894496-arch/runtime36.git"
+  }
+}

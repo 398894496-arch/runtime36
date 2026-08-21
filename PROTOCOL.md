@@ -9,3 +9,4 @@ KRouter Obsidian. Architecture: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 5. Routing: match `canonical_sources.psv` with a short noun (exact > alias in query > query in alias; same score and same file → lowest id; otherwise no hit). Open that page. On a miss, print alias suggestions (hints only) and literal-search the route’s scope. No vector store.
 6. Every route prints a receipt: time, source path, source SHA-256, map SHA-256.
 7. If daily evolution uses a local agent CLI, pin the binary. Do not use a PATH-level `agent`.
+8. Cursor, Codex, and DeepSeek Harness are mounts on one vault. Sharing is the vault and the alias map, not a second protocol. The DSH plugin is read-only. Uninstalling it does not delete notes.

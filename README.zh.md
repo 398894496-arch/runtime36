@@ -13,9 +13,16 @@ python3 -m pip install -r requirements.txt
 ./scripts/first_run.sh
 ```
 
-通过标准：`search home` 得到 `canonical_id: Q01`、首页路径、双 SHA。CI 每次 push 都会跑 `pytest` 和 `first_run.sh`。未命中时 `suggest homz` 只给别名提示，不是命中，也没有向量回退。
+通过标准：`search home` 得到 `canonical_id: Q01`、首页路径、双 SHA。CI 每次 push 都会跑 `pytest`、`first_run.sh` 和 DSH 桥测试。未命中时 `suggest homz` 只给别名提示，不是命中，也没有向量回退。
 
 维护成本低，是因为没有向量库要重建索引。你要维护的是 Markdown 和一张别名表，不是记忆服务器。不是零成本：别名和晋升还是要写，那就是这套协议本身。
+
+Cursor / Codex / DeepSeek Harness 是三个挂载，共用同一座 Obsidian 库和同一张别名表。DSH 插件只读：`krouter_status`、`krouter_search`、`krouter_suggest`。卸插件不删库。
+
+```bash
+node extras/dsh/test-bridge.mjs
+dsh plugin add github:398894496-arch/runtime36
+```
 
 作者活库（2026-08-21）有盲测 25/25、26/26 主题、156/156 别名、72 天封账、30 条真实任务。那是作者库的成绩。clone 空模板请先跑 `first_run.sh`。
 

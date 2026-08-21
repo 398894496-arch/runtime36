@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0 — 2026-08-21
+
+- DSH mount: `extras/dsh` registers read-only `krouter_status`, `krouter_search`, `krouter_suggest`.
+- Bridge tests on the template vault. No write routes. Uninstall does not delete the vault.
+- Same `OBSIDIAN_VAULT` and alias map as Cursor and Codex.
+
 ## 0.2.0 — 2026-08-21
 
 - CI: pytest + `first_run.sh` on every push to `main`.

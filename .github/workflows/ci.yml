@@ -19,5 +19,10 @@ jobs:
         run: python3 -m pip install -r requirements.txt -r requirements-dev.txt
       - name: Unit tests
         run: python3 -m pytest -q
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: DSH bridge
+        run: node extras/dsh/test-bridge.mjs && node extras/dsh/test-apply.mjs
       - name: First run
         run: ./scripts/first_run.sh

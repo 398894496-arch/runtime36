@@ -1,0 +1,5 @@
+# Host-realm insert. Read-only KRouter tools.
+# Uninstalling this plugin must not delete the Obsidian vault.
+- insert:
+    - id: krouter
+      name: dsh-krouter

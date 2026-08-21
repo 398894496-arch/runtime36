@@ -1,0 +1,59 @@
+#!/usr/bin/env node
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { parseReceipt, runRoute } from "./lib/route.js";
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const ROOT = resolve(HERE, "../..");
+const VAULT = join(ROOT, "template");
+const ROUTER = join(ROOT, "skill/krouter-obsidian/scripts/route_knowledge.sh");
+
+let failed = 0;
+function check(name, cond, detail = "") {
+  if (cond) {
+    console.log(`ok ${name}`);
+    return;
+  }
+  failed += 1;
+  console.error(`FAIL ${name}${detail ? `\n${detail}` : ""}`);
+}
+
+const status = runRoute({ route: "status", vault: VAULT, router: ROUTER });
+check("status exit 0", status.ok, status.stderr);
+check(
+  "status home page",
+  status.stdout.includes("Agent第二大脑.md"),
+  status.stdout,
+);
+
+const home = runRoute({ route: "search", query: "home", vault: VAULT, router: ROUTER });
+const homeFields = parseReceipt(home.stdout);
+check("search home exit 0", home.ok, home.stderr);
+check("search home Q01", homeFields.canonical_id === "Q01", home.stdout);
+check("search home match true", homeFields.canonical_match === "true", home.stdout);
+
+const suggest = runRoute({ route: "suggest", query: "homz", vault: VAULT, router: ROUTER });
+check("suggest homz mentions Q01", suggest.stdout.includes("Q01"), suggest.stdout);
+check(
+  "suggest is not a hit",
+  !suggest.stdout.includes("canonical_match: true"),
+  suggest.stdout,
+);
+
+const write = runRoute({ route: "rm", query: "/", vault: VAULT, router: ROUTER });
+check("refuse non-route", !write.ok && write.stderr.includes("refused route"), write.stderr);
+
+const savedVault = process.env.OBSIDIAN_VAULT;
+const savedAlt = process.env.KROUTER_VAULT;
+delete process.env.OBSIDIAN_VAULT;
+delete process.env.KROUTER_VAULT;
+const missing = runRoute({ route: "status", router: ROUTER });
+if (savedVault !== undefined) process.env.OBSIDIAN_VAULT = savedVault;
+if (savedAlt !== undefined) process.env.KROUTER_VAULT = savedAlt;
+check("missing vault fails", !missing.ok, missing.stderr);
+
+if (failed) {
+  console.error(`\n${failed} failed`);
+  process.exit(1);
+}
+console.log("\nDSH bridge tests passed on template vault");
