@@ -3,3 +3,4 @@
 .env.*
 *.pem
 .obsidian/
+template/.obsidian/
