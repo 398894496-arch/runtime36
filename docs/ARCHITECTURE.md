@@ -1,5 +1,7 @@
 # KRouter Obsidian architecture
 
+Public listing: **DSH Plugin: Agent Second Brain**. This file is the protocol. The DSH plugin is a mount, not a second knowledge base.
+
 This is the protocol detail. README is the entry; [`PROTOCOL.md`](../PROTOCOL.md) is the invariant list. The author’s private notes are not in this repository.
 
 Author-vault results (home `verified_at: 2026-08-21`): retrieval blind test **25/25**, canonical routing **26/26** topics and **156/156** aliases, **72** consecutive sealed days (2026-06-10 → 2026-08-20), **30** real tasks, execution gate passed, host daily evolution running. See **Proven in the author’s vault** at the end.

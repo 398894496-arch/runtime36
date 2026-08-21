@@ -1,7 +1,7 @@
 {
   "name": "dsh-krouter",
-  "version": "0.3.0",
-  "description": "Hot-pluggable KRouter for DeepSeek Harness. Same Obsidian vault as Cursor and Codex. No vector store.",
+  "version": "0.3.1",
+  "description": "KRouter Obsidian — DSH Plugin: Agent Second Brain. Obsidian knowledge base and memory system. Optional self-evolution. Also mounts on Cursor and Codex. No vector store.",
   "type": "module",
   "main": "extras/dsh/lib/index.js",
   "exports": {
@@ -26,9 +26,14 @@
   "keywords": [
     "dsh",
     "dsh-plugin",
+    "deepseek-harness",
     "obsidian",
     "krouter",
-    "deepseek-harness"
+    "knowledge-base",
+    "memory-system",
+    "second-brain",
+    "self-evolution",
+    "agent-memory"
   ],
   "license": "MIT",
   "repository": {

@@ -1,8 +1,8 @@
-# DSH mount for KRouter
+# KRouter Obsidian — DSH Plugin: Agent Second Brain
 
-This is a **read-only** DeepSeek Harness plugin. It does not create a second vault. Cursor, Codex, and DSH share `OBSIDIAN_VAULT`.
+DeepSeek Harness plugin for a shared Obsidian **knowledge base** / **memory system**. It does not create a second vault. Also mounts on Cursor and Codex. All three share `OBSIDIAN_VAULT`.
 
-Uninstalling the plugin does not delete notes.
+This plugin does **not** schedule **self-evolution**. Daily seal is [`extras/host-daily-evolution/`](../host-daily-evolution/). Uninstalling the plugin does not delete notes and does not stop a host cron you added yourself.
 
 ## Local test (before `dsh plugin add`)
 

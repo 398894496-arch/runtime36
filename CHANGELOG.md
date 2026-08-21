@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.1 — 2026-08-21
+
+- Public listing: **DSH Plugin: Agent Second Brain**. Knowledge base, memory system, optional self-evolution. Cursor/Codex remain extra mounts.
+- Daily evolution extra documents the host scheduler contract. `dsh plugin add` still does not create a cron.
+
 ## 0.3.0 — 2026-08-21
 
 - DSH mount: `extras/dsh` registers read-only `krouter_status`, `krouter_search`, `krouter_suggest`.
