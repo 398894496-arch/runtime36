@@ -16,7 +16,7 @@ The DSH plugin is read-only retrieval. This extra is a host scheduler plus a pin
 4. Write L1 logs and L2 distillation. Same-day reusable practice is `provisional` only. Do not auto-promote to `active`.
 5. Do not edit `canonical_sources.psv`. The alias map is a separate writer.
 6. On failure, leave a to-summarize note. Do not switch shells and rewrite the day.
-7. Uninstalling a Cursor / Codex / DSH mount does not stop this job. Disable the OS schedule yourself.
+7. Uninstalling a Cursor / Codex / Claude Code / DSH mount does not stop this job. Disable the OS schedule yourself.
 
 ## macOS launchd (example)
 

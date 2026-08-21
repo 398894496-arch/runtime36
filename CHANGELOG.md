@@ -2,7 +2,7 @@
 
 ## 0.3.1 — 2026-08-21
 
-- Public listing: **DSH Plugin: Agent Second Brain**. Knowledge base, memory system, optional self-evolution. Cursor/Codex remain extra mounts.
+- Public listing: **DSH-KRouter**. Keyword subtitle: DeepSeek Harness memory system, Agent second brain, Obsidian knowledge base, optional self-evolution, Cursor / Codex / Claude Code.
 - Daily evolution extra documents the host scheduler contract. `dsh plugin add` still does not create a cron.
 
 ## 0.3.0 — 2026-08-21

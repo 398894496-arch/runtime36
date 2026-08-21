@@ -1,7 +1,7 @@
 {
   "name": "dsh-krouter",
   "version": "0.3.1",
-  "description": "KRouter Obsidian — DSH Plugin: Agent Second Brain. Obsidian knowledge base and memory system. Optional self-evolution. Also mounts on Cursor and Codex. No vector store.",
+  "description": "DSH-KRouter — DeepSeek Harness memory system, Agent second brain, Obsidian knowledge base, optional self-evolution. Cursor, Codex, Claude Code. Deterministic knowledge routing. No vector store.",
   "type": "module",
   "main": "extras/dsh/lib/index.js",
   "exports": {

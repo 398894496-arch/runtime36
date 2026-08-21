@@ -1,18 +1,14 @@
-# KRouter Obsidian — DSH Plugin: Agent Second Brain
+# DSH-KRouter
 
 [![ci](https://github.com/398894496-arch/runtime36/actions/workflows/ci.yml/badge.svg)](https://github.com/398894496-arch/runtime36/actions/workflows/ci.yml)
 
-**DeepSeek Harness plugin.** A deterministic **memory system** and **knowledge base** for AI agents that already live in [Obsidian](https://obsidian.md). Optional **self-evolution**. Also mounts on Cursor and Codex. The vault home page is `Agent第二大脑.md`.
+**DeepSeek Harness memory system · Agent second brain · Obsidian knowledge base · optional self-evolution · Cursor / Codex / Claude Code.**
+
+Deterministic knowledge routing for AI agents that already live in [Obsidian](https://obsidian.md).
 
 Not a notes app. Not a generic memory SDK. Not an MCP vector store. One short noun hits the page that should change this action. You get a SHA-256 receipt. Wrong-neighbor cites are a protocol violation, not a retrieval quirk.
 
-```bash
-dsh plugin add github:398894496-arch/runtime36
-```
-
-Read-only tools: `krouter_status`, `krouter_search`, `krouter_suggest`. **`dsh plugin add` does not create a daily job.** Self-evolution is [`extras/host-daily-evolution/`](extras/host-daily-evolution/).
-
-**Try the template in fifteen minutes** (no DSH required). No GPU. No Docker. No embedding daemon. The author runs the live vault on an **8 GB M2 Mac** with `python3` + `rg` only.
+**Try it in fifteen minutes** on the bundled template. No GPU. No Docker. No embedding daemon. The author runs the live vault on an **8 GB M2 Mac** with `python3` + `rg` only.
 
 ```bash
 git clone https://github.com/398894496-arch/runtime36.git
@@ -69,11 +65,14 @@ Installs to `~/.agents/skills/krouter-obsidian` and `~/.cursor/rules/krouter-obs
 
 ## DeepSeek Harness
 
-Same vault. Third mount. Uninstalling the plugin does not delete notes. Local checkout: `dsh plugin add /path/to/runtime36/extras/dsh`. Set `OBSIDIAN_VAULT` (or `vaultPath`). Details: [`extras/dsh/README.md`](extras/dsh/README.md).
+Same vault. Third mount. Read-only tools. Uninstalling the plugin does not delete notes. **`dsh plugin add` does not create a daily job.**
 
 ```bash
 node extras/dsh/test-bridge.mjs
+dsh plugin add github:398894496-arch/runtime36
 ```
+
+Or a local checkout: `dsh plugin add /path/to/runtime36/extras/dsh`. Tools: `krouter_status`, `krouter_search`, `krouter_suggest`. Set `OBSIDIAN_VAULT` (or `vaultPath` in the plugin config). Details: [`extras/dsh/README.md`](extras/dsh/README.md).
 
 ## Optional self-evolution
 
