@@ -1,0 +1,26 @@
+---
+name: krouter-obsidian
+description: KRouter Obsidian — route knowledge-dependent tasks to the smallest current evidence set in an Obsidian vault using deterministic local search. Use when a request depends on durable user preferences, prior corrections or superseded claims, long-term project history or results, reusable methods or evidence, or the current vault and automation state. Return evidence in-process; do not spawn a retrieval model or add embeddings.
+---
+
+# KRouter Obsidian
+
+Set `OBSIDIAN_VAULT` to the vault root. Run retrieval in the current process. Do not spawn a retrieval agent. Do not add vector storage.
+
+Router script (after install): `$HOME/.agents/skills/krouter-obsidian/scripts/route_knowledge.sh`
+
+## Workflow
+
+1. Choose one route: `status` for current system state; otherwise `preference`, `correction`, `memory`, `project`, or `search`.
+2. Send one contiguous distinguishing noun or short phrase. Do not send the full question. Do not join several words with spaces as if they were AND.
+3. Run the router script: `route_knowledge.sh <route> [query]`.
+4. If the receipt has `canonical_match: true`, cite `canonical_source` as the source. Do not substitute the preferences note unless that is the mapped source.
+5. Answer and stop when complete. Otherwise retry one alternate noun, then open that one receipt source. Report any remaining gap or conflict.
+
+## Boundaries
+
+- The script is read-only. Semantic vault writes need an explicit assignment.
+- Prefer canonical, current, `active` evidence. Use `correction` for `supersedes` conflicts.
+- Skip `Clippings/`, backups, and cold mirrors. If the receipt source is `candidate` or `rejected`, read it; do not skip the mapped source.
+- Do not restart Obsidian or print secrets.
+- A complete `status` result needs no second lookup.

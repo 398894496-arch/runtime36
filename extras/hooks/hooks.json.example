@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "hooks": {
+    "beforeShellExecution": [
+      {
+        "command": "python3 /absolute/path/to/exec-gate.py",
+        "failClosed": true
+      }
+    ],
+    "preToolUse": [
+      {
+        "command": "python3 /absolute/path/to/exec-gate.py",
+        "failClosed": true
+      }
+    ]
+  }
+}

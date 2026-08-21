@@ -9,7 +9,7 @@ VAULT=$OBSIDIAN_VAULT
 ROUTE=${1:-}
 QUERY=${2:-}
 
-CANONICAL="$VAULT/90 系统文件/状态.md"
+CANONICAL="$VAULT/Agent第二大脑.md"
 PREFERENCES="$VAULT/02 经验与方法/Agent/用户偏好与工作约束.md"
 CORRECTIONS="$VAULT/90 系统文件/Agent记忆/纠错与取代记录.md"
 MEMORY="$VAULT/90 系统文件/Agent记忆/可靠记忆索引.md"
@@ -80,33 +80,22 @@ bounded_search() {
 canonical_lookup() {
   [ -n "$QUERY" ] || return 1
   [ -f "$CANONICAL_MAP" ] || return 1
-  compact_query=$(printf '%s' "$QUERY" | sed 's/[[:space:][:punct:]“”‘’《》【】（）？，。！：；、]//g')
-
-  while IFS='|' read -r canonical_id aliases relative_source anchor; do
-    case "$canonical_id" in ''|'#'*) continue ;; esac
-    matched=false
-    saved_ifs=$IFS
-    IFS=';'
-    for alias in $aliases; do
-      compact_alias=$(printf '%s' "$alias" | sed 's/[[:space:][:punct:]“”‘’《》【】（）？，。！：；、]//g')
-      case "$compact_query" in *"$compact_alias"*) matched=true; break ;; esac
-    done
-    IFS=$saved_ifs
-
-    if [ "$matched" = true ]; then
-      canonical_source="$VAULT/$relative_source"
-      [ -f "$canonical_source" ] || {
-        printf 'Canonical source missing: %s\n' "$canonical_source" >&2
-        return 1
-      }
-      emit_receipt "$canonical_source" canonical-match
-      printf 'route: canonical\ncanonical_id: %s\ncanonical_source: %s\ncanonical_match: true\n' \
-        "$canonical_id" "$canonical_source"
-      rg -n -i -F -m 2 -C 1 -- "$anchor" "$canonical_source" || true
-      return 0
-    fi
-  done < "$CANONICAL_MAP"
-  return 1
+  lookup_py="$(dirname "$0")/canonical_lookup.py"
+  hit=$(python3 "$lookup_py" --map "$CANONICAL_MAP" --vault "$VAULT" --query "$QUERY") || return 1
+  canonical_id=${hit%%|*}
+  rest=${hit#*|}
+  relative_source=${rest%%|*}
+  canonical_source="$VAULT/$relative_source"
+  [ -f "$canonical_source" ] || {
+    printf 'Canonical source missing: %s\n' "$canonical_source" >&2
+    return 1
+  }
+  emit_receipt "$canonical_source" canonical-match
+  printf 'route: canonical\ncanonical_id: %s\ncanonical_source: %s\ncanonical_match: true\n' \
+    "$canonical_id" "$canonical_source"
+  anchor=${rest#*|}
+  rg -n -i -F -m 2 -C 1 -- "$anchor" "$canonical_source" || true
+  return 0
 }
 
 [ -d "$VAULT" ] || { printf 'Vault not found: %s\n' "$VAULT" >&2; exit 1; }

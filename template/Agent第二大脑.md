@@ -3,6 +3,7 @@ title: Agent第二大脑
 type: home
 status: active
 updated: 2026-01-01
+verified_at: 2026-01-01
 ---
 
 # Agent第二大脑
