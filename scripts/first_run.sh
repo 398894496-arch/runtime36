@@ -50,9 +50,9 @@ printf '%s\n' "$status" | grep -q "source: $OBSIDIAN_VAULT/Agent第二大脑.md"
 printf '%s\n' "ok status -> Agent第二大脑.md"
 
 printf '%s\n' "== short-noun routing =="
-assert_match "入口" "Q01" "Agent第二大脑.md"
-assert_match "剪藏" "Q02" "用户偏好与工作约束.md"
-assert_match "纠正" "Q05" "纠错与取代记录.md"
+assert_match "home" "Q01" "Agent第二大脑.md"
+assert_match "clippings" "Q02" "用户偏好与工作约束.md"
+assert_match "correction" "Q05" "纠错与取代记录.md"
 
 printf '%s\n' "== validate template day =="
 if python3 -c "import yaml" 2>/dev/null; then

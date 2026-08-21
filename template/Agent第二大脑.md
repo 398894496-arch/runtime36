@@ -8,13 +8,13 @@ verified_at: 2026-01-01
 
 # Agent第二大脑
 
-> [!important] 唯一总入口
-> 整个知识库只从这里进入。
+> [!important] The only home page
+> Enter the vault from here. There is no second dashboard.
 
-## 五个核心区域
+## Five zones
 
-1. [[01 项目/项目|项目]]
-2. [[02 经验与方法/经验与方法|经验与方法]]
-3. [[03 资料与证据/资料与证据|资料与证据]]
-4. [[04 已完成与复盘/已完成与复盘|已完成与复盘]]
-5. [[05 时间日志/时间日志入口|时间日志]]
+1. [[01 项目/项目|Projects]]
+2. [[02 经验与方法/经验与方法|Methods]]
+3. [[03 资料与证据/资料与证据|Evidence]]
+4. [[04 已完成与复盘/已完成与复盘|Reviews]]
+5. [[05 时间日志/时间日志入口|Daily logs]]

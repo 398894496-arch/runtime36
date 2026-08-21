@@ -1,11 +1,11 @@
-# 协议
+# Protocol
 
-KRouter Obsidian。详情与层级图见 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)。
+KRouter Obsidian. Architecture: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
-1. 五区：`01 项目` 正在做；`02 经验与方法` 已验证可复用；`03 资料与证据` 输入和证据；`04 已完成与复盘` 结束的结果；`05 时间日志` 每天发生了什么。
-2. 成熟度四层：全量日志 → 日志总结 → 经验晋升 → 检索。只有满足晋升条件的内容才进入正式 `02`：当天五条进准经验（`provisional`）；下次同类任务先问是否采纳，宿主采纳且该次任务验收通过才 `active`。候选留在项目或资料里。
-3. 冲突时：用户当前指令和最新 `supersedes` 优先于旧日志。
-4. Clippings 原件只复制，不移动。
-5. 路由：先用短名词匹配 `canonical_sources.psv`（精确 > 别名在查询里 > 查询在别名里；同分且同源取最小 id；否则算未命中）。命中则打开那一页。未命中再在指定范围内字面搜索。不引入向量库。
-6. 每次路由打印回执：时间、来源路径、来源 SHA-256、映射 SHA-256。
-7. 日更写手如果用本机 Agent CLI，必须钉死二进制，禁止 PATH 上的同名 `agent`。
+1. Five zones: `01 项目` in progress; `02 经验与方法` verified reusable methods; `03 资料与证据` inputs and evidence; `04 已完成与复盘` finished results; `05 时间日志` what happened that day.
+2. Four maturity layers: full logs → distillation → promotion → retrieval. Formal `02` requires the promotion gates: five conditions into `provisional` the same day; on the next similar task ask whether to adopt; host adopts and that task is accepted → `active`. Candidates stay in projects or materials.
+3. On conflict: the current user instruction and the latest `supersedes` beat old logs.
+4. Clippings originals are copied only. Do not move them.
+5. Routing: match `canonical_sources.psv` with a short noun (exact > alias in query > query in alias; same score and same file → lowest id; otherwise no hit). Open that page. On a miss, literal search in the route’s scope. No vector store.
+6. Every route prints a receipt: time, source path, source SHA-256, map SHA-256.
+7. If daily evolution uses a local agent CLI, pin the binary. Do not use a PATH-level `agent`.

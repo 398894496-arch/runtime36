@@ -1,9 +1,9 @@
 # id|aliases separated by ;|Vault-relative source|evidence anchor
-Q01|整个知识库唯一主入口;知识库唯一主入口;主入口是什么;第二大脑入口;总入口;入口|Agent第二大脑.md|唯一总入口
-Q02|Clippings原件允许怎样处理;Clippings原件;Clippings怎么处理;剪藏原件;剪藏|02 经验与方法/Agent/用户偏好与工作约束.md|Clippings 原件不得移动
-Q03|目录名称要求;文件夹名称要求;名称直接看懂用途|02 经验与方法/Agent/用户偏好与工作约束.md|用户必须能从名称直接看懂内容用途
-Q04|时间日志的文件名规则;时间日志命名;日志怎么命名|02 经验与方法/Agent/用户偏好与工作约束.md|文件名使用 DD｜一句话简述
-Q05|知识冲突;新旧冲突;纠错优先级;最新纠正|90 系统文件/Agent记忆/纠错与取代记录.md|最新纠正优先
-Q06|候选知识什么时候才能进入经验与方法;知识晋升标准;准经验;晋升|02 经验与方法/经验与方法.md|只有验证过的做法才进入经验与方法
-Q07|哪些记忆可以直接作为行动依据;高可信记忆;可靠记忆|90 系统文件/Agent记忆/可靠记忆索引.md|高可信：可以作为行动依据
-Q08|每日进化运行状态;自动化是否运行;日更健康|90 系统文件/自动化/日更健康.md|当前健康以本页为准
+Q01|home;homepage;only entrance;唯一总入口;第二大脑入口;总入口;入口|Agent第二大脑.md|The only home page
+Q02|clippings;clippings originals;how to handle clippings;剪藏;Clippings原件|02 经验与方法/Agent/用户偏好与工作约束.md|Do not move Clippings originals
+Q03|folder names;readable names;名称直接看懂用途|02 经验与方法/Agent/用户偏好与工作约束.md|Names must show what the file is for
+Q04|daily log filename;log naming;时间日志命名|02 经验与方法/Agent/用户偏好与工作约束.md|Daily logs use DD｜one-line summary
+Q05|correction;conflict;supersedes;latest correction;纠错;最新纠正|90 系统文件/Agent记忆/纠错与取代记录.md|Latest correction wins
+Q06|promotion;provisional;when can a method enter;晋升;准经验|02 经验与方法/经验与方法.md|Only verified methods enter this folder
+Q07|high trust;action basis;reliable memory;高可信记忆|90 系统文件/Agent记忆/可靠记忆索引.md|High-trust: may be used as action basis
+Q08|daily evolution health;automation status;日更健康|90 系统文件/自动化/日更健康.md|Health on this page is authoritative

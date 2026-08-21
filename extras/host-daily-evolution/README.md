@@ -1,5 +1,5 @@
-# 宿主日更（extra）
+# Host daily evolution (extra)
 
-需要本机 Agent CLI 和操作系统定时任务。不是这个模板的默认功能。
+Needs a local agent CLI and an OS scheduler. Not a default feature of this template.
 
-把 `OBSIDIAN_VAULT` 指到你的库。写手必须是你钉死的二进制，不要用 PATH 上的 `agent`。
+Point `OBSIDIAN_VAULT` at your vault. The writer must be a binary you pin. Do not use a PATH-level `agent`.

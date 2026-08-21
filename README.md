@@ -1,49 +1,45 @@
 # KRouter Obsidian
 
-作者活库实测（2026-08-21）：检索盲测 **25/25**，权威路由 26/26 主题 · 156/156 别名，连续封账 **72** 天，**30** 条真实任务，执行门禁已通过，本机日更持续运行。
+Author-vault results (2026-08-21): retrieval blind test **25/25**, canonical routing 26/26 topics · 156/156 aliases, **72** consecutive sealed days, **30** real tasks, execution gate passed, host daily evolution running.
 
-面向 Agent 的 Obsidian 知识路由。准备做事时命中会影响行为的那一页，并留下 SHA 回执。纠错写入权威页后，下次同类任务自动找回。库越用越准，Agent 越用越稳。不引入向量库。
+Obsidian knowledge routing for agents. One short noun hits the page that should change this action, and returns a SHA-256 receipt. Corrections are written to canonical pages and retrieved on the next similar task. The vault gets sharper; the agent gets steadier. No vector index.
 
-本仓库是可安装协议。详情页：[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)。不变量：[`PROTOCOL.md`](PROTOCOL.md)。许可 MIT。
+This repository is an installable protocol. Details: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md). Invariants: [`PROTOCOL.md`](PROTOCOL.md). MIT.
 
-GitHub 仓名 `runtime36`。产品名 **KRouter Obsidian**。
+GitHub repo: `runtime36`. Product: **KRouter Obsidian**. Vault folder names stay in Chinese (`01 项目` …); that is the on-disk layout, not the docs language. Chinese overview: [`README.zh.md`](README.zh.md).
 
-## 四层
+## Four layers
 
-写入走成熟度，读取必须走检索。空间五区（项目 / 方法 / 证据 / 复盘 / 日志）是存放位置，不替代这四层。
+Write-up maturity, then retrieval. The five folders are storage. They do not replace these layers.
 
 ```mermaid
 flowchart LR
-  L1[L1 全量日志] --> L2[L2 日志总结] --> L3[L3 经验晋升] --> L4[L4 检索]
+  L1[L1 Full logs] --> L2[L2 Distillation] --> L3[L3 Promotion] --> L4[L4 Retrieval]
 ```
 
+| Layer | Rule |
+|---|---|
+| L1 Full logs | `05` — one note per day. Episodic memory, not a result |
+| L2 Distillation | Daily evolution and reviews. Summaries never replace originals |
+| L3 Promotion | Five gates into `provisional`; host adopts and the task is accepted → `active` |
+| L4 Retrieval | One short noun hits one page. Receipt includes SHA-256. No vector store |
 
+Full ladder, trust rules, receipts, and write-back: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
+## Invariants
 
-| 层       | 规定                          |
-| ------- | --------------------------- |
-| L1 全量日志 | `05` 一天一篇。事件记忆，不自动等于结果      |
-| L2 日志总结 | 日更蒸馏与复盘。原文不可被总结替代           |
-| L3 经验晋升 | 五条进准经验；下次问采纳且任务验收才 `active` |
-| L4 检索   | 短名词命中唯一页，回执含 SHA-256。无向量库   |
+- The host sets `OBSIDIAN_VAULT`. This repo hard-codes nobody’s home directory.
+- Queries are one contiguous noun. Do not send a full question as if spaces were AND.
+- If the receipt has `canonical_match: true`, the agent **must** cite `canonical_source`. Nearby notes are not substitutes.
+- Clippings originals are copied only. Do not move, edit, or delete them.
+- `status` reads `Agent第二大脑.md`.
+- Daily evolution and the execution hook live under `extras/` and are off by default.
 
+Alias scoring: exact match, then alias-in-query, then query-in-alias (length ≥ 2). Tied scores resolve to the lowest id only when they point at the same file; otherwise there is no hit.
 
-完整梯子、可信度、回执与写回边界见详情页。作者活库实测见详情页「协议已经跑过」。
+## Install
 
-## 不变量
-
-- `OBSIDIAN_VAULT` 由宿主设置。仓库不写死任何人家目录。
-- 查询必须是连续短名词，禁止把整句问题当作 AND 检索。
-- 回执含 `canonical_match: true` 时，Agent **必须**引用 `canonical_source`，不得改引近邻笔记。
-- Clippings 原件只复制，不移动、不修改、不删除。
-- `status` 读取首页 `Agent第二大脑.md`。
-- 日更与执行钩子在 `extras/`，默认关闭。
-
-别名匹配顺序：完全相等 > 别名是查询的子串 > 查询是别名的子串（长度 ≥ 2）。同分且指向同一文件时取最小 id；否则视为未命中。
-
-## 安装
-
-依赖：`python3`、`rg`。
+Requires `python3` and `rg`.
 
 ```bash
 git clone https://github.com/398894496-arch/runtime36.git
@@ -52,9 +48,9 @@ chmod +x scripts/*.sh skill/krouter-obsidian/scripts/*.sh
 ./scripts/first_run.sh
 ```
 
-`first_run.sh` 只验收仓库内 `template/`，不读取宿主已有的 `OBSIDIAN_VAULT`。对准其他库时设置 `KROUTER_FIRST_RUN_VAULT`。
+`first_run.sh` validates the bundled `template/` only. It does not inherit a host `OBSIDIAN_VAULT`. Set `KROUTER_FIRST_RUN_VAULT` to aim it elsewhere.
 
-通过标准：`search 入口` 回执为 `canonical_id: Q01`，`source` 为 `template/Agent第二大脑.md`，并含 `source_sha256` 与 `canonical_map_sha256`。
+Pass criterion: `search home` yields `canonical_id: Q01`, `source` at `template/Agent第二大脑.md`, plus `source_sha256` and `canonical_map_sha256`.
 
 ```bash
 cp -R template /path/to/YourVault
@@ -62,41 +58,25 @@ export OBSIDIAN_VAULT=/path/to/YourVault
 ./scripts/install.sh
 ```
 
-安装位置：
+Installs to `~/.agents/skills/krouter-obsidian` and `~/.cursor/rules/krouter-obsidian.mdc`. Pass `--force` to replace an existing skill. This path does not overwrite `obsidian-knowledge-router`. Then rewrite `canonical_sources.psv` with the host’s own nouns.
 
+## Layout
 
-| 目标        | 路径                                     |
-| --------- | -------------------------------------- |
-| Skill     | `~/.agents/skills/krouter-obsidian`    |
-| Cursor 规则 | `~/.cursor/rules/krouter-obsidian.mdc` |
-| Codex 片段  | `extras/codex/AGENTS.snippet.md`       |
+| Path | Role |
+|---|---|
+| `docs/ARCHITECTURE.md` | Four-layer architecture and promotion |
+| `template/` | Empty five zones; home `Agent第二大脑.md`; provisional index |
+| `skill/krouter-obsidian/` | `route_knowledge.sh`, `canonical_lookup.py`, alias table |
+| `scripts/install.sh` | Install into the agent runtime |
+| `scripts/first_run.sh` | Mechanical check |
+| `scripts/validate_vault.py` | YAML, Clippings ledger, log continuity |
+| `extras/cursor/` | Cursor always-on rule |
+| `extras/codex/` | Codex handbook snippet |
+| `extras/hooks/` | Optional: block Clippings mutation and Obsidian restart |
+| `extras/host-daily-evolution/` | Optional host daily evolution |
 
+## Proven in the author’s vault
 
-已存在同名 skill 时须 `--force`。本 skill 目录与 `obsidian-knowledge-router` 分离，互不覆盖。随后改 `canonical_sources.psv` 为宿主自己的主题与短名词，再搜一次确认回执。
+As of 2026-08-21: retrieval blind test 25/25; canonical routing 26/26 topics, 156/156 aliases; 72 consecutive sealed days; 30 real tasks; execution gate passed; host daily evolution running.
 
-## 布局
-
-
-| 路径                             | 规定                                             |
-| ------------------------------ | ---------------------------------------------- |
-| `docs/ARCHITECTURE.md`         | 四层架构与晋升机制详情                                    |
-| `template/`                    | 空五区；首页 `Agent第二大脑.md`；准经验入口                    |
-| `skill/krouter-obsidian/`      | `route_knowledge.sh`、`canonical_lookup.py`、别名表 |
-| `scripts/install.sh`           | 装入 Agent 运行时                                   |
-| `scripts/first_run.sh`         | 机械验收                                           |
-| `scripts/validate_vault.py`    | YAML、Clippings 账、日志连续日                         |
-| `extras/cursor/`               | Cursor Always 规则                               |
-| `extras/codex/`                | Codex 手册片段                                     |
-| `extras/hooks/`                | 可选：拦截剪藏原件与重启 Obsidian                          |
-| `extras/host-daily-evolution/` | 可选宿主日更                                         |
-
-
-
-
-## 协议已经跑过
-
-作者活库（2026-08-21）：检索盲测 25/25；权威路由 26/26 主题、156/156 别名；连续封账 72 天；30 条真实任务；执行门禁已通过；本机日更持续运行。
-
-检索以 SHA 回执命中权威页。纠错写入后，下次同类任务自动找回。
-
-English: [`README.en.md`](README.en.md)。
+Retrieval hits the canonical page with a SHA receipt. Corrections are written in and retrieved next time.
