@@ -92,10 +92,12 @@ Installs `~/.agents/skills/krouter-obsidian` and `~/.cursor/rules/krouter-obsidi
 | Cursor | `extras/cursor/krouter-obsidian.mdc` via `install.sh` |
 | Codex | `extras/codex/AGENTS.snippet.md` |
 | Claude Code | `extras/claude-code/CLAUDE.snippet.md` |
-| DeepSeek Harness | DSH socket in this same product: `dsh plugin add /path/to/this/repo` (repo root). Read-only tools: status, preference, **correction**, memory (vault route, not chat memory), project, search, suggest. Uninstall does not delete notes. |
+| DeepSeek Harness | DSH socket in this same product. From a clone: `dsh plugin add /path/to/this/repo` (repo root). From the catalog: `dsh plugin --profile web add github:398894496-arch/runtime36`. Read-only tools: status, preference, **correction**, memory (vault route, not chat memory), project, search, suggest. Uninstall does not delete notes. |
 
 ```bash
 node extras/dsh/test-bridge.mjs
+dsh plugin --profile web add github:398894496-arch/runtime36
+# or, from a local clone of this repo:
 dsh plugin add /absolute/path/to/this/repo
 ```
 

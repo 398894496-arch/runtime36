@@ -90,10 +90,12 @@ export OBSIDIAN_VAULT=/path/to/YourVault
 | Cursor | `install.sh` → `extras/cursor/krouter-obsidian.mdc` |
 | Codex | `extras/codex/AGENTS.snippet.md` |
 | Claude Code | `extras/claude-code/CLAUDE.snippet.md` |
-| DeepSeek Harness | 同一产品的 DSH 插座：`dsh plugin add /path/to/this/repo`（仓库根）。只读工具，含 **correction**；`memory` 是库内路由，不是聊天记忆。卸插件不删库 |
+| DeepSeek Harness | 同一产品的 DSH 插座。克隆后：`dsh plugin add /path/to/this/repo`（仓库根）。目录安装：`dsh plugin --profile web add github:398894496-arch/runtime36`。只读工具，含 **correction**；`memory` 是库内路由，不是聊天记忆。卸插件不删库 |
 
 ```bash
 node extras/dsh/test-bridge.mjs
+dsh plugin --profile web add github:398894496-arch/runtime36
+# 或本机克隆：
 dsh plugin add /absolute/path/to/this/repo
 ```
 

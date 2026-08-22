@@ -25,6 +25,8 @@ export OBSIDIAN_VAULT=/path/to/YourVault
 Then, from a machine that already runs DSH. Prefer a spare profile. Point `dsh plugin add` at **this repo root**, not `extras/dsh`:
 
 ```bash
+dsh plugin --profile web add github:398894496-arch/runtime36
+# or, from a local clone:
 dsh plugin add /absolute/path/to/runtime36
 ```
 
