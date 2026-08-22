@@ -94,6 +94,42 @@ def test_grok_invoke_uses_vault_cwd(tmp_path):
     assert "--prompt-file" in argv
     assert "--cwd" in argv
     assert str(vault) in argv
+    assert "bypassPermissions" in argv
+    assert "acceptEdits" not in argv
+    assert "--always-approve" in argv
+    assert "--sandbox" in argv
+
+
+def test_timer_router_skips_live_skill(monkeypatch, tmp_path):
+    live = tmp_path / "obsidian-knowledge-router" / "scripts" / "route_knowledge.sh"
+    live.parent.mkdir(parents=True)
+    live.write_text("#!/bin/sh\n", encoding="utf-8")
+    monkeypatch.setenv("KROUTER_ROUTER", str(live))
+    from resolve import bundled_router, timer_router
+
+    got = timer_router()
+    assert got == bundled_router()
+    assert "obsidian-knowledge-router" not in str(got)
+
+
+def test_run_cli_writer_leaves_pending(tmp_path, monkeypatch):
+    vault = tmp_path / "vault"
+    vault.mkdir()
+    writer = tmp_path / "grok"
+    writer.write_text("#!/bin/sh\n", encoding="utf-8")
+    writer.chmod(0o755)
+    monkeypatch.setenv("TARGET_DATE", "2026-08-21")
+
+    class Fake:
+        returncode = 0
+
+    monkeypatch.setattr("resolve.subprocess.run", lambda *a, **k: Fake())
+    from resolve import bundled_router, run_cli_writer
+
+    assert run_cli_writer(str(writer), vault, bundled_router()) == 0
+    pending = vault / "05 时间日志" / "2026-08" / "21｜待总结.md"
+    assert pending.is_file()
+    assert "to-summarize" in pending.read_text(encoding="utf-8")
 
 
 def test_codex_invoke_isolates_vault(tmp_path):

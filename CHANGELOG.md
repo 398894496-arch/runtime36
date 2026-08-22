@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Self-evolution key lives on the vault page. **API key first** locks that provider's flagship model (`api_writer.py`). **No key** uses the user's Claudian-class CLI subscription. Both lanes distill and write `provisional`. Placeholders only in git.
+- Grok unattended uses `--permission-mode bypassPermissions` (Claudian yolo). The timer pins this clone's `krouter-obsidian`, not a live `obsidian-knowledge-router`. CLI cancel/empty still writes `待总结`.
 - `status` prints `host_action` while the key and CLI login are missing. Cursor / Codex / Claude mounts must tell the host. `install.sh` will not load the timer onto the clone template.
 
 ## 0.4.0 — 2026-08-21

@@ -55,7 +55,10 @@ else
     Darwin)
       DST="$HOME/Library/LaunchAgents/local.dsh-krouter.daily-evolution.plist"
       mkdir -p "$HOME/Library/LaunchAgents"
+      ROUTER="$ROOT/skill/krouter-obsidian/scripts/route_knowledge.sh"
+      TIMER_PATH="/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/usr/local/bin:$HOME/.grok/bin:$HOME/.local/bin"
       sed -e "s|__RUN_SH__|$RUN_SH|g" -e "s|__VAULT__|$VAULT|g" -e "s|__HOME__|$HOME|g" \
+        -e "s|__ROUTER__|$ROUTER|g" -e "s|__PATH__|$TIMER_PATH|g" \
         "$ROOT/extras/host-daily-evolution/launchd.example.plist" > "$DST"
       uid=$(id -u)
       launchctl bootout "gui/$uid/local.dsh-krouter.daily-evolution" >/dev/null 2>&1 || true

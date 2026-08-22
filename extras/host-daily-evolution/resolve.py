@@ -328,6 +328,72 @@ CLI_FLAGSHIP = {
     "grok": "grok-4.6",
     "claude": "opus",
 }
+LIVE_FOREIGN_ROUTER = "obsidian-knowledge-router"
+
+
+def repo_root() -> Path:
+    return Path(__file__).resolve().parents[2]
+
+
+def bundled_router() -> Path:
+    return repo_root() / "skill/krouter-obsidian/scripts/route_knowledge.sh"
+
+
+def is_foreign_live_router(path: Path) -> bool:
+    return LIVE_FOREIGN_ROUTER in path.as_posix()
+
+
+def timer_router() -> Path:
+    """Clone skill only. Never the host's live obsidian-knowledge-router."""
+    pinned = os.environ.get("KROUTER_ROUTER", "").strip()
+    candidates: list[Path] = []
+    if pinned:
+        candidates.append(Path(pinned))
+    candidates.append(bundled_router())
+    candidates.append(Path.home() / ".agents/skills/krouter-obsidian/scripts/route_knowledge.sh")
+    for path in candidates:
+        if is_foreign_live_router(path):
+            continue
+        if path.is_file():
+            return path
+    return bundled_router()
+
+
+def enrich_path(raw: str) -> str:
+    home = Path.home()
+    extra = [str(home / ".grok/bin"), str(home / ".local/bin")]
+    parts = [p for p in raw.split(":") if p] if raw else []
+    for item in reversed(extra):
+        if item not in parts:
+            parts.insert(0, item)
+    return ":".join(parts)
+
+
+def distill_wrote(vault: Path, day) -> bool:
+    month = vault / "05 时间日志" / day.strftime("%Y-%m")
+    if not month.is_dir():
+        return False
+    prefix = day.strftime("%d")
+    for path in month.iterdir():
+        if path.is_file() and path.name.startswith(prefix + "｜"):
+            return True
+    return False
+
+
+def write_runtime_prompt(base: Path, vault: Path, router: Path) -> Path:
+    header = (
+        "# Runtime lock (injected by the timer)\n\n"
+        f"OBSIDIAN_VAULT={vault}\n"
+        f"KROUTER_ROUTER={router}\n\n"
+        f"Run `{router} status` (then search / correction as needed). "
+        "Write only inside that vault. "
+        "Do not read or run ~/.agents/skills/obsidian-knowledge-router "
+        "or any other knowledge router.\n\n"
+        "---\n\n"
+    )
+    dest = Path(__file__).resolve().parent / ".runtime-prompt.md"
+    dest.write_text(header + base.read_text(encoding="utf-8"), encoding="utf-8")
+    return dest
 
 
 def writer_invoke(writer: str, prompt: Path, vault: Path) -> list[str]:
@@ -345,7 +411,12 @@ def writer_invoke(writer: str, prompt: Path, vault: Path) -> list[str]:
                 prompt_s,
                 "--always-approve",
                 "--permission-mode",
-                "acceptEdits",
+                "bypassPermissions",
+                "--sandbox",
+                "off",
+                "--max-turns",
+                "32",
+                "--no-alt-screen",
                 "--cwd",
                 vault_s,
             ]
@@ -464,6 +535,40 @@ def apply_live_env(vault: Path, probe: bool) -> tuple[dict[str, str], dict[str, 
     return live, extra
 
 
+def run_cli_writer(writer: str, vault: Path, router: Path) -> int:
+    base = Path(__file__).resolve().parent / "PROMPT.md"
+    prompt = write_runtime_prompt(base, vault, router)
+    argv = writer_invoke(writer, prompt, vault)
+    kind = writer_probe_argv(writer)[0]
+    stdin = subprocess.DEVNULL
+    handle = None
+    if kind == "codex":
+        handle = open(prompt, "rb")
+        stdin = handle
+    try:
+        proc = subprocess.run(argv, cwd=str(vault), stdin=stdin)
+        code = int(proc.returncode or 0)
+    except OSError:
+        code = 1
+    finally:
+        if handle is not None:
+            handle.close()
+    from api_writer import target_day, write_pending
+
+    day = target_day()
+    if not distill_wrote(vault, day):
+        write_pending(
+            vault,
+            day,
+            f"CLI writer {kind} left no seal (exit {code}). Timer on; left to-summarize.",
+        )
+        print(
+            "DSH-KRouter: CLI writer left a to-summarize note.",
+            file=sys.stderr,
+        )
+    return 0
+
+
 def exec_distill(probe: bool) -> int:
     vault = vault_root()
     payload = status_payload(detect=True, probe=probe)
@@ -478,23 +583,18 @@ def exec_distill(probe: bool) -> int:
         os.environ["KROUTER_DISTILL_MODEL"] = model
     probe_result = payload.get("writer_probe", "")
     writer = payload.get("writer_path", "")
+    router = timer_router()
+    os.environ["KROUTER_ROUTER"] = str(router)
+    os.environ["OBSIDIAN_VAULT"] = str(vault)
+    os.environ["PATH"] = enrich_path(os.environ.get("PATH", ""))
+    os.environ.setdefault("HOME", str(Path.home()))
     if live:
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         from api_writer import run as run_api
 
         return run_api(live, extra)
     if writer_ok(probe_result) and not probe_result.startswith("api-writer") and writer:
-        prompt = Path(__file__).resolve().parent / "PROMPT.md"
-        argv = writer_invoke(writer, prompt, vault)
-        os.environ.setdefault("HOME", str(Path.home()))
-        os.chdir(str(vault))
-        kind = writer_probe_argv(writer)[0]
-        if kind == "codex":
-            fd = os.open(prompt, os.O_RDONLY)
-            os.dup2(fd, 0)
-            os.close(fd)
-        os.execv(argv[0], argv)
-        return 1
+        return run_cli_writer(writer, vault, router)
     print(
         f"DSH-KRouter: timer on; distill skipped. "
         f"Put *_API_KEY on {payload.get('key_page', 'the vault key page')} "

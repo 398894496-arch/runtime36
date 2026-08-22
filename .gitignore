@@ -7,5 +7,6 @@ template/.obsidian/
 __pycache__/
 .pytest_cache/
 .venv/
+extras/host-daily-evolution/.runtime-prompt.md
 node_modules/
 

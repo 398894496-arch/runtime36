@@ -58,6 +58,7 @@ clone 没有作者的笔记。覆盖率是别名表（你的名词），不是�
 ```bash
 git clone https://github.com/398894496-arch/runtime36.git
 cd runtime36
+python3 -m venv .venv && . .venv/bin/activate
 python3 -m pip install -r requirements.txt
 ./scripts/first_run.sh
 ```
@@ -82,7 +83,7 @@ export OBSIDIAN_VAULT=/path/to/YourVault
 ./scripts/install.sh
 ```
 
-装到 `~/.agents/skills/krouter-obsidian` 和 `~/.cursor/rules/krouter-obsidian.mdc`。Cursor 规则先跑 `status`，收据里有 `host_action` **必须告诉宿主**（知识库页没钥匙、本机也没 CLI 登录）。`--force` 才覆盖。不会覆盖正在用的 `obsidian-knowledge-router`。先拷 `template/`，别名表换成**你的**名词（模板只有八个样例）。**先**把 `OBSIDIAN_VAULT` 指到那座库再跑 `install.sh`，否则不挂定时器。这台机器如果已经登录了 `grok` / Codex / `claude`，不用再配，蒸馏会自己跑。
+装到 `~/.agents/skills/krouter-obsidian` 和 `~/.cursor/rules/krouter-obsidian.mdc`。Cursor 规则先跑 `status`，收据里有 `host_action` **必须告诉宿主**（知识库页没钥匙、本机也没 CLI 登录）。`--force` 才覆盖。若 `~/.agents/skills/krouter-obsidian` 已在，不带 `--force` 会 exit 1（不会覆盖正在用的地图）。不会覆盖正在用的 `obsidian-knowledge-router`。先拷 `template/`，别名表换成**你的**名词（模板只有八个样例）。**先**把 `OBSIDIAN_VAULT` 指到那座库再跑 `install.sh`，否则不挂定时器。这台机器如果已经登录了 `grok` / Codex / `claude`，不用再配，蒸馏会自己跑。定时器钉死本仓库的 `krouter-obsidian`，grok 用 `bypassPermissions`（Claudian 无值守）。
 
 | 挂载 | 仓库里有什么 |
 |---|---|

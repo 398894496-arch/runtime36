@@ -58,7 +58,8 @@ This proves the **lock**. It does not distill yesterday. No GPU. No Docker. No e
 ```bash
 git clone https://github.com/398894496-arch/runtime36.git
 cd runtime36
-python3 -m pip install -r requirements.txt   # PyYAML
+python3 -m venv .venv && . .venv/bin/activate
+python3 -m pip install -r requirements.txt   # PyYAML (Homebrew Python is PEP 668)
 ./scripts/first_run.sh
 ```
 
@@ -84,7 +85,7 @@ export OBSIDIAN_VAULT=/path/to/YourVault
 ./scripts/install.sh
 ```
 
-Installs `~/.agents/skills/krouter-obsidian` and `~/.cursor/rules/krouter-obsidian.mdc`. The Cursor rule runs `status` first and **must tell the host** if `host_action` is present (no vault-page key and no CLI login). Pass `--force` to replace. Does not overwrite a live `obsidian-knowledge-router`. Copy `template/` first; put **your** nouns in the alias table (the template ships eight samples). Set `OBSIDIAN_VAULT` to that vault **before** `install.sh`, or the timer will not load. If that machine already has `grok` / Codex / `claude` logged in, distill runs with no further setup.
+Installs `~/.agents/skills/krouter-obsidian` and `~/.cursor/rules/krouter-obsidian.mdc`. The Cursor rule runs `status` first and **must tell the host** if `host_action` is present (no vault-page key and no CLI login). Pass `--force` to replace. If `~/.agents/skills/krouter-obsidian` already exists, install exits 1 without `--force` (it will not overwrite a live map). Does not overwrite a live `obsidian-knowledge-router`. Copy `template/` first; put **your** nouns in the alias table (the template ships eight samples). Set `OBSIDIAN_VAULT` to that vault **before** `install.sh`, or the timer will not load. If that machine already has `grok` / Codex / `claude` logged in, distill runs with no further setup. The timer pins this clone's `krouter-obsidian` router and grok `bypassPermissions` (Claudian-class unattended).
 
 | Mount | What ships |
 |---|---|

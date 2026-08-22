@@ -302,16 +302,10 @@ def collect_snapshot(vault: Path, day: date) -> str:
 
 
 def router_script() -> Path | None:
-    pinned = os.environ.get("KROUTER_ROUTER", "").strip()
-    if pinned:
-        p = Path(pinned)
-        return p if p.is_file() else None
-    repo = HERE.parents[1] / "skill/krouter-obsidian/scripts/route_knowledge.sh"
-    installed = Path.home() / ".agents/skills/krouter-obsidian/scripts/route_knowledge.sh"
-    for p in (repo, installed):
-        if p.is_file():
-            return p
-    return None
+    from resolve import timer_router
+
+    path = timer_router()
+    return path if path.is_file() else None
 
 
 def run_route(route: str, query: str = "") -> str:

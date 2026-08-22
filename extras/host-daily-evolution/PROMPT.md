@@ -8,10 +8,11 @@ Lane 2: no key — Claudian-class subscription CLI already logged in (`grok` / o
 Do not use a PATH-level `agent`. `dsh plugin add` is a mount, not this writer.
 
 Set `OBSIDIAN_VAULT` to the knowledge-base root (the Agent second brain).
+The timer injects `KROUTER_ROUTER` — that script only. Do not use `obsidian-knowledge-router`.
 
 ## Do
 
-1. Route through `route_knowledge.sh` (`status`, then `search` / `correction` as needed). Cite receipts. No vector store.
+1. Route through `$KROUTER_ROUTER` (`status`, then `search` / `correction` as needed). Cite receipts. No vector store.
 2. Seal one note for the target day under `05 时间日志/YYYY-MM/DD｜one-line summary.md`.
 3. Distill into project roll-up or `04` only when there is evidence. Summaries never replace originals.
 4. When the five gates pass, write `provisional` the same day. Do not auto-promote to `active`.

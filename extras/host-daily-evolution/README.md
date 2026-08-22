@@ -14,7 +14,7 @@ There is no extra env file. The job auto-detects the CLI each run. Do not commit
 | `api_writer.py` | Distill with only a vault-page `*_API_KEY`. No grok / Codex / claude required. |
 | `patch_health.py` | Updates health fields (`present` / `missing` / `dead` / `unknown`). Never the secret. |
 | `PROMPT.md` | Writer contract. Passed to the detected CLI. |
-| `launchd.example.plist` | macOS example. Only `OBSIDIAN_VAULT`, `HOME`, `PATH`. No key slot. |
+| `launchd.example.plist` | macOS example. `OBSIDIAN_VAULT`, `KROUTER_ROUTER`, `HOME`, `PATH` (includes `~/.grok/bin`). No key slot. |
 | `cron.example` | cron example. Same. |
 
 `dsh plugin add` is a mount, not this writer. It does not replace the timer.
