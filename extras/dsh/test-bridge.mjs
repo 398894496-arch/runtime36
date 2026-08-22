@@ -1,7 +1,8 @@
 #!/usr/bin/env node
+import { homedir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { parseReceipt, runRoute } from "./lib/route.js";
+import { parseReceipt, resolveRouter, runRoute } from "./lib/route.js";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(HERE, "../..");
@@ -58,6 +59,20 @@ check(
 
 const write = runRoute({ route: "rm", query: "/", vault: VAULT, router: ROUTER });
 check("refuse non-route", !write.ok && write.stderr.includes("refused route"), write.stderr);
+
+const savedRouter = process.env.KROUTER_ROUTER;
+process.env.KROUTER_ROUTER = join(
+  homedir(),
+  ".agents/skills/obsidian-knowledge-router/scripts/route_knowledge.sh",
+);
+const pinned = resolveRouter();
+if (savedRouter !== undefined) process.env.KROUTER_ROUTER = savedRouter;
+else delete process.env.KROUTER_ROUTER;
+check(
+  "skip live foreign router",
+  Boolean(pinned) && !String(pinned).includes("obsidian-knowledge-router"),
+  pinned,
+);
 
 const savedVault = process.env.OBSIDIAN_VAULT;
 const savedAlt = process.env.KROUTER_VAULT;

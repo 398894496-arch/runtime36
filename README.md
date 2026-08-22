@@ -69,7 +69,7 @@ A miss is not a hit. `./scripts/krouter suggest homz` prints nearest aliases as 
 
 ## Self-evolution — the writer
 
-This is the product. Timer is **on by default**. **API key first:** paste `*_API_KEY` on [`template/90 系统文件/自动化/自进化钥匙.md`](template/90%20系统文件/自动化/自进化钥匙.md); the writer locks that provider's flagship and distills + promotes. **No key:** your already-logged-in Claudian-class CLI (`grok` / official Codex / `claude`) does the same work. No extra env file. Do not use a PATH-level `agent`. Files: [`extras/host-daily-evolution/`](extras/host-daily-evolution/).
+This is the product. Timer is **on by default**. **API key first:** paste `*_API_KEY` on [`template/90 系统文件/自动化/自进化钥匙.md`](template/90%20系统文件/自动化/自进化钥匙.md) — or let `install.sh` wire it into `~/.dsh-krouter-keys.env` (chmod 600, never the vault). The writer reads both, the vault page wins, and it locks that provider's flagship before it distills + promotes. **No key:** your already-logged-in Claudian-class CLI (`grok` / official Codex / `claude`) does the same work. No extra env file. Do not use a PATH-level `agent`. Files: [`extras/host-daily-evolution/`](extras/host-daily-evolution/).
 
 - Five gates pass → write `provisional` **the same day**. That step is automatic.
 - Next similar task: ask. Do not auto-write `active`.
@@ -92,11 +92,11 @@ Installs `~/.agents/skills/krouter-obsidian` and `~/.cursor/rules/krouter-obsidi
 | Cursor | `extras/cursor/krouter-obsidian.mdc` via `install.sh` |
 | Codex | `extras/codex/AGENTS.snippet.md` |
 | Claude Code | `extras/claude-code/CLAUDE.snippet.md` |
-| DeepSeek Harness | `dsh plugin add github:398894496-arch/runtime36` — read-only tools: status, preference, **correction**, memory (vault route, not chat memory), project, search, suggest. Uninstall does not delete notes. |
+| DeepSeek Harness | DSH socket in this same product: `dsh plugin add /path/to/this/repo` (repo root). Read-only tools: status, preference, **correction**, memory (vault route, not chat memory), project, search, suggest. Uninstall does not delete notes. |
 
 ```bash
 node extras/dsh/test-bridge.mjs
-dsh plugin add github:398894496-arch/runtime36
+dsh plugin add /absolute/path/to/this/repo
 ```
 
 Requires `python3`, `rg`, PyYAML. Tests: `python3 -m pip install -r requirements-dev.txt && python3 -m pytest -q`.

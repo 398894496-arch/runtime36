@@ -21,6 +21,10 @@
     <string>__VAULT__</string>
     <key>KROUTER_ROUTER</key>
     <string>__ROUTER__</string>
+    <key>KROUTER_WRITER</key>
+    <string>__WRITER__</string>
+    <key>KROUTER_KEYS_ENV</key>
+    <string>__KEYS_ENV__</string>
     <key>HOME</key>
     <string>__HOME__</string>
     <key>PATH</key>

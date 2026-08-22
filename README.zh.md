@@ -67,7 +67,7 @@ python3 -m pip install -r requirements.txt
 
 ## 自进化 — 写入器
 
-这就是产品。定时器**默认开**。**先 API key：** 贴在 [`template/90 系统文件/自动化/自进化钥匙.md`](template/90%20系统文件/自动化/自进化钥匙.md)，写入器锁定该家旗舰模型，蒸馏并写准经验。**没有 key：** 用你自己已经登录的 Claudian 类 CLI（`grok` / 官方 Codex / `claude`）做同一件事。没有第二份 env。不要用 PATH 上的 `agent`。文件：[`extras/host-daily-evolution/`](extras/host-daily-evolution/)。
+这就是产品。定时器**默认开**。**先 API key：** 贴在 [`template/90 系统文件/自动化/自进化钥匙.md`](template/90%20系统文件/自动化/自进化钥匙.md)，或者让 `install.sh` 织进 `~/.dsh-krouter-keys.env`（chmod 600，永不进库）。两处都读，库页优先；写入器锁定该家旗舰模型，蒸馏并写准经验。**没有 key：** 用你自己已经登录的 Claudian 类 CLI（`grok` / 官方 Codex / `claude`）做同一件事。没有第二份 env。不要用 PATH 上的 `agent`。文件：[`extras/host-daily-evolution/`](extras/host-daily-evolution/)。
 
 - 五道门过了 → **当天自动写 `provisional`**
 - 正式 `active` 不自动：下次同类先问，采纳且该次验收才升
@@ -90,11 +90,11 @@ export OBSIDIAN_VAULT=/path/to/YourVault
 | Cursor | `install.sh` → `extras/cursor/krouter-obsidian.mdc` |
 | Codex | `extras/codex/AGENTS.snippet.md` |
 | Claude Code | `extras/claude-code/CLAUDE.snippet.md` |
-| DeepSeek Harness | `dsh plugin add github:398894496-arch/runtime36` — 只读工具，含 **correction**；`memory` 是库内路由，不是聊天记忆。卸插件不删库 |
+| DeepSeek Harness | 同一产品的 DSH 插座：`dsh plugin add /path/to/this/repo`（仓库根）。只读工具，含 **correction**；`memory` 是库内路由，不是聊天记忆。卸插件不删库 |
 
 ```bash
 node extras/dsh/test-bridge.mjs
-dsh plugin add github:398894496-arch/runtime36
+dsh plugin add /absolute/path/to/this/repo
 ```
 
 需要 `python3`、`rg`、PyYAML。测试：`python3 -m pip install -r requirements-dev.txt && python3 -m pytest -q`。

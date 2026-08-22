@@ -1,17 +1,18 @@
 # Host daily evolution (the writer)
 
-This is the **product**, not a side plugin. Self-evolution: seal yesterday’s log, distill, **write `provisional` the same day when the five gates pass**.
+This is the **product**, not a side plugin. It is the writer socket of **DSH-KRouter** (same tree as `extras/dsh`). Self-evolution: seal yesterday’s log, distill, **write `provisional` the same day when the five gates pass**.
 
 Timer is **on by default** (`lamp: running`). **API key first:** lock that provider's flagship model, then distill and promote. **No key:** the user's Claudian-class CLI subscription does the same work. `lamp: unused` = you turned the timer off.
 
-There is no extra env file. The job auto-detects the CLI each run. Do not commit a live key.
+The job auto-detects the CLI each run. Keys come from the vault page, `~/.dsh-krouter-keys.env` (what `install.sh` writes), or the job environment — the vault page wins. Do not commit a live key.
 
 | File | Role |
 |---|---|
 | `check.sh` | Proves writer files exist and reads `lamp:`. Default `running`. Does not fire the job. |
 | `run.sh` | OS job entry. Calls `resolve.py --exec`. Skips distill if the key and CLI login are both missing. |
-| `resolve.py` | Reads the vault key page; auto-detects a logged-in CLI; otherwise runs the bundled API writer. Never prints secrets. |
-| `api_writer.py` | Distill with only a vault-page `*_API_KEY`. No grok / Codex / claude required. |
+| `resolve.py` | The one probe engine: collects keys (process env, `~/.dsh-krouter-keys.env`, vault page — page wins), detects a logged-in CLI, otherwise runs the bundled API writer. Never prints secrets. |
+| `api_writer.py` | Distill with only an `*_API_KEY`. No grok / Codex / claude required. |
+| `wire_keys.py` | Installer front end over `resolve.py`: detect a logged-in CLI (`--detect`), probe keys, keep the live ones in `~/.dsh-krouter-keys.env`. Never copies `auth.json`, never writes the vault. |
 | `patch_health.py` | Updates health fields (`present` / `missing` / `dead` / `unknown`). Never the secret. |
 | `PROMPT.md` | Writer contract. Passed to the detected CLI. |
 | `launchd.example.plist` | macOS example. `OBSIDIAN_VAULT`, `KROUTER_ROUTER`, `HOME`, `PATH` (includes `~/.grok/bin`). No key slot. |

@@ -4,6 +4,9 @@
 
 - Self-evolution key lives on the vault page. **API key first** locks that provider's flagship model (`api_writer.py`). **No key** uses the user's Claudian-class CLI subscription. Both lanes distill and write `provisional`. Placeholders only in git.
 - Grok unattended uses `--permission-mode bypassPermissions` (Claudian yolo). The timer pins this clone's `krouter-obsidian`, not a live `obsidian-knowledge-router`. CLI cancel/empty still writes `待总结`.
+- One local product: DSH-KRouter. `extras/dsh` is the DSH socket; `extras/host-daily-evolution` is the writer (`wire_keys.py` graft: logged-in CLI or `*_API_KEY`). Not two projects.
+- Key and CLI probing live once in `resolve.py`; `wire_keys.py` is only the installer front end. The timer reads keys from the process env, `~/.dsh-krouter-keys.env`, and the vault page (page wins).
+- API lane is covered end to end on a loopback stub: catalog, flagship lock, bearer header, seal on disk, and `待总结` on a failed call. The router entry falls back to `grep` when `ripgrep` is absent.
 - `status` prints `host_action` while the key and CLI login are missing. Cursor / Codex / Claude mounts must tell the host. `install.sh` will not load the timer onto the clone template.
 
 ## 0.4.0 — 2026-08-21

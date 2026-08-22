@@ -1,7 +1,7 @@
 {
   "name": "dsh-krouter",
   "version": "0.4.0",
-  "description": "DSH-KRouter — Agent knowledge OS. Self-evolution. Timer on by default; your vault-page API key or logged-in CLI is the key. Cursor, Codex, Claude Code, DeepSeek Harness. No vector store.",
+  "description": "DSH-KRouter DSH socket (same product as the repo root: router + writer). Not a second project.",
   "type": "module",
   "main": "lib/index.js",
   "exports": {

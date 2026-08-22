@@ -12,7 +12,8 @@ for arg in "$@"; do
       printf '%s\n' "usage: install.sh [--force] [--with-hooks]"
       printf '%s\n' "copies the KRouter Obsidian skill to ~/.agents/skills/krouter-obsidian"
       printf '%s\n' "copies a Cursor always-on rule to ~/.cursor/rules/"
-      printf '%s\n' "self-evolution timer is on by default; key is the vault page or a logged-in CLI"
+      printf '%s\n' "self-evolution timer is on by default"
+      printf '%s\n' "DSH-KRouter writer: detect a logged-in Claudian-class CLI, or wire *_API_KEY"
       printf '%s\n' "does not overwrite an existing skill unless --force"
       printf '%s\n' "does not enable hooks unless --with-hooks"
       exit 0
@@ -42,15 +43,54 @@ printf '%s\n' "Codex snippet: $ROOT/extras/codex/AGENTS.snippet.md"
 printf '%s\n' "Claude Code snippet: $ROOT/extras/claude-code/CLAUDE.snippet.md"
 
 RUN_SH="$ROOT/extras/host-daily-evolution/run.sh"
-chmod +x "$RUN_SH" "$ROOT/extras/host-daily-evolution/check.sh" "$ROOT/extras/host-daily-evolution/resolve.py"
+chmod +x "$RUN_SH" "$ROOT/extras/host-daily-evolution/check.sh" \
+  "$ROOT/extras/host-daily-evolution/resolve.py" "$ROOT/extras/host-daily-evolution/wire_keys.py"
+WRITER="${KROUTER_WRITER:-}"
+KEYS_ENV="${KROUTER_KEYS_ENV:-$HOME/.dsh-krouter-keys.env}"
+if [ -z "$WRITER" ]; then
+  WRITER=$(python3 "$ROOT/extras/host-daily-evolution/wire_keys.py" --detect) || WRITER=""
+  if [ -n "$WRITER" ]; then
+    export KROUTER_WRITER=$WRITER
+    printf '%s\n' "detected writer: $WRITER"
+  fi
+fi
 printf '%s\n' "self-evolution writer: $RUN_SH"
-printf '%s\n' "timer on by default. paste *_API_KEY on the vault page, or already-logged-in grok/codex/claude."
+printf '%s\n' "keys file: $KEYS_ENV (chmod 600). never written into the vault."
+wire=$(python3 "$ROOT/extras/host-daily-evolution/wire_keys.py") || wire="missing path=$KEYS_ENV"
+printf '%s\n' "key wire: $wire"
+case "$wire" in
+  present\ *)
+    printf '%s\n' "HOST: live graft probed (CLI login or API key). Marker in $KEYS_ENV."
+    key_field=present
+    ;;
+  dead\ *)
+    printf '%s\n' "HOST ACTION: existing key failed probe. Replace the API key in $KEYS_ENV, or re-login the CLI."
+    key_field=dead
+    ;;
+  unknown\ *)
+    printf '%s\n' "HOST ACTION: could not probe (network). Re-run install.sh when online."
+    key_field=missing
+    ;;
+  *)
+    printf '%s\n' "HOST ACTION: self-evolution key missing. Login grok / official Codex / claude, or put *_API_KEY in $KEYS_ENV or on the vault page."
+    key_field=missing
+    ;;
+esac
 printf '%s\n' "mounted agent runs status and must tell the host if host_action is present."
 if [ -z "${OBSIDIAN_VAULT:-}" ]; then
   printf '%s\n' "timer not loaded: export OBSIDIAN_VAULT to YOUR vault (copy template/ there first), then re-run install.sh."
   printf '%s\n' "do not point the timer at the clone template."
 else
   VAULT=$OBSIDIAN_VAULT
+  HEALTH="$VAULT/90 系统文件/自动化/日更健康.md"
+  if [ -f "$HEALTH" ]; then
+    python3 "$ROOT/extras/host-daily-evolution/patch_health.py" "$HEALTH" self_evolution_key "$key_field" || true
+    if [ -n "$WRITER" ]; then
+      python3 "$ROOT/extras/host-daily-evolution/patch_health.py" "$HEALTH" krouter_writer present || true
+    else
+      python3 "$ROOT/extras/host-daily-evolution/patch_health.py" "$HEALTH" krouter_writer missing || true
+    fi
+  fi
   case "$(uname -s)" in
     Darwin)
       DST="$HOME/Library/LaunchAgents/local.dsh-krouter.daily-evolution.plist"
@@ -59,13 +99,18 @@ else
       TIMER_PATH="/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/usr/local/bin:$HOME/.grok/bin:$HOME/.local/bin"
       sed -e "s|__RUN_SH__|$RUN_SH|g" -e "s|__VAULT__|$VAULT|g" -e "s|__HOME__|$HOME|g" \
         -e "s|__ROUTER__|$ROUTER|g" -e "s|__PATH__|$TIMER_PATH|g" \
+        -e "s|__WRITER__|$WRITER|g" -e "s|__KEYS_ENV__|$KEYS_ENV|g" \
         "$ROOT/extras/host-daily-evolution/launchd.example.plist" > "$DST"
-      uid=$(id -u)
-      launchctl bootout "gui/$uid/local.dsh-krouter.daily-evolution" >/dev/null 2>&1 || true
-      if launchctl bootstrap "gui/$uid" "$DST" >/dev/null 2>&1 || launchctl load "$DST" >/dev/null 2>&1; then
-        printf '%s\n' "self-evolution timer loaded: $DST vault=$VAULT"
+      if [ "${KROUTER_SKIP_LAUNCHD:-}" = "1" ]; then
+        printf '%s\n' "self-evolution timer plist written (load skipped): $DST"
       else
-        printf '%s\n' "self-evolution timer plist written: $DST"
+        uid=$(id -u)
+        launchctl bootout "gui/$uid/local.dsh-krouter.daily-evolution" >/dev/null 2>&1 || true
+        if launchctl bootstrap "gui/$uid" "$DST" >/dev/null 2>&1 || launchctl load "$DST" >/dev/null 2>&1; then
+          printf '%s\n' "self-evolution timer loaded: $DST vault=$VAULT"
+        else
+          printf '%s\n' "self-evolution timer plist written: $DST"
+        fi
       fi
       ;;
     *)

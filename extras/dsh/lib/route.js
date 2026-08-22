@@ -20,14 +20,27 @@ const ALLOWED = new Set([
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
+function isForeignLiveRouter(path) {
+  return String(path).includes("obsidian-knowledge-router");
+}
+
 export function resolveRouter(explicit) {
+  const bundled = resolve(
+    HERE,
+    "../../../skill/krouter-obsidian/scripts/route_knowledge.sh",
+  );
+  const installed = join(
+    homedir(),
+    ".agents/skills/krouter-obsidian/scripts/route_knowledge.sh",
+  );
   const candidates = [
     explicit,
     process.env.KROUTER_ROUTER,
-    join(homedir(), ".agents/skills/krouter-obsidian/scripts/route_knowledge.sh"),
-    resolve(HERE, "../../../skill/krouter-obsidian/scripts/route_knowledge.sh"),
+    bundled,
+    installed,
   ].filter(Boolean);
   for (const path of candidates) {
+    if (isForeignLiveRouter(path)) continue;
     if (existsSync(path)) return path;
   }
   return null;

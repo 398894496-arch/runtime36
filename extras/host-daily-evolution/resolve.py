@@ -28,6 +28,9 @@ KEY_LINE = re.compile(r"^(?:export\s+)?([A-Z][A-Z0-9_]+)=(.*)$")
 GEMINI_NAMES = frozenset(
     {"GEMINI_API_KEY", "GOOGLE_API_KEY", "GOOGLE_GENERATIVE_AI_API_KEY"}
 )
+CONFIG_NAMES = frozenset(
+    {"OPENAI_BASE_URL", "OPENAI_API_BASE", "MODEL", "DISTILL_MODEL", "KROUTER_DISTILL_MODEL"}
+)
 BEARER_URLS = {
     "OPENAI_API_KEY": "https://api.openai.com/v1/models",
     "DEEPSEEK_API_KEY": "https://api.deepseek.com/models",
@@ -68,6 +71,11 @@ def key_page(vault: Path) -> Path:
     return vault / "90 系统文件" / "自动化" / "自进化钥匙.md"
 
 
+def keys_env_path() -> Path:
+    raw = os.environ.get("KROUTER_KEYS_ENV", "").strip()
+    return Path(raw) if raw else Path.home() / ".dsh-krouter-keys.env"
+
+
 def usable(val: str) -> bool:
     val = (val or "").strip().strip('"').strip("'")
     if not val:
@@ -77,16 +85,14 @@ def usable(val: str) -> bool:
 
 
 def is_key_name(name: str) -> bool:
-    if name in GEMINI_NAMES or name in {
-        "HF_TOKEN",
-        "OPENAI_BASE_URL",
-        "OPENAI_API_BASE",
-        "MODEL",
-        "DISTILL_MODEL",
-        "KROUTER_DISTILL_MODEL",
-    }:
+    """Secret names only. Base URLs and model pins are config, not keys."""
+    if name in GEMINI_NAMES or name == "HF_TOKEN":
         return True
     return name.endswith("_API_KEY") or name.endswith("_API_TOKEN")
+
+
+def is_config_name(name: str) -> bool:
+    return name in CONFIG_NAMES
 
 
 def parse_vault_page(text: str) -> dict[str, str]:
@@ -100,14 +106,32 @@ def parse_vault_page(text: str) -> dict[str, str]:
         if not m:
             continue
         name, val = m.group(1), m.group(2).strip().strip('"').strip("'")
-        if is_key_name(name) and usable(val):
+        if (is_key_name(name) or is_config_name(name)) and usable(val):
             found[name] = val
     return found
 
 
+def collect_keys(vault: Path) -> dict[str, str]:
+    """Process env, then the keys file install.sh writes, then the vault page.
+
+    Later sources win. Values are never printed.
+    """
+    keys: dict[str, str] = {}
+    for name, val in os.environ.items():
+        if (is_key_name(name) or is_config_name(name)) and usable(val):
+            keys[name] = val.strip().strip('"').strip("'")
+    path = keys_env_path()
+    if path.is_file():
+        keys.update(parse_vault_page(path.read_text(encoding="utf-8", errors="replace")))
+    page = key_page(vault)
+    if page.is_file():
+        keys.update(parse_vault_page(page.read_text(encoding="utf-8", errors="replace")))
+    return keys
+
+
 def extra_urls(keys: dict[str, str]) -> dict[str, str]:
     extra: dict[str, str] = {}
-    for name in ("OPENAI_BASE_URL", "OPENAI_API_BASE", "MODEL", "DISTILL_MODEL", "KROUTER_DISTILL_MODEL"):
+    for name in sorted(CONFIG_NAMES):
         val = keys.get(name) or os.environ.get(name, "")
         if usable(val):
             extra[name] = val.strip().strip('"').strip("'")
@@ -290,8 +314,7 @@ def detect_writer(pinned: str = "") -> tuple[str, str]:
 
 def live_keys(keys: dict[str, str], extra: dict[str, str], probe: bool) -> tuple[dict[str, str], str]:
     """Return (live_key_map, field) where field is present|missing|dead|unknown."""
-    skip = {"OPENAI_BASE_URL", "OPENAI_API_BASE", "MODEL", "DISTILL_MODEL", "KROUTER_DISTILL_MODEL"}
-    secret_names = [n for n in keys if n not in skip]
+    secret_names = [n for n in keys if not is_config_name(n)]
     if not secret_names:
         return {}, "missing"
     if not probe:
@@ -451,9 +474,7 @@ def writer_invoke(writer: str, prompt: Path, vault: Path) -> list[str]:
 def status_payload(detect: bool, probe: bool) -> dict[str, str]:
     vault = vault_root()
     page = key_page(vault)
-    keys: dict[str, str] = {}
-    if page.is_file():
-        keys = parse_vault_page(page.read_text(encoding="utf-8", errors="replace"))
+    keys = collect_keys(vault)
     extra = extra_urls(keys)
     live, key_field = live_keys(keys, extra, probe=probe)
     pinned = os.environ.get("KROUTER_WRITER", "").strip()
@@ -517,15 +538,13 @@ def distill_gate(payload: dict[str, str]) -> tuple[bool, int, str]:
         False,
         0,
         f"DSH-KRouter: timer on; distill skipped. "
-        f"Log in grok/codex/claude once, or put your *_API_KEY on {page}.",
+        f"Log in grok/codex/claude once, or put your *_API_KEY on {page} "
+        f"or in {keys_env_path()}.",
     )
 
 
 def apply_live_env(vault: Path, probe: bool) -> tuple[dict[str, str], dict[str, str]]:
-    page = key_page(vault)
-    keys: dict[str, str] = {}
-    if page.is_file():
-        keys = parse_vault_page(page.read_text(encoding="utf-8", errors="replace"))
+    keys = collect_keys(vault)
     extra = extra_urls(keys)
     live, _ = live_keys(keys, extra, probe=probe)
     for name, val in live.items():

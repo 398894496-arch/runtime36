@@ -82,6 +82,15 @@ frontmatter_fields() {
   ' "$CANONICAL"
 }
 
+md_search() {
+  # $1 max matches per file, $2 literal needle, $3 file or directory
+  if command -v rg >/dev/null 2>&1; then
+    rg -L -F -n -i -C 1 -m "$1" --glob '*.md' --glob '!Clippings/**' -- "$2" "$3" 2>/dev/null || true
+  else
+    grep -R -F -n -i -C 1 -m "$1" --include='*.md' --exclude-dir=Clippings -- "$2" "$3" 2>/dev/null || true
+  fi
+}
+
 bounded_search() {
   scope=$1
   [ -n "$QUERY" ] || usage
@@ -89,7 +98,7 @@ bounded_search() {
   emit_suggestions
   printf 'route: %s\n' "$ROUTE"
   printf 'scope: %s\n' "$scope"
-  rg -L -F -n -i -C 1 -m 4 --glob '*.md' --glob '!Clippings/**' -- "$QUERY" "$scope" \
+  md_search 4 "$QUERY" "$scope" \
     | awk 'NR <= 24 { print } NR == 25 { print "[truncated after 24 lines]"; exit }' || true
 }
 
@@ -120,7 +129,7 @@ canonical_lookup() {
   printf 'route: canonical\ncanonical_id: %s\ncanonical_source: %s\ncanonical_match: true\n' \
     "$canonical_id" "$canonical_source"
   anchor=${rest#*|}
-  rg -n -i -F -m 2 -C 1 -- "$anchor" "$canonical_source" || true
+  md_search 2 "$anchor" "$canonical_source"
   return 0
 }
 

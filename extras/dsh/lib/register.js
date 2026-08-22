@@ -9,6 +9,7 @@ function textResult(run) {
     canonical_match: fields.canonical_match || "false",
     canonical_id: fields.canonical_id || "",
     canonical_source: fields.canonical_source || "",
+    host_action: fields.host_action || "",
     text: body,
   };
 }
@@ -22,6 +23,7 @@ const RESULT_SCHEMA = {
     canonical_match: { type: "string", required: true },
     canonical_id: { type: "string", required: true },
     canonical_source: { type: "string", required: true },
+    host_action: { type: "string", required: true },
     text: { type: "string", required: true },
   },
 };

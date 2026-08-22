@@ -143,6 +143,46 @@ def test_codex_invoke_isolates_vault(tmp_path):
     assert str(vault) in argv
 
 
+def test_collect_keys_reads_install_keys_file(tmp_path, monkeypatch):
+    from resolve import collect_keys
+
+    vault = tmp_path / "vault"
+    vault.mkdir()
+    keys_file = tmp_path / "keys.env"
+    keys_file.write_text('export DEEPSEEK_API_KEY="sk-live-looking"\n', encoding="utf-8")
+    monkeypatch.setenv("KROUTER_KEYS_ENV", str(keys_file))
+    monkeypatch.delenv("DEEPSEEK_API_KEY", raising=False)
+
+    assert collect_keys(vault)["DEEPSEEK_API_KEY"] == "sk-live-looking"
+
+
+def test_vault_page_beats_keys_file(tmp_path, monkeypatch):
+    from resolve import collect_keys, key_page
+
+    vault = tmp_path / "vault"
+    page = key_page(vault)
+    page.parent.mkdir(parents=True)
+    page.write_text("```env\nDEEPSEEK_API_KEY=sk-live-page\n```\n", encoding="utf-8")
+    keys_file = tmp_path / "keys.env"
+    keys_file.write_text("DEEPSEEK_API_KEY=sk-live-file\n", encoding="utf-8")
+    monkeypatch.setenv("KROUTER_KEYS_ENV", str(keys_file))
+
+    assert collect_keys(vault)["DEEPSEEK_API_KEY"] == "sk-live-page"
+
+
+def test_collect_keys_ignores_placeholders(tmp_path, monkeypatch):
+    from resolve import collect_keys
+
+    vault = tmp_path / "vault"
+    vault.mkdir()
+    keys_file = tmp_path / "keys.env"
+    keys_file.write_text("DEEPSEEK_API_KEY=YOUR_DEEPSEEK_API_KEY\n", encoding="utf-8")
+    monkeypatch.setenv("KROUTER_KEYS_ENV", str(keys_file))
+    monkeypatch.delenv("DEEPSEEK_API_KEY", raising=False)
+
+    assert "DEEPSEEK_API_KEY" not in collect_keys(vault)
+
+
 def test_distill_gate_skips_without_key():
     ok, code, msg = distill_gate(
         {

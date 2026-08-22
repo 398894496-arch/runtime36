@@ -11,7 +11,10 @@
     "extras/dsh/lib",
     "extras/dsh/cordis.patch.yml",
     "extras/dsh/README.md",
-    "skill/krouter-obsidian"
+    "extras/host-daily-evolution",
+    "skill/krouter-obsidian",
+    "scripts",
+    "template"
   ],
   "dsh": {
     "bundle": {

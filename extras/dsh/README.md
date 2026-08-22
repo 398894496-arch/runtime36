@@ -1,8 +1,10 @@
 # DSH-KRouter
 
-Read-only **DeepSeek Harness** plugin. **DeepSeek Harness memory system · Agent second brain · Obsidian knowledge base · self-evolution · Cursor / Codex / Claude Code.** It does not create a second vault. All four share `OBSIDIAN_VAULT`.
+This directory is the **DeepSeek Harness socket** of DSH-KRouter, not a second product.
 
-Uninstalling the plugin does not delete notes. **`dsh plugin add` is a mount, not the writer.** Self-evolution is [`extras/host-daily-evolution/`](../host-daily-evolution/). Timer on by default; the key is your vault-page API key or a logged-in CLI.
+The product is the repo root: router (`skill/krouter-obsidian`) + writer (`extras/host-daily-evolution`) + this socket. One vault. `dsh plugin add` does not start the timer.
+
+Uninstalling the socket does not delete notes.
 
 ## Local test (before `dsh plugin add`)
 
@@ -11,26 +13,22 @@ node extras/dsh/test-bridge.mjs
 ./scripts/first_run.sh
 ```
 
-## Install into a DSH profile
+## Install the product (repo root)
 
-First install the skill so the router exists:
+Skill + writer timer (needs `OBSIDIAN_VAULT` at **your** vault, not the clone template):
 
 ```bash
 export OBSIDIAN_VAULT=/path/to/YourVault
 ./scripts/install.sh
 ```
 
-Then, from a machine that already runs DSH. Prefer a spare profile. Do not point experiments at a live profile that already has other plugins:
+Then, from a machine that already runs DSH. Prefer a spare profile. Point `dsh plugin add` at **this repo root**, not `extras/dsh`:
 
 ```bash
-dsh plugin add github:398894496-arch/runtime36
+dsh plugin add /absolute/path/to/runtime36
 ```
 
-Local checkout:
-
-```bash
-dsh plugin add /absolute/path/to/runtime36/extras/dsh
-```
+Do not treat `extras/dsh` as a separate project to publish.
 
 Tools: `krouter_status` (includes `host_action` when the vault-page key and CLI login are missing — tell the host), `krouter_preference`, `krouter_correction`, `krouter_memory`, `krouter_project`, `krouter_search`, `krouter_suggest`.
 
