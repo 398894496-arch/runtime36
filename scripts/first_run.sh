@@ -48,6 +48,12 @@ printf '%s\n' "$status" | grep -q "source: $OBSIDIAN_VAULT/Agent第二大脑.md"
   fail=1
 }
 printf '%s\n' "ok status -> Agent第二大脑.md"
+printf '%s\n' "$status" | grep -q "host_action:" || {
+  printf '%s\n' "FAIL status missing host_action (template key/writer should be missing)" >&2
+  printf '%s\n' "$status" >&2
+  fail=1
+}
+printf '%s\n' "ok status host_action on missing key"
 
 printf '%s\n' "== short-noun routing =="
 assert_match "home" "Q01" "Agent第二大脑.md"
@@ -80,7 +86,7 @@ else
   printf '%s\n' "skip validate_vault.py (install PyYAML to run it)"
 fi
 
-printf '%s\n' "== self-evolution extra =="
+printf '%s\n' "== self-evolution writer =="
 if sh "$ROOT/extras/host-daily-evolution/check.sh"; then
   printf '%s\n' "ok extras/host-daily-evolution/check.sh"
 else

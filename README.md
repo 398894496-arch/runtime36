@@ -84,7 +84,7 @@ export OBSIDIAN_VAULT=/path/to/YourVault
 ./scripts/install.sh
 ```
 
-Installs `~/.agents/skills/krouter-obsidian` and `~/.cursor/rules/krouter-obsidian.mdc`. Pass `--force` to replace. Does not overwrite a live `obsidian-knowledge-router`. Copy `template/` first; put **your** nouns in the alias table (the template ships eight samples).
+Installs `~/.agents/skills/krouter-obsidian` and `~/.cursor/rules/krouter-obsidian.mdc`. The Cursor rule runs `status` first and **must tell the host** if `host_action` is present (key or writer missing). Pass `--force` to replace. Does not overwrite a live `obsidian-knowledge-router`. Copy `template/` first; put **your** nouns in the alias table (the template ships eight samples). Set `OBSIDIAN_VAULT` to that vault **before** `install.sh`, or the timer will not load.
 
 | Mount | What ships |
 |---|---|

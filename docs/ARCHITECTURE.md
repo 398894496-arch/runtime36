@@ -66,7 +66,7 @@ Landings:
 - Derived notes with `source_ref`, `verified_at`, and scope
 
 1. **Derived notes keep source, time, scope, trust, and limits.**
-2. **The daily writer is a pinned local CLI binary.** Do not use a PATH-level `agent`. Timer is on by default. The self-evolution key is an API key or subscription env vars on the OS job. An in-vault chat plugin is not the writer. On failure, leave a to-summarize note. Do not switch shells and rewrite.
+2. **The daily writer is a pinned local CLI binary.** Do not use a PATH-level `agent`. Timer is on by default. The self-evolution key is an API key or subscription env vars on the OS job. Mounted agents run `status` and tell the host if `host_action` is present. An in-vault chat plugin is not the writer. On failure, leave a to-summarize note. Do not switch shells and rewrite.
 3. **The writer lives in** `extras/host-daily-evolution/`. DSH (`extras/dsh`) is a mount on the same `OBSIDIAN_VAULT`, not the writer. Uninstalling that plugin does not delete notes and does not stop the timer.
 4. Distillation may propose candidates. **It must not write formal `02`.**
 

@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Listing: self-evolution is the product. Timer on by default. API key or subscription vars are the key. `lamp: running` is the clone default. `unused` means you turned the timer off. Not optional.
+- `status` prints `host_action` while the key or writer is missing. Cursor / Codex / Claude mounts must tell the host. `install.sh` will not load the timer onto the clone template.
 
 ## 0.4.0 — 2026-08-21
 

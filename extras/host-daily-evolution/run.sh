@@ -5,6 +5,8 @@ set -eu
 ROOT=$(CDPATH= cd -- "$(dirname "$0")/../.." && pwd)
 KEYS="${KROUTER_KEYS_ENV:-$HOME/.dsh-krouter-keys.env}"
 PROMPT="$ROOT/extras/host-daily-evolution/PROMPT.md"
+PATCH="$ROOT/extras/host-daily-evolution/patch_health.py"
+HEALTH="${OBSIDIAN_VAULT:+$OBSIDIAN_VAULT/90 系统文件/自动化/日更健康.md}"
 
 if [ -f "$KEYS" ]; then
   while IFS= read -r line || [ -n "$line" ]; do
@@ -35,13 +37,31 @@ for name in DEEPSEEK_API_KEY CURSOR_API_KEY ANTHROPIC_API_KEY OPENAI_API_KEY; do
   fi
 done
 
+WRITER="${KROUTER_WRITER:-}"
+has_writer=0
+if [ -n "$WRITER" ] && [ -x "$WRITER" ]; then
+  has_writer=1
+fi
+
+if [ -n "${HEALTH:-}" ] && [ -f "$HEALTH" ]; then
+  if [ "$has_key" -eq 1 ]; then
+    python3 "$PATCH" "$HEALTH" self_evolution_key present
+  else
+    python3 "$PATCH" "$HEALTH" self_evolution_key missing
+  fi
+  if [ "$has_writer" -eq 1 ]; then
+    python3 "$PATCH" "$HEALTH" krouter_writer present
+  else
+    python3 "$PATCH" "$HEALTH" krouter_writer missing
+  fi
+fi
+
 if [ "$has_key" -eq 0 ]; then
   printf '%s\n' "DSH-KRouter: timer on; self-evolution key missing (API key or subscription vars). Distill skipped." >&2
   exit 0
 fi
 
-WRITER="${KROUTER_WRITER:-}"
-if [ -z "$WRITER" ] || [ ! -x "$WRITER" ]; then
+if [ "$has_writer" -eq 0 ]; then
   printf '%s\n' "DSH-KRouter: key present; pin KROUTER_WRITER to an executable CLI (not a PATH-level agent)." >&2
   exit 1
 fi

@@ -9,7 +9,8 @@ Put the key on the OS job, not in the vault. That key is not a cloud memory API.
 | File | Role |
 |---|---|
 | `check.sh` | Proves writer files exist and reads `lamp:`. Default `running`. Does not fire the job. |
-| `run.sh` | OS job entry. Skips distill if the key is missing. |
+| `run.sh` | OS job entry. Skips distill if the key is missing. Writes `self_evolution_key` / `krouter_writer` on the health page (never the secret). |
+| `patch_health.py` | Updates those health fields. |
 | `PROMPT.md` | Writer contract. Pin a local CLI; pass this file to it. |
 | `launchd.example.plist` | macOS example. Replace `WRITER`, `VAULT`, and the key. |
 | `cron.example` | cron example. Same replacements. |

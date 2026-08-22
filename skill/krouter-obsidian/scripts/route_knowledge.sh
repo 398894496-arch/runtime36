@@ -14,6 +14,7 @@ PREFERENCES="$VAULT/02 经验与方法/Agent/用户偏好与工作约束.md"
 CORRECTIONS="$VAULT/90 系统文件/Agent记忆/纠错与取代记录.md"
 MEMORY="$VAULT/90 系统文件/Agent记忆/可靠记忆索引.md"
 PROJECTS="$VAULT/01 项目"
+HEALTH="$VAULT/90 系统文件/自动化/日更健康.md"
 CANONICAL_MAP="$(dirname "$0")/canonical_sources.psv"
 
 usage() {
@@ -57,6 +58,20 @@ emit_receipt() {
     printf 'source_sha256: %s\n' "$(file_sha256 "$source")"
   fi
   [ -f "$CANONICAL_MAP" ] && printf 'canonical_map_sha256: %s\n' "$(file_sha256 "$CANONICAL_MAP")"
+}
+
+emit_host_action() {
+  [ -f "$HEALTH" ] || return 0
+  lamp=$(frontmatter_value "$HEALTH" lamp)
+  key=$(frontmatter_value "$HEALTH" self_evolution_key)
+  writer=$(frontmatter_value "$HEALTH" krouter_writer)
+  printf 'health: %s\n' "$HEALTH"
+  printf 'lamp: %s\n' "${lamp:-unset}"
+  printf 'self_evolution_key: %s\n' "${key:-missing}"
+  printf 'krouter_writer: %s\n' "${writer:-missing}"
+  if [ "${key:-missing}" != "present" ] || [ "${writer:-missing}" != "present" ]; then
+    printf '%s\n' "host_action: Fill the self-evolution key on the OS job: API key or subscription env vars (DEEPSEEK_API_KEY or CURSOR_API_KEY). Pin KROUTER_WRITER to an executable. Do not put keys in the vault. Distill will not run until both are set."
+  fi
 }
 
 frontmatter_fields() {
@@ -122,6 +137,7 @@ case "$ROUTE" in
     emit_receipt "$CANONICAL" requested-fields-returned
     printf 'route: status\nevidence_scope: selected-frontmatter-fields\n'
     frontmatter_fields
+    emit_host_action
     ;;
   preference)
     bounded_search "$PREFERENCES"

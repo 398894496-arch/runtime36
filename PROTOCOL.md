@@ -15,5 +15,5 @@ Architecture: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 4. Clippings originals are copied only. Do not move them.
 5. Routing: match `canonical_sources.psv` with a short noun (exact > alias in query > query in alias; same score and same file → lowest id; otherwise no hit). Open that page. On a miss, print alias suggestions (hints only) and literal-search the route’s scope. No vector store.
 6. Every route prints a receipt: time, source path, source SHA-256, map SHA-256.
-7. The daily writer is a pinned local CLI binary. Do not use a PATH-level `agent`. The self-evolution key is an API key or subscription env vars on the OS job, not in the vault.
+7. The daily writer is a pinned local CLI binary. Do not use a PATH-level `agent`. The self-evolution key is an API key or subscription env vars on the OS job, not in the vault. Mounted agents must run `status` and tell the host if `host_action` is present. Do not print secrets.
 8. Cursor, Codex, Claude Code, and DeepSeek Harness are mounts on one vault. Sharing is the vault and the alias map, not a second protocol. The DSH plugin is read-only. Uninstalling it does not delete notes. `dsh plugin add` is not the writer.

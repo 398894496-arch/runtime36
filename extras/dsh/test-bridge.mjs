@@ -25,6 +25,11 @@ check(
   status.stdout.includes("Agent第二大脑.md"),
   status.stdout,
 );
+check(
+  "status host_action",
+  status.stdout.includes("host_action:"),
+  status.stdout,
+);
 
 const home = runRoute({ route: "search", query: "home", vault: VAULT, router: ROUTER });
 const homeFields = parseReceipt(home.stdout);

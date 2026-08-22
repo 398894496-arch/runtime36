@@ -43,29 +43,40 @@ printf '%s\n' "Claude Code snippet: $ROOT/extras/claude-code/CLAUDE.snippet.md"
 
 RUN_SH="$ROOT/extras/host-daily-evolution/run.sh"
 chmod +x "$RUN_SH" "$ROOT/extras/host-daily-evolution/check.sh"
-VAULT="${OBSIDIAN_VAULT:-$ROOT/template}"
 WRITER="${KROUTER_WRITER:-}"
 printf '%s\n' "self-evolution writer: $RUN_SH"
 printf '%s\n' "timer on by default. fill the key: API key or subscription vars (not in the vault)."
-case "$(uname -s)" in
-  Darwin)
-    DST="$HOME/Library/LaunchAgents/local.dsh-krouter.daily-evolution.plist"
-    mkdir -p "$HOME/Library/LaunchAgents"
-    sed -e "s|__RUN_SH__|$RUN_SH|g" -e "s|__VAULT__|$VAULT|g" -e "s|__WRITER__|$WRITER|g" \
-      "$ROOT/extras/host-daily-evolution/launchd.example.plist" > "$DST"
-    uid=$(id -u)
-    launchctl bootout "gui/$uid/local.dsh-krouter.daily-evolution" >/dev/null 2>&1 || true
-    if launchctl bootstrap "gui/$uid" "$DST" >/dev/null 2>&1 || launchctl load "$DST" >/dev/null 2>&1; then
-      printf '%s\n' "self-evolution timer loaded: $DST"
-    else
-      printf '%s\n' "self-evolution timer plist written: $DST (launchctl load after filling the key)"
-    fi
-    ;;
-  *)
-    printf '%s\n' "install extras/host-daily-evolution/cron.example (timer on; fill the key)"
-    ;;
-esac
-printf '%s\n' "next: export OBSIDIAN_VAULT to your vault (or $ROOT/template) then run ./scripts/first_run.sh"
+printf '%s\n' "mounted agent runs status and must tell the host if host_action is present."
+if [ -z "${OBSIDIAN_VAULT:-}" ]; then
+  printf '%s\n' "timer not loaded: export OBSIDIAN_VAULT to YOUR vault (copy template/ there first), then re-run install.sh."
+  printf '%s\n' "do not point the timer at the clone template."
+else
+  VAULT=$OBSIDIAN_VAULT
+  HEALTH="$VAULT/90 系统文件/自动化/日更健康.md"
+  if [ -f "$HEALTH" ]; then
+    python3 "$ROOT/extras/host-daily-evolution/patch_health.py" "$HEALTH" self_evolution_key missing || true
+    python3 "$ROOT/extras/host-daily-evolution/patch_health.py" "$HEALTH" krouter_writer missing || true
+  fi
+  case "$(uname -s)" in
+    Darwin)
+      DST="$HOME/Library/LaunchAgents/local.dsh-krouter.daily-evolution.plist"
+      mkdir -p "$HOME/Library/LaunchAgents"
+      sed -e "s|__RUN_SH__|$RUN_SH|g" -e "s|__VAULT__|$VAULT|g" -e "s|__WRITER__|$WRITER|g" \
+        "$ROOT/extras/host-daily-evolution/launchd.example.plist" > "$DST"
+      uid=$(id -u)
+      launchctl bootout "gui/$uid/local.dsh-krouter.daily-evolution" >/dev/null 2>&1 || true
+      if launchctl bootstrap "gui/$uid" "$DST" >/dev/null 2>&1 || launchctl load "$DST" >/dev/null 2>&1; then
+        printf '%s\n' "self-evolution timer loaded: $DST vault=$VAULT"
+      else
+        printf '%s\n' "self-evolution timer plist written: $DST (launchctl load after filling the key)"
+      fi
+      ;;
+    *)
+      printf '%s\n' "install extras/host-daily-evolution/cron.example with OBSIDIAN_VAULT=$VAULT (timer on; fill the key)"
+      ;;
+  esac
+fi
+printf '%s\n' "next: run ./scripts/first_run.sh against the template, then point OBSIDIAN_VAULT at your vault."
 
 if [ "$WITH_HOOKS" -eq 1 ]; then
   HOOK_DST="${KROUTER_HOOK_HOME:-$HOME/.cursor/hooks/krouter-exec-gate.py}"

@@ -11,16 +11,18 @@ Router script (after install): `$HOME/.agents/skills/krouter-obsidian/scripts/ro
 
 ## Workflow
 
-1. Choose one route: `status` for current system state; otherwise `preference`, `correction`, `memory`, `project`, or `search`.
-2. Send one contiguous distinguishing noun or short phrase. Do not send the full question. Do not join several words with spaces as if they were AND.
-3. Run the router script: `route_knowledge.sh <route> [query]`.
-4. If the receipt has `canonical_match: true`, cite `canonical_source` as the source. Do not substitute the preferences note unless that is the mapped source.
-5. Answer and stop when complete. If the receipt has no `canonical_match: true` but lists `suggestions:`, retry **one** suggested alias. Do not treat a suggestion as a hit until the next receipt says `canonical_match: true`. Then open that source. Report any remaining gap.
+1. Run `route_knowledge.sh status`. If the receipt has `host_action:`, tell the host that line (fill API key or subscription env vars on the OS job; pin `KROUTER_WRITER`; not in the vault). Do not print secrets. Then continue the user's question.
+2. Choose one route: `status` for current system state; otherwise `preference`, `correction`, `memory`, `project`, or `search`.
+3. Send one contiguous distinguishing noun or short phrase. Do not send the full question. Do not join several words with spaces as if they were AND.
+4. Run the router script: `route_knowledge.sh <route> [query]`.
+5. If the receipt has `canonical_match: true`, cite `canonical_source` as the source. Do not substitute the preferences note unless that is the mapped source.
+6. Answer and stop when complete. If the receipt has no `canonical_match: true` but lists `suggestions:`, retry **one** suggested alias. Do not treat a suggestion as a hit until the next receipt says `canonical_match: true`. Then open that source. Report any remaining gap.
 
 ## Boundaries
 
 - The script is read-only. Semantic vault writes need an explicit assignment.
 - Prefer canonical, current, `active` evidence. Use `correction` for `supersedes` conflicts.
 - Skip `Clippings/`, backups, and cold mirrors. If the receipt source is `candidate` or `rejected`, read it; do not skip the mapped source.
-- Do not restart Obsidian or print secrets.
+- Do not restart Obsidian or print secrets. Never echo API keys.
+- If `status` prints `host_action:`, tell the host. Do not skip that reminder.
 - A complete `status` result needs no second lookup.

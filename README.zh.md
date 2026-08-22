@@ -82,7 +82,7 @@ export OBSIDIAN_VAULT=/path/to/YourVault
 ./scripts/install.sh
 ```
 
-装到 `~/.agents/skills/krouter-obsidian` 和 `~/.cursor/rules/krouter-obsidian.mdc`。`--force` 才覆盖。不会覆盖正在用的 `obsidian-knowledge-router`。先拷 `template/`，别名表换成**你的**名词（模板只有八个样例）。
+装到 `~/.agents/skills/krouter-obsidian` 和 `~/.cursor/rules/krouter-obsidian.mdc`。Cursor 规则先跑 `status`，收据里有 `host_action` **必须告诉宿主**（缺钥匙或未钉写入器）。`--force` 才覆盖。不会覆盖正在用的 `obsidian-knowledge-router`。先拷 `template/`，别名表换成**你的**名词（模板只有八个样例）。**先**把 `OBSIDIAN_VAULT` 指到那座库再跑 `install.sh`，否则不挂定时器。
 
 | 挂载 | 仓库里有什么 |
 |---|---|
