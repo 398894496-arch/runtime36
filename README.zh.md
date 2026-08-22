@@ -9,7 +9,7 @@
 | 命题 | 含义 |
 |---|---|
 | 产品 | **Agent 知识操作系统**。方法和纠错在 Obsidian 里。聊天不是记忆。 |
-| 自进化 | **就是产品。** 封当天、蒸馏。定时器**默认开**。**钥匙**是知识库页上你自己的 `*_API_KEY`，或本机已登录的 CLI（`grok` / 官方 Codex / `claude`）。没填钥匙：定时器仍开，蒸馏不跑。`lamp: unused` = 你把定时器关了。`dsh plugin add` 是挂载，不是写入器。 |
+| 自进化 | **就是产品。** 封账、蒸馏、两步晋升。定时器**默认开**。**先 API key** 锁定该家旗舰；**没有 key** 用你自己的 Claudian 类 CLI 订阅。`lamp: unused` = 你把定时器关了。`dsh plugin add` 是挂载，不是写入器。 |
 | 晋升 | **两步。** 五道门过了 → **当天自动写 `provisional`（准经验）**（不问、不准停在没入口的 candidate）。下次同类 → **先问**；采纳且该次验收 → `active`（正式）。文案里的 “Do not auto-promote” 只禁止自动写 **`active`**。 |
 | 纠错 | 纠错页压过旧笔记。下次路由必须打开它。 |
 | 检索 | **锁**，不是产品。别名表、未命中才 `rg`、双 SHA-256、无向量。打不中那一页，进化就没发生。 |
@@ -66,7 +66,7 @@ python3 -m pip install -r requirements.txt
 
 ## 自进化 — 写入器
 
-这就是产品。定时器**默认开**。**钥匙**是 [`template/90 系统文件/自动化/自进化钥匙.md`](template/90%20系统文件/自动化/自进化钥匙.md) 上你自己的 `*_API_KEY`，或本机已经 `grok login` / 官方 Codex / `claude auth login`。只有 API key 也够：仓库自带写入器直接调那个聊天接口。没有第二份 env。不要用 PATH 上的 `agent`。文件：[`extras/host-daily-evolution/`](extras/host-daily-evolution/)。
+这就是产品。定时器**默认开**。**先 API key：** 贴在 [`template/90 系统文件/自动化/自进化钥匙.md`](template/90%20系统文件/自动化/自进化钥匙.md)，写入器锁定该家旗舰模型，蒸馏并写准经验。**没有 key：** 用你自己已经登录的 Claudian 类 CLI（`grok` / 官方 Codex / `claude`）做同一件事。没有第二份 env。不要用 PATH 上的 `agent`。文件：[`extras/host-daily-evolution/`](extras/host-daily-evolution/)。
 
 - 五道门过了 → **当天自动写 `provisional`**
 - 正式 `active` 不自动：下次同类先问，采纳且该次验收才升

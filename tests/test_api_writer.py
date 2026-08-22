@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from api_writer import apply_files, parse_files_payload, pick_chat, safe_vault_path
+from api_writer import apply_files, lock_flagship, parse_files_payload, pick_chat, safe_vault_path
 
 
 def test_pick_chat_deepseek():
@@ -9,7 +9,22 @@ def test_pick_chat_deepseek():
     assert spec["name"] == "DEEPSEEK_API_KEY"
     assert spec["url"].endswith("/chat/completions")
     assert spec["style"] == "openai"
+    assert spec["model"] == "deepseek-reasoner"
     assert "sk-live" not in spec["url"]
+
+
+def test_lock_flagship_prefers_opus_over_haiku():
+    locked = lock_flagship(
+        ["claude-3-5-haiku-20241022", "claude-opus-4-20250514", "claude-sonnet-4-20250514"],
+        fallback="haiku",
+    )
+    assert "opus" in locked
+
+
+def test_lock_flagship_skips_mini():
+    locked = lock_flagship(["gpt-4o-mini", "gpt-4.1", "o3"], fallback="gpt-4o-mini")
+    assert locked in {"o3", "gpt-4.1"}
+    assert "mini" not in locked
 
 
 def test_pick_chat_unnamed_needs_base():

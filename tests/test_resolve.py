@@ -89,6 +89,8 @@ def test_grok_invoke_uses_vault_cwd(tmp_path):
     vault = tmp_path / "vault"
     vault.mkdir()
     argv = writer_invoke("/Users/x/.grok/bin/grok", prompt, vault)
+    assert "--model" in argv
+    assert "grok-4.6" in argv
     assert "--prompt-file" in argv
     assert "--cwd" in argv
     assert str(vault) in argv

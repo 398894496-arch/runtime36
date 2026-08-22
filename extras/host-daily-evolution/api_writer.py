@@ -24,30 +24,52 @@ MAX_ROUNDS = 12
 MAX_FILE_BYTES = 120_000
 DENIED_NAMES = frozenset({"canonical_sources.psv", "自进化钥匙.md"})
 
-# (env name, chat url, default model, style)
+# (env name, chat url, flagship default, style)
 CHAT_SPECS: list[tuple[str, str, str, str]] = [
-    ("DEEPSEEK_API_KEY", "https://api.deepseek.com/chat/completions", "deepseek-chat", "openai"),
-    ("OPENAI_API_KEY", "https://api.openai.com/v1/chat/completions", "gpt-4o-mini", "openai"),
-    ("ANTHROPIC_API_KEY", "https://api.anthropic.com/v1/messages", "claude-sonnet-4-20250514", "anthropic"),
-    ("XAI_API_KEY", "https://api.x.ai/v1/chat/completions", "grok-3", "openai"),
-    ("GROQ_API_KEY", "https://api.groq.com/openai/v1/chat/completions", "llama-3.3-70b-versatile", "openai"),
-    ("OPENROUTER_API_KEY", "https://openrouter.ai/api/v1/chat/completions", "openai/gpt-4o-mini", "openai"),
-    ("MOONSHOT_API_KEY", "https://api.moonshot.ai/v1/chat/completions", "moonshot-v1-auto", "openai"),
-    ("KIMI_API_KEY", "https://api.moonshot.ai/v1/chat/completions", "moonshot-v1-auto", "openai"),
-    ("DASHSCOPE_API_KEY", "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions", "qwen-plus", "openai"),
-    ("ZHIPUAI_API_KEY", "https://open.bigmodel.cn/api/paas/v4/chat/completions", "glm-4-flash", "openai"),
-    ("GLM_API_KEY", "https://open.bigmodel.cn/api/paas/v4/chat/completions", "glm-4-flash", "openai"),
-    ("SILICONFLOW_API_KEY", "https://api.siliconflow.cn/v1/chat/completions", "deepseek-ai/DeepSeek-V3", "openai"),
-    ("TOGETHER_API_KEY", "https://api.together.xyz/v1/chat/completions", "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo", "openai"),
-    ("FIREWORKS_API_KEY", "https://api.fireworks.ai/inference/v1/chat/completions", "accounts/fireworks/models/llama-v3p1-70b-instruct", "openai"),
-    ("MISTRAL_API_KEY", "https://api.mistral.ai/v1/chat/completions", "mistral-small-latest", "openai"),
-    ("CEREBRAS_API_KEY", "https://api.cerebras.ai/v1/chat/completions", "llama3.1-70b", "openai"),
-    ("NVIDIA_API_KEY", "https://integrate.api.nvidia.com/v1/chat/completions", "meta/llama-3.1-70b-instruct", "openai"),
-    ("PERPLEXITY_API_KEY", "https://api.perplexity.ai/chat/completions", "sonar", "openai"),
-    ("GEMINI_API_KEY", "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent", "gemini-2.0-flash", "gemini"),
-    ("GOOGLE_API_KEY", "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent", "gemini-2.0-flash", "gemini"),
-    ("GOOGLE_GENERATIVE_AI_API_KEY", "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent", "gemini-2.0-flash", "gemini"),
+    ("DEEPSEEK_API_KEY", "https://api.deepseek.com/chat/completions", "deepseek-reasoner", "openai"),
+    ("OPENAI_API_KEY", "https://api.openai.com/v1/chat/completions", "gpt-4.1", "openai"),
+    ("ANTHROPIC_API_KEY", "https://api.anthropic.com/v1/messages", "claude-opus-4-20250514", "anthropic"),
+    ("XAI_API_KEY", "https://api.x.ai/v1/chat/completions", "grok-4", "openai"),
+    ("GROQ_API_KEY", "https://api.groq.com/openai/v1/chat/completions", "openai/gpt-oss-120b", "openai"),
+    ("OPENROUTER_API_KEY", "https://openrouter.ai/api/v1/chat/completions", "anthropic/claude-sonnet-4", "openai"),
+    ("MOONSHOT_API_KEY", "https://api.moonshot.ai/v1/chat/completions", "kimi-k2-0711-preview", "openai"),
+    ("KIMI_API_KEY", "https://api.moonshot.ai/v1/chat/completions", "kimi-k2-0711-preview", "openai"),
+    ("DASHSCOPE_API_KEY", "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions", "qwen-max", "openai"),
+    ("ZHIPUAI_API_KEY", "https://open.bigmodel.cn/api/paas/v4/chat/completions", "glm-4-plus", "openai"),
+    ("GLM_API_KEY", "https://open.bigmodel.cn/api/paas/v4/chat/completions", "glm-4-plus", "openai"),
+    ("SILICONFLOW_API_KEY", "https://api.siliconflow.cn/v1/chat/completions", "deepseek-ai/DeepSeek-R1", "openai"),
+    ("TOGETHER_API_KEY", "https://api.together.xyz/v1/chat/completions", "deepseek-ai/DeepSeek-R1", "openai"),
+    ("FIREWORKS_API_KEY", "https://api.fireworks.ai/inference/v1/chat/completions", "accounts/fireworks/models/deepseek-r1", "openai"),
+    ("MISTRAL_API_KEY", "https://api.mistral.ai/v1/chat/completions", "mistral-large-latest", "openai"),
+    ("CEREBRAS_API_KEY", "https://api.cerebras.ai/v1/chat/completions", "gpt-oss-120b", "openai"),
+    ("NVIDIA_API_KEY", "https://integrate.api.nvidia.com/v1/chat/completions", "deepseek-ai/deepseek-r1", "openai"),
+    ("PERPLEXITY_API_KEY", "https://api.perplexity.ai/chat/completions", "sonar-pro", "openai"),
+    ("GEMINI_API_KEY", "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent", "gemini-2.5-pro", "gemini"),
+    ("GOOGLE_API_KEY", "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent", "gemini-2.5-pro", "gemini"),
+    ("GOOGLE_GENERATIVE_AI_API_KEY", "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent", "gemini-2.5-pro", "gemini"),
 ]
+
+FLAGSHIP_NEEDLES = (
+    ("opus-4", 100),
+    ("claude-opus", 98),
+    ("grok-4.6", 96),
+    ("grok-4", 92),
+    ("gpt-5", 90),
+    ("o3", 86),
+    ("deepseek-reasoner", 85),
+    ("deepseek-r1", 84),
+    ("claude-sonnet-4", 82),
+    ("gpt-4.1", 80),
+    ("gemini-2.5-pro", 78),
+    ("qwen-max", 76),
+    ("kimi-k2", 74),
+    ("glm-4.5", 72),
+    ("glm-4-plus", 70),
+    ("mistral-large", 68),
+    ("deepseek-chat", 60),
+    ("sonar-pro", 58),
+)
+FLAGSHIP_PENALTY = ("mini", "nano", "haiku", "lite", "small", "instant", "flash-lite", "tiny")
 
 HERE = Path(__file__).resolve().parent
 PROMPT = HERE / "PROMPT.md"
@@ -116,20 +138,52 @@ def vault_root() -> Path:
     return Path(raw).resolve()
 
 
+def lock_flagship(model_ids: list[str], fallback: str = "") -> str:
+    """Pick the flagship id from a provider catalog. Never prefers mini/haiku/flash-lite."""
+    best_id = fallback
+    best_score = -10_000
+    for raw in model_ids:
+        mid = (raw or "").strip()
+        if not mid:
+            continue
+        lower = mid.lower()
+        score = 1
+        for needle, pts in FLAGSHIP_NEEDLES:
+            if needle in lower:
+                score = max(score, pts)
+                break
+        if any(p in lower for p in FLAGSHIP_PENALTY):
+            score -= 40
+        if "flash" in lower and "pro" not in lower:
+            score -= 20
+        if score > best_score:
+            best_score = score
+            best_id = mid
+    return best_id or fallback
+
+
+def model_override(keys: dict[str, str], extra: dict[str, str]) -> str:
+    for name in ("MODEL", "DISTILL_MODEL", "KROUTER_DISTILL_MODEL"):
+        val = (keys.get(name) or extra.get(name) or os.environ.get(name, "")).strip()
+        if val:
+            return val
+    return ""
+
+
 def pick_chat(keys: dict[str, str], extra: dict[str, str] | None = None) -> dict[str, str] | None:
     """Choose a chat endpoint. Return metadata only — never the secret."""
     extra = extra or {}
-    override = os.environ.get("KROUTER_DISTILL_MODEL", "").strip()
+    override = model_override(keys, extra)
     base = (extra.get("OPENAI_BASE_URL") or extra.get("OPENAI_API_BASE") or "").rstrip("/")
     for name, url, model, style in CHAT_SPECS:
         if name not in keys:
             continue
-        chosen = dict(name=name, url=url, model=override or model, style=style)
+        chosen = dict(name=name, url=url, model=override or model, style=style, locked="override" if override else "default")
         if name == "OPENAI_API_KEY" and base:
             chosen["url"] = base + "/chat/completions"
         return chosen
     for name, val in keys.items():
-        if name in {"OPENAI_BASE_URL", "OPENAI_API_BASE"} or not val:
+        if name in {"OPENAI_BASE_URL", "OPENAI_API_BASE", "MODEL", "DISTILL_MODEL", "KROUTER_DISTILL_MODEL"} or not val:
             continue
         if not (name.endswith("_API_KEY") or name.endswith("_API_TOKEN")):
             continue
@@ -138,8 +192,9 @@ def pick_chat(keys: dict[str, str], extra: dict[str, str] | None = None) -> dict
         return {
             "name": name,
             "url": base + "/chat/completions",
-            "model": override or "gpt-4o-mini",
+            "model": override or "gpt-4.1",
             "style": "openai",
+            "locked": "override" if override else "default",
         }
     return None
 
@@ -440,6 +495,64 @@ def run_single_shot(vault: Path, spec: dict[str, str], key: str, user: str) -> i
     return apply_files(vault, parse_files_payload(text))
 
 
+def _http_get_json(url: str, headers: dict[str, str]) -> dict:
+    req = urllib.request.Request(url, headers=headers, method="GET")
+    try:
+        with urllib.request.urlopen(req, timeout=12) as resp:
+            raw = resp.read()
+    except (urllib.error.URLError, TimeoutError, OSError, urllib.error.HTTPError):
+        return {}
+    try:
+        return json.loads(raw.decode("utf-8"))
+    except json.JSONDecodeError:
+        return {}
+
+
+def catalog_ids(spec: dict[str, str], key: str) -> list[str]:
+    style = spec.get("style")
+    if style == "anthropic":
+        data = _http_get_json(
+            "https://api.anthropic.com/v1/models",
+            {"x-api-key": key, "anthropic-version": "2023-06-01", "Accept": "application/json"},
+        )
+        rows = data.get("data") or []
+        return [str(r.get("id") or "") for r in rows if isinstance(r, dict)]
+    if style == "gemini":
+        q = urllib.parse.urlencode({"key": key})
+        data = _http_get_json(
+            f"https://generativelanguage.googleapis.com/v1beta/models?{q}",
+            {"Accept": "application/json"},
+        )
+        rows = data.get("models") or []
+        ids = []
+        for r in rows:
+            if not isinstance(r, dict):
+                continue
+            name = str(r.get("name") or "")
+            ids.append(name.split("/")[-1] if name else "")
+        return ids
+    url = spec["url"].replace("/chat/completions", "/models")
+    data = _http_get_json(url, openai_headers(key, spec["name"]))
+    rows = data.get("data") or []
+    return [str(r.get("id") or "") for r in rows if isinstance(r, dict)]
+
+
+def apply_flagship_lock(spec: dict[str, str], key: str) -> dict[str, str]:
+    if spec.get("locked") == "override":
+        return spec
+    ids = catalog_ids(spec, key)
+    if ids:
+        spec["model"] = lock_flagship(ids, spec.get("model") or "")
+        spec["locked"] = "catalog"
+    if spec.get("style") == "gemini":
+        spec["url"] = (
+            "https://generativelanguage.googleapis.com/v1beta/models/"
+            + spec["model"]
+            + ":generateContent"
+        )
+    return spec
+
+
 def run(keys: dict[str, str], extra: dict[str, str] | None = None) -> int:
     vault = vault_root()
     extra = extra or {}
@@ -448,14 +561,16 @@ def run(keys: dict[str, str], extra: dict[str, str] | None = None) -> int:
         print("DSH-KRouter: no chat endpoint for the vault-page key.", file=sys.stderr)
         return 1
     secret = keys.get(spec["name"], "")
+    spec = apply_flagship_lock(spec, secret)
     day = target_day()
     user = (
         f"Vault root: {vault}\n"
         f"Target day: {day.isoformat()} (yesterday unless TARGET_DATE is set).\n"
         f"Observed at: {datetime.now().isoformat(timespec='seconds')}\n"
+        f"Locked model: {spec['model']}\n"
         f"Snapshot:\n{collect_snapshot(vault, day)}\n"
-        "Use tools if available. Write L1/L2 markdown in the vault. "
-        "Do not write active methods. Do not edit the key page."
+        "Use tools if available. Seal yesterday, distill, and when the five gates pass "
+        "write provisional the same day. Do not write active. Do not edit the key page."
     )
     os.chdir(str(vault))
     try:

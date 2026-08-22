@@ -70,7 +70,7 @@ emit_host_action() {
   printf 'self_evolution_key: %s\n' "${key:-missing}"
   printf 'krouter_writer: %s\n' "${writer:-missing}"
   if [ "${key:-missing}" != "present" ] || [ "${writer:-missing}" != "present" ]; then
-    printf '%s\n' "host_action: Distill needs your key or login. Paste *_API_KEY on 90 系统文件/自动化/自进化钥匙.md, or log in grok / official Codex / claude once. Timer already on. Do not print secrets."
+    printf '%s\n' "host_action: Distill needs a callable model. Paste *_API_KEY on 90 系统文件/自动化/自进化钥匙.md (flagship is auto-locked), or log in grok / official Codex / claude (your subscription). Timer already on. Do not print secrets."
   fi
 }
 

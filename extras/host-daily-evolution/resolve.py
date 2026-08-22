@@ -77,7 +77,14 @@ def usable(val: str) -> bool:
 
 
 def is_key_name(name: str) -> bool:
-    if name in GEMINI_NAMES or name in {"HF_TOKEN", "OPENAI_BASE_URL", "OPENAI_API_BASE"}:
+    if name in GEMINI_NAMES or name in {
+        "HF_TOKEN",
+        "OPENAI_BASE_URL",
+        "OPENAI_API_BASE",
+        "MODEL",
+        "DISTILL_MODEL",
+        "KROUTER_DISTILL_MODEL",
+    }:
         return True
     return name.endswith("_API_KEY") or name.endswith("_API_TOKEN")
 
@@ -100,7 +107,7 @@ def parse_vault_page(text: str) -> dict[str, str]:
 
 def extra_urls(keys: dict[str, str]) -> dict[str, str]:
     extra: dict[str, str] = {}
-    for name in ("OPENAI_BASE_URL", "OPENAI_API_BASE"):
+    for name in ("OPENAI_BASE_URL", "OPENAI_API_BASE", "MODEL", "DISTILL_MODEL", "KROUTER_DISTILL_MODEL"):
         val = keys.get(name) or os.environ.get(name, "")
         if usable(val):
             extra[name] = val.strip().strip('"').strip("'")
@@ -162,6 +169,7 @@ def detect_candidates() -> list[Path]:
     home = Path.home()
     return [
         home / ".grok/bin/grok",
+        home / ".local/bin/grok",
         Path("/Applications/ChatGPT.app/Contents/Resources/codex"),
         Path("/Applications/Codex.app/Contents/Resources/codex"),
         Path("/opt/homebrew/bin/claude"),
@@ -282,7 +290,8 @@ def detect_writer(pinned: str = "") -> tuple[str, str]:
 
 def live_keys(keys: dict[str, str], extra: dict[str, str], probe: bool) -> tuple[dict[str, str], str]:
     """Return (live_key_map, field) where field is present|missing|dead|unknown."""
-    secret_names = [n for n in keys if n not in {"OPENAI_BASE_URL", "OPENAI_API_BASE"}]
+    skip = {"OPENAI_BASE_URL", "OPENAI_API_BASE", "MODEL", "DISTILL_MODEL", "KROUTER_DISTILL_MODEL"}
+    secret_names = [n for n in keys if n not in skip]
     if not secret_names:
         return {}, "missing"
     if not probe:
@@ -315,21 +324,33 @@ def writer_field_of(writer: str, wr: str) -> str:
     return "missing"
 
 
+CLI_FLAGSHIP = {
+    "grok": "grok-4.6",
+    "claude": "opus",
+}
+
+
 def writer_invoke(writer: str, prompt: Path, vault: Path) -> list[str]:
     kind, _ = writer_probe_argv(writer)
     vault_s = str(vault)
     prompt_s = str(prompt)
+    flagship = os.environ.get("KROUTER_DISTILL_MODEL", "").strip() or CLI_FLAGSHIP.get(kind, "")
     if kind == "grok":
-        return [
-            writer,
-            "--prompt-file",
-            prompt_s,
-            "--always-approve",
-            "--permission-mode",
-            "acceptEdits",
-            "--cwd",
-            vault_s,
-        ]
+        argv = [writer]
+        if flagship:
+            argv.extend(["--model", flagship])
+        argv.extend(
+            [
+                "--prompt-file",
+                prompt_s,
+                "--always-approve",
+                "--permission-mode",
+                "acceptEdits",
+                "--cwd",
+                vault_s,
+            ]
+        )
+        return argv
     if kind == "codex":
         return [
             writer,
@@ -344,14 +365,11 @@ def writer_invoke(writer: str, prompt: Path, vault: Path) -> list[str]:
             "-",
         ]
     if kind == "claude":
-        return [
-            writer,
-            "--print",
-            "--dangerously-skip-permissions",
-            "--add-dir",
-            vault_s,
-            prompt.read_text(encoding="utf-8"),
-        ]
+        argv = [writer, "--print", "--dangerously-skip-permissions", "--add-dir", vault_s]
+        if flagship:
+            argv.extend(["--model", flagship])
+        argv.append(prompt.read_text(encoding="utf-8"))
+        return argv
     if kind == "opencode":
         return [writer, "run", "--auto", "--dir", vault_s, prompt.read_text(encoding="utf-8")]
     if kind in {"kimi", "pi", "vibe", "antigravity", "cursor"}:
@@ -455,8 +473,16 @@ def exec_distill(probe: bool) -> int:
         print(msg, file=sys.stderr)
         return code
     live, extra = apply_live_env(vault, probe=probe)
+    model = extra.get("MODEL") or extra.get("DISTILL_MODEL") or extra.get("KROUTER_DISTILL_MODEL")
+    if model:
+        os.environ["KROUTER_DISTILL_MODEL"] = model
     probe_result = payload.get("writer_probe", "")
     writer = payload.get("writer_path", "")
+    if live:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        from api_writer import run as run_api
+
+        return run_api(live, extra)
     if writer_ok(probe_result) and not probe_result.startswith("api-writer") and writer:
         prompt = Path(__file__).resolve().parent / "PROMPT.md"
         argv = writer_invoke(writer, prompt, vault)
@@ -469,10 +495,13 @@ def exec_distill(probe: bool) -> int:
             os.close(fd)
         os.execv(argv[0], argv)
         return 1
-    sys.path.insert(0, str(Path(__file__).resolve().parent))
-    from api_writer import run as run_api
-
-    return run_api(live, extra)
+    print(
+        f"DSH-KRouter: timer on; distill skipped. "
+        f"Put *_API_KEY on {payload.get('key_page', 'the vault key page')} "
+        f"or log in grok/codex/claude (Claudian-class subscription).",
+        file=sys.stderr,
+    )
+    return 0
 
 
 def main() -> int:

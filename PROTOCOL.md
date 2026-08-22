@@ -2,7 +2,7 @@
 
 This is an **Agent knowledge OS**, not a search plugin.
 
-- **Self-evolution** is the product (seal → distill). Timer is **on by default**. The **key** is your `*_API_KEY` on the vault page, or an already-logged-in local CLI (`grok` / official Codex / `claude`). No key → timer still on, distill does not run. `lamp: unused` = you turned the timer off.
+- **Self-evolution** is the product (seal → distill → two-step promotion). Timer is **on by default**. **API key first:** lock that provider's flagship model and run distill + promotion. **No key:** the user's own Claudian-class CLI subscription (`grok` / official Codex / `claude` / …) does the same work. `lamp: unused` = you turned the timer off.
 - **Promotion is two-step:** five gates pass → write `provisional` the **same day**, no ask. Next similar task → ask; host adopts AND that task is accepted → `active`. Do not auto-write `active`.
 - **Correction-first:** current instruction and latest `supersedes` beat old logs.
 - **Retrieval is the lock:** short noun, dual SHA-256 receipt, no vector store. A neighbor cite is a protocol violation.
@@ -15,5 +15,5 @@ Architecture: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 4. Clippings originals are copied only. Do not move them.
 5. Routing: match `canonical_sources.psv` with a short noun (exact > alias in query > query in alias; same score and same file → lowest id; otherwise no hit). Open that page. On a miss, print alias suggestions (hints only) and literal-search the route’s scope. No vector store.
 6. Every route prints a receipt: time, source path, source SHA-256, map SHA-256.
-7. The daily writer auto-detects a logged-in local CLI (`grok`, official Codex, `claude`, and other Claudian-class binaries). If there is no CLI, a vault-page `*_API_KEY` is enough: `api_writer.py` calls that chat API. Do not use a PATH-level `agent`. The self-evolution key lives on `90 系统文件/自动化/自进化钥匙.md` or that CLI login. No extra env file. Mounted agents must run `status` and tell the host if `host_action` is present. Do not print secrets. Do not commit a live key.
+7. Two lanes, same job (distill + two-step promotion). **API key first:** read `90 系统文件/自动化/自进化钥匙.md`, lock the provider's flagship model (`/models` catalog; skip mini/haiku), run `api_writer.py`. **No key:** spawn a logged-in Claudian-class CLI (`grok`, official Codex, `claude`, opencode, kimi, pi, vibe, antigravity) with that harness's flagship. Do not use a PATH-level `agent`. Chat/IDE login is not a spawnable harness. No extra env file. Mounted agents must run `status` and tell the host if `host_action` is present. Do not print secrets. Do not commit a live key.
 8. Cursor, Codex, Claude Code, and DeepSeek Harness are mounts on one vault. Sharing is the vault and the alias map, not a second protocol. The DSH plugin is read-only. Uninstalling it does not delete notes. `dsh plugin add` is not the writer.

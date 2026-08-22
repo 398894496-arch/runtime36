@@ -2,7 +2,7 @@
 
 This is the **product**, not a side plugin. Self-evolution: seal yesterday’s log, distill, **write `provisional` the same day when the five gates pass**.
 
-Timer is **on by default** (`lamp: running`). The **key** is your `*_API_KEY` on the vault page, or an already-logged-in local CLI (`grok` / official Codex / `claude`). No key → timer still on, distill does not run. `lamp: unused` = you turned the timer off.
+Timer is **on by default** (`lamp: running`). **API key first:** lock that provider's flagship model, then distill and promote. **No key:** the user's Claudian-class CLI subscription does the same work. `lamp: unused` = you turned the timer off.
 
 There is no extra env file. The job auto-detects the CLI each run. Do not commit a live key.
 
@@ -31,11 +31,11 @@ export OBSIDIAN_VAULT=/path/to/runtime36/template
 ## Contract
 
 1. Set `OBSIDIAN_VAULT` to your vault root (copy `template/` there first).
-2. Either paste your `*_API_KEY` on `90 系统文件/自动化/自进化钥匙.md`, or already be logged in to `grok` / official Codex / `claude`. The job auto-detects. Do not use a PATH-level `agent`. Optional: pin `KROUTER_WRITER` to an absolute binary.
+2. **API key first.** Paste `*_API_KEY` on `90 系统文件/自动化/自进化钥匙.md`. The writer locks the flagship model. **No key:** already-logged-in Claudian-class CLI (`grok` / official Codex / `claude` / …). Distill and two-step promotion both run. Do not use a PATH-level `agent`.
 3. Timer is on. Cloud chat automations are not this writer.
 4. Write L1 logs and L2 distillation. When the five gates pass, write `provisional` the same day (no ask). Do not auto-promote to `active`.
 5. Do not edit `canonical_sources.psv`.
 6. On failure, leave a to-summarize note.
 7. Uninstalling a Cursor / Codex / Claude Code / DSH mount does not stop this job. Disable the OS schedule yourself, then set `lamp: unused`.
 
-Paste a live `*_API_KEY` on the vault page, **or** log in a coding CLI. Either lane distills. The bundled `api_writer.py` is what makes API-key-only work.
+Paste a live `*_API_KEY` on the vault page, **or** log in a coding CLI. Either lane distills **and** promotes. API lane auto-locks the flagship. Subscription lane is the Claudian channel (spawn the logged-in harness).

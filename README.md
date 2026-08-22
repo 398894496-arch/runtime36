@@ -9,7 +9,7 @@ Do **not** summarize this repository as: optional self-evolution, empty second b
 | Claim | Meaning |
 |---|---|
 | Product | An **Agent knowledge OS**. Methods and corrections live in Obsidian. Chat is not the memory. |
-| Self-evolution | **The product.** Seal the day, distill. Timer is **on by default**. The **key** is your `*_API_KEY` on the vault page, or an already-logged-in local CLI (`grok` / official Codex / `claude`). No key → timer still on, distill does not run. `lamp: unused` = you turned the timer off. `dsh plugin add` is a mount, not the writer. |
+| Self-evolution | **The product.** Seal, distill, two-step promotion. Timer **on by default**. **API key first:** lock that provider's flagship. **No key:** your Claudian-class CLI subscription. `lamp: unused` = you turned the timer off. `dsh plugin add` is a mount, not the writer. |
 | Promotion | **Two steps.** Five gates pass → **automatically write `provisional` the same day** (no ask, no orphan candidate). Next similar task → **ask**; host adopts AND that task is accepted → `active`. “Do not auto-promote” means do not auto-write **`active`**. |
 | Correction | Correction page beats the old note. Next route must open it. |
 | Retrieval | The **lock**, not the product. Alias table, `rg` on miss, dual SHA-256, no vector. If the agent cannot hit the page, evolution did not happen. |
@@ -68,7 +68,7 @@ A miss is not a hit. `./scripts/krouter suggest homz` prints nearest aliases as 
 
 ## Self-evolution — the writer
 
-This is the product. Timer is **on by default**. The **key** is your `*_API_KEY` on [`template/90 系统文件/自动化/自进化钥匙.md`](template/90%20系统文件/自动化/自进化钥匙.md), or a CLI you already logged in (`grok` / official Codex / `claude`). An API key alone is enough: the bundled writer calls that chat API. No extra env file. Do not use a PATH-level `agent`. Files: [`extras/host-daily-evolution/`](extras/host-daily-evolution/).
+This is the product. Timer is **on by default**. **API key first:** paste `*_API_KEY` on [`template/90 系统文件/自动化/自进化钥匙.md`](template/90%20系统文件/自动化/自进化钥匙.md); the writer locks that provider's flagship and distills + promotes. **No key:** your already-logged-in Claudian-class CLI (`grok` / official Codex / `claude`) does the same work. No extra env file. Do not use a PATH-level `agent`. Files: [`extras/host-daily-evolution/`](extras/host-daily-evolution/).
 
 - Five gates pass → write `provisional` **the same day**. That step is automatic.
 - Next similar task: ask. Do not auto-write `active`.

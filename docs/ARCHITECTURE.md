@@ -66,7 +66,7 @@ Landings:
 - Derived notes with `source_ref`, `verified_at`, and scope
 
 1. **Derived notes keep source, time, scope, trust, and limits.**
-2. **The daily writer auto-detects a logged-in local CLI.** Do not use a PATH-level `agent`. Timer is on by default. The self-evolution key lives on the vault page `90 系统文件/自动化/自进化钥匙.md`, or that CLI login. An API key alone is enough: `extras/host-daily-evolution/api_writer.py` is the writer. No extra env file. Chat/IDE login is not the timer. Mounted agents run `status` and tell the host if `host_action` is present. An in-vault chat plugin is not the writer. On failure, leave a to-summarize note. Do not switch shells and rewrite.
+2. **Two lanes, same job.** API key first: lock the provider's flagship model and run distill + two-step promotion. No key: spawn a logged-in Claudian-class CLI (`grok`, official Codex, `claude`, …) with vault cwd. Do not use a PATH-level `agent`. Chat/IDE login is not a spawnable harness. Mounted agents run `status` and tell the host if `host_action` is present. An in-vault chat plugin is not the writer. On failure, leave a to-summarize note. Do not switch shells and rewrite.
 3. **The writer lives in** `extras/host-daily-evolution/`. DSH (`extras/dsh`) is a mount on the same `OBSIDIAN_VAULT`, not the writer. Uninstalling that plugin does not delete notes and does not stop the timer.
 4. Distillation may propose candidates. **It must not write formal `02`.**
 

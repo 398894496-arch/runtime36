@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Self-evolution key lives on the vault page `90 系统文件/自动化/自进化钥匙.md`. Timer auto-detects a logged-in grok / official Codex / claude CLI. **API key alone is enough** (`api_writer.py`). No extra env file. Placeholders only in git.
+- Self-evolution key lives on the vault page. **API key first** locks that provider's flagship model (`api_writer.py`). **No key** uses the user's Claudian-class CLI subscription. Both lanes distill and write `provisional`. Placeholders only in git.
 - `status` prints `host_action` while the key and CLI login are missing. Cursor / Codex / Claude mounts must tell the host. `install.sh` will not load the timer onto the clone template.
 
 ## 0.4.0 — 2026-08-21

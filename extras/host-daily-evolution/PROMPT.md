@@ -1,6 +1,11 @@
 # Self-evolution writer prompt
 
-The OS scheduler runs this prompt. Timer is on by default. The key is your vault-page `*_API_KEY` or an already-logged-in local CLI. An API key alone is enough (bundled writer). Do not use a PATH-level `agent`. `dsh plugin add` is a mount, not this writer.
+The OS scheduler runs this prompt. Timer is on by default.
+
+Lane 1: vault-page `*_API_KEY` — lock that provider's flagship model, then distill and promote.
+Lane 2: no key — Claudian-class subscription CLI already logged in (`grok` / official Codex / `claude` / opencode / …) does the same work.
+
+Do not use a PATH-level `agent`. `dsh plugin add` is a mount, not this writer.
 
 Set `OBSIDIAN_VAULT` to the knowledge-base root (the Agent second brain).
 
