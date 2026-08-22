@@ -1,6 +1,6 @@
-# Self-evolution writer prompt (host extra)
+# Self-evolution writer prompt
 
-Pin a local agent CLI. Do not use a PATH-level `agent`. The OS scheduler runs this prompt. `dsh plugin add` does not.
+Pin a local writer CLI. Do not use a PATH-level `agent`. The OS scheduler runs this prompt. Timer is on by default. The key is an API key or subscription env vars. `dsh plugin add` is a mount, not this writer.
 
 Set `OBSIDIAN_VAULT` to the knowledge-base root (the Agent second brain).
 
@@ -19,4 +19,4 @@ Set `OBSIDIAN_VAULT` to the knowledge-base root (the Agent second brain).
 - Call a second memory system
 - Treat this job as a DeepSeek Harness plugin feature
 
-After the scheduler is actually loaded, set `90 系统文件/自动化/日更健康.md` `lamp: running`. If you skip the extra, `lamp: unused`.
+Default `90 系统文件/自动化/日更健康.md` `lamp: running`. Distill needs the key. If you turned the timer off, `lamp: unused`.

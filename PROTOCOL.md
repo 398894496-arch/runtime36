@@ -2,7 +2,7 @@
 
 This is an **Agent knowledge OS**, not a search plugin.
 
-- **Self-evolution** is the product loop (seal → distill). The host extra’s timer defaults off (`lamp: unused`). That is not “evolution is optional.”
+- **Self-evolution** is the product (seal → distill). Timer is **on by default**. The **key** is an API key or subscription env vars. No key → timer still on, distill does not run. `lamp: unused` = you turned the timer off.
 - **Promotion is two-step:** five gates pass → write `provisional` the **same day**, no ask. Next similar task → ask; host adopts AND that task is accepted → `active`. Do not auto-write `active`.
 - **Correction-first:** current instruction and latest `supersedes` beat old logs.
 - **Retrieval is the lock:** short noun, dual SHA-256 receipt, no vector store. A neighbor cite is a protocol violation.
@@ -15,5 +15,5 @@ Architecture: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 4. Clippings originals are copied only. Do not move them.
 5. Routing: match `canonical_sources.psv` with a short noun (exact > alias in query > query in alias; same score and same file → lowest id; otherwise no hit). Open that page. On a miss, print alias suggestions (hints only) and literal-search the route’s scope. No vector store.
 6. Every route prints a receipt: time, source path, source SHA-256, map SHA-256.
-7. If daily evolution uses a local agent CLI, pin the binary. Do not use a PATH-level `agent`.
-8. Cursor, Codex, and DeepSeek Harness are mounts on one vault. Sharing is the vault and the alias map, not a second protocol. The DSH plugin is read-only. Uninstalling it does not delete notes.
+7. The daily writer is a pinned local CLI binary. Do not use a PATH-level `agent`. The self-evolution key is an API key or subscription env vars on the OS job, not in the vault.
+8. Cursor, Codex, Claude Code, and DeepSeek Harness are mounts on one vault. Sharing is the vault and the alias map, not a second protocol. The DSH plugin is read-only. Uninstalling it does not delete notes. `dsh plugin add` is not the writer.

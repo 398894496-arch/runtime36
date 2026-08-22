@@ -2,7 +2,7 @@
 
 This is the protocol detail. README is the entry; [`PROTOCOL.md`](../PROTOCOL.md) is the invariant list. The author’s private notes are not in this repository.
 
-**Product (do not skip):** self-evolution (seal → distill) → two-step promotion (auto `provisional` the same day when five gates pass; `active` only after ask + adopt + accepted task) → correction-first → retrieval as the lock. `lamp: unused` is the timer, not “evolution is optional.” Author-vault scores below are not clone scores.
+**Product (do not skip):** self-evolution (seal → distill) → two-step promotion (auto `provisional` the same day when five gates pass; `active` only after ask + adopt + accepted task) → correction-first → retrieval as the lock. Timer is on by default. The key is an API key or subscription env vars. `lamp: unused` = you turned the timer off. Author-vault scores below are not clone scores.
 
 KRouter splits knowledge into **four write-up maturity layers** and **five spatial zones**. Layers answer how far this claim can be trusted. Zones answer where the file lives. Agents must read the vault through layer 4. Chat memory and vector indexes are not a second source of truth.
 
@@ -66,8 +66,8 @@ Landings:
 - Derived notes with `source_ref`, `verified_at`, and scope
 
 1. **Derived notes keep source, time, scope, trust, and limits.**
-2. **The daily writer is a pinned local CLI binary.** Do not use a PATH-level `agent`. Schedule with the OS. An in-vault chat plugin is not the unattended writer. On failure, leave a to-summarize note. Do not switch shells and rewrite.
-3. **Daily evolution is an extra** (`extras/host-daily-evolution/`). Not installing it does not delete the protocol. DSH (`extras/dsh`) is an extra mount on the same `OBSIDIAN_VAULT`. Uninstalling that plugin does not delete notes.
+2. **The daily writer is a pinned local CLI binary.** Do not use a PATH-level `agent`. Timer is on by default. The self-evolution key is an API key or subscription env vars on the OS job. An in-vault chat plugin is not the writer. On failure, leave a to-summarize note. Do not switch shells and rewrite.
+3. **The writer lives in** `extras/host-daily-evolution/`. DSH (`extras/dsh`) is a mount on the same `OBSIDIAN_VAULT`, not the writer. Uninstalling that plugin does not delete notes and does not stop the timer.
 4. Distillation may propose candidates. **It must not write formal `02`.**
 
 ---
@@ -200,6 +200,6 @@ Home page `verified_at: 2026-08-21`.
 
 **Corrections:** written to canonical pages (`supersedes` / quasi-correction → formal correction). The next similar task hits the new page through L4. Old wording is not current rule. Provisional methods become `active` after adopt + accept. The vault gets sharper; the agent gets steadier.
 
-Daily evolution and the execution hook ship as extras. The DSH plugin (`extras/dsh`) is a third mount on the same vault; it is not a second knowledge base. The author’s vault already runs daily evolution and the execution hook under this protocol.
+The writer is the product (`extras/host-daily-evolution/`). The execution hook is optional. The DSH plugin (`extras/dsh`) is a mount on the same vault, not a second knowledge base. The author’s vault already runs daily evolution under this protocol.
 
 Chinese overview: [`README.zh.md`](../README.zh.md).

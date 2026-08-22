@@ -6,9 +6,7 @@
   <string>local.dsh-krouter.daily-evolution</string>
   <key>ProgramArguments</key>
   <array>
-    <string>WRITER</string>
-    <string>--print</string>
-    <string>/absolute/path/to/runtime36/extras/host-daily-evolution/PROMPT.md</string>
+    <string>__RUN_SH__</string>
   </array>
   <key>StartCalendarInterval</key>
   <dict>
@@ -20,7 +18,11 @@
   <key>EnvironmentVariables</key>
   <dict>
     <key>OBSIDIAN_VAULT</key>
-    <string>VAULT</string>
+    <string>__VAULT__</string>
+    <key>KROUTER_WRITER</key>
+    <string>__WRITER__</string>
+    <key>DEEPSEEK_API_KEY</key>
+    <string></string>
   </dict>
 </dict>
 </plist>

@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Listing: self-evolution is the product. Timer on by default. API key or subscription vars are the key. `lamp: running` is the clone default. `unused` means you turned the timer off. Not optional.
+
 ## 0.4.0 — 2026-08-21
 
 - Memory-system tools on the DSH mount: `preference`, `correction`, `memory`, `project` in addition to `status` / `search` / `suggest`.

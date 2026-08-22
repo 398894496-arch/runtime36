@@ -1,17 +1,20 @@
 # Host daily evolution (the writer)
 
-This is the **product loop**, not a side plugin. Self-evolution for an agent second brain: seal yesterday’s log, distill, **write `provisional` the same day when the five gates pass**.
+This is the **product**, not a side plugin. Self-evolution: seal yesterday’s log, distill, **write `provisional` the same day when the five gates pass**.
 
-`lamp: unused` means the OS **timer is off**. It does not mean this loop is optional. This extra **ships the contract and examples**. It still does **not** start launchd/cron by itself.
+Timer is **on by default** (`lamp: running`). The **key** is an API key or subscription env vars. No key → timer still on, distill does not run. `lamp: unused` = you turned the timer off.
+
+Put the key on the OS job, not in the vault. That key is not a cloud memory API.
 
 | File | Role |
 |---|---|
-| `check.sh` | Proves the extra is present and reads `lamp:` on the vault health page. `unused` is a valid skip. Does not load launchd. |
+| `check.sh` | Proves writer files exist and reads `lamp:`. Default `running`. Does not fire the job. |
+| `run.sh` | OS job entry. Skips distill if the key is missing. |
 | `PROMPT.md` | Writer contract. Pin a local CLI; pass this file to it. |
-| `launchd.example.plist` | macOS example. Replace `WRITER` and `VAULT`. |
+| `launchd.example.plist` | macOS example. Replace `WRITER`, `VAULT`, and the key. |
 | `cron.example` | cron example. Same replacements. |
 
-`./scripts/install.sh` and `dsh plugin add github:398894496-arch/runtime36` do **not** create a cron or launchd job. Clone default: `template/90 系统文件/自动化/日更健康.md` has `lamp: unused`.
+`dsh plugin add` is a mount, not this writer. It does not replace the timer.
 
 ## Prove it on the template
 
@@ -20,14 +23,15 @@ export OBSIDIAN_VAULT=/path/to/runtime36/template
 ./extras/host-daily-evolution/check.sh
 ```
 
-`./scripts/first_run.sh` runs that check. Pass means the extra exists and the lamp is `unused` or `running`, not that a daily job is already scheduled.
+`./scripts/first_run.sh` runs that check. Pass means the writer files exist and the lamp is `running` (default) or `unused` (you turned it off). CI does not fire the daily job.
 
 ## Contract
 
 1. Set `OBSIDIAN_VAULT` to your vault root (the knowledge base).
 2. Pin the writer binary by absolute path. Do not use a PATH-level `agent`.
-3. Schedule with the OS. Cloud chat automations are not the unattended writer.
-4. Write L1 logs and L2 distillation. When the five gates pass, write `provisional` the same day (no ask). Do not auto-promote to `active`.
-5. Do not edit `canonical_sources.psv`.
-6. On failure, leave a to-summarize note.
-7. Uninstalling a Cursor / Codex / Claude Code / DSH mount does not stop this job. Disable the OS schedule yourself, then set `lamp: unused`.
+3. Fill the self-evolution key on the OS job (API key or subscription env vars). Not in the vault.
+4. Timer is on. Cloud chat automations are not this writer.
+5. Write L1 logs and L2 distillation. When the five gates pass, write `provisional` the same day (no ask). Do not auto-promote to `active`.
+6. Do not edit `canonical_sources.psv`.
+7. On failure, leave a to-summarize note.
+8. Uninstalling a Cursor / Codex / Claude Code / DSH mount does not stop this job. Disable the OS schedule yourself, then set `lamp: unused`.

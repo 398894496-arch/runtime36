@@ -1,2 +1,3 @@
-# Replace WRITER and VAULT. Pin the binary. Do not use PATH-level agent.
-10 9 * * * OBSIDIAN_VAULT=VAULT WRITER --print /absolute/path/to/runtime36/extras/host-daily-evolution/PROMPT.md
+# Timer on by default. Fill the self-evolution key (API key or subscription vars), not in the vault.
+# Replace __RUN_SH__, __VAULT__, __WRITER__.
+10 9 * * * OBSIDIAN_VAULT=__VAULT__ KROUTER_WRITER=__WRITER__ DEEPSEEK_API_KEY= __RUN_SH__

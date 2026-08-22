@@ -1,6 +1,6 @@
 #!/bin/sh
-# Prove the self-evolution extra is present and the vault lamp is readable.
-# Does not start cron/launchd. unused is a valid skip.
+# Prove the self-evolution writer is present and the vault lamp is readable.
+# Default lamp is running (timer on). Does not fire the daily job.
 set -eu
 
 ROOT=$(CDPATH= cd -- "$(dirname "$0")/../.." && pwd)
@@ -20,25 +20,25 @@ lamp=$(awk '
 lamp=${lamp:-unset}
 
 case "$lamp" in
-  unused)
-    printf '%s\n' "ok self-evolution lamp=unused on $HEALTH"
-    ;;
   running)
-    printf '%s\n' "ok self-evolution lamp=running on $HEALTH"
+    printf '%s\n' "ok self-evolution lamp=running (timer on) on $HEALTH"
+    ;;
+  unused)
+    printf '%s\n' "ok self-evolution lamp=unused (you turned the timer off) on $HEALTH"
     ;;
   *)
-    printf '%s\n' "FAIL lamp must be unused or running (got: $lamp) in $HEALTH" >&2
-    printf '%s\n' "skip daily evolution: set lamp: unused. run it: set lamp: running after the OS scheduler is loaded." >&2
+    printf '%s\n' "FAIL lamp must be running (default) or unused (got: $lamp) in $HEALTH" >&2
+    printf '%s\n' "timer on: lamp: running. you turned it off: lamp: unused." >&2
     exit 1
     ;;
 esac
 
-for f in README.md PROMPT.md check.sh launchd.example.plist cron.example; do
+for f in README.md PROMPT.md check.sh run.sh launchd.example.plist cron.example; do
   p="$ROOT/extras/host-daily-evolution/$f"
   if [ ! -f "$p" ]; then
-    printf '%s\n' "FAIL missing extra file: $p" >&2
+    printf '%s\n' "FAIL missing writer file: $p" >&2
     exit 1
   fi
 done
 
-printf '%s\n' "ok self-evolution extra files present (scheduler not installed by this check)"
+printf '%s\n' "ok self-evolution writer files present (this check does not fire the job)"

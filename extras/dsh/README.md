@@ -1,8 +1,8 @@
 # DSH-KRouter
 
-Read-only **DeepSeek Harness** plugin. **DeepSeek Harness memory system · Agent second brain · Obsidian knowledge base · optional self-evolution · Cursor / Codex / Claude Code.** It does not create a second vault. All four share `OBSIDIAN_VAULT`.
+Read-only **DeepSeek Harness** plugin. **DeepSeek Harness memory system · Agent second brain · Obsidian knowledge base · self-evolution · Cursor / Codex / Claude Code.** It does not create a second vault. All four share `OBSIDIAN_VAULT`.
 
-Uninstalling the plugin does not delete notes. **`dsh plugin add` does not schedule self-evolution.** Daily seal is [`extras/host-daily-evolution/`](../host-daily-evolution/).
+Uninstalling the plugin does not delete notes. **`dsh plugin add` is a mount, not the writer.** Self-evolution is [`extras/host-daily-evolution/`](../host-daily-evolution/). Timer on by default; the key is an API key or subscription vars.
 
 ## Local test (before `dsh plugin add`)
 

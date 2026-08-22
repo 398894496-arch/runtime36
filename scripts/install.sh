@@ -12,6 +12,7 @@ for arg in "$@"; do
       printf '%s\n' "usage: install.sh [--force] [--with-hooks]"
       printf '%s\n' "copies the KRouter Obsidian skill to ~/.agents/skills/krouter-obsidian"
       printf '%s\n' "copies a Cursor always-on rule to ~/.cursor/rules/"
+      printf '%s\n' "self-evolution timer is on by default; fill API key or subscription vars"
       printf '%s\n' "does not overwrite an existing skill unless --force"
       printf '%s\n' "does not enable hooks unless --with-hooks"
       exit 0
@@ -39,7 +40,31 @@ printf '%s\n' "skill: $SKILL_DST"
 printf '%s\n' "cursor rule: $RULE_DST"
 printf '%s\n' "Codex snippet: $ROOT/extras/codex/AGENTS.snippet.md"
 printf '%s\n' "Claude Code snippet: $ROOT/extras/claude-code/CLAUDE.snippet.md"
-printf '%s\n' "self-evolution extra: $ROOT/extras/host-daily-evolution (not scheduled; run check.sh)"
+
+RUN_SH="$ROOT/extras/host-daily-evolution/run.sh"
+chmod +x "$RUN_SH" "$ROOT/extras/host-daily-evolution/check.sh"
+VAULT="${OBSIDIAN_VAULT:-$ROOT/template}"
+WRITER="${KROUTER_WRITER:-}"
+printf '%s\n' "self-evolution writer: $RUN_SH"
+printf '%s\n' "timer on by default. fill the key: API key or subscription vars (not in the vault)."
+case "$(uname -s)" in
+  Darwin)
+    DST="$HOME/Library/LaunchAgents/local.dsh-krouter.daily-evolution.plist"
+    mkdir -p "$HOME/Library/LaunchAgents"
+    sed -e "s|__RUN_SH__|$RUN_SH|g" -e "s|__VAULT__|$VAULT|g" -e "s|__WRITER__|$WRITER|g" \
+      "$ROOT/extras/host-daily-evolution/launchd.example.plist" > "$DST"
+    uid=$(id -u)
+    launchctl bootout "gui/$uid/local.dsh-krouter.daily-evolution" >/dev/null 2>&1 || true
+    if launchctl bootstrap "gui/$uid" "$DST" >/dev/null 2>&1 || launchctl load "$DST" >/dev/null 2>&1; then
+      printf '%s\n' "self-evolution timer loaded: $DST"
+    else
+      printf '%s\n' "self-evolution timer plist written: $DST (launchctl load after filling the key)"
+    fi
+    ;;
+  *)
+    printf '%s\n' "install extras/host-daily-evolution/cron.example (timer on; fill the key)"
+    ;;
+esac
 printf '%s\n' "next: export OBSIDIAN_VAULT to your vault (or $ROOT/template) then run ./scripts/first_run.sh"
 
 if [ "$WITH_HOOKS" -eq 1 ]; then
