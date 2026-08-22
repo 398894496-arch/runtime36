@@ -70,7 +70,7 @@ emit_host_action() {
   printf 'self_evolution_key: %s\n' "${key:-missing}"
   printf 'krouter_writer: %s\n' "${writer:-missing}"
   if [ "${key:-missing}" != "present" ] || [ "${writer:-missing}" != "present" ]; then
-    printf '%s\n' "host_action: Fill the self-evolution key on the OS job: API key or subscription env vars (DEEPSEEK_API_KEY or CURSOR_API_KEY). Pin KROUTER_WRITER to an executable. Do not put keys in the vault. Distill will not run until both are set."
+    printf '%s\n' "host_action: Distill needs your key or login. Paste *_API_KEY on 90 系统文件/自动化/自进化钥匙.md, or log in grok / official Codex / claude once. Timer already on. Do not print secrets."
   fi
 }
 

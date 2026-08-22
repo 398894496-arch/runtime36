@@ -1,6 +1,6 @@
 # Self-evolution writer prompt
 
-Pin a local writer CLI. Do not use a PATH-level `agent`. The OS scheduler runs this prompt. Timer is on by default. The key is an API key or subscription env vars. `dsh plugin add` is a mount, not this writer.
+The OS scheduler runs this prompt. Timer is on by default. The key is your vault-page `*_API_KEY` or an already-logged-in local CLI. Do not use a PATH-level `agent`. `dsh plugin add` is a mount, not this writer.
 
 Set `OBSIDIAN_VAULT` to the knowledge-base root (the Agent second brain).
 

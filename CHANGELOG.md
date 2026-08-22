@@ -2,8 +2,8 @@
 
 ## Unreleased
 
-- Listing: self-evolution is the product. Timer on by default. API key or subscription vars are the key. `lamp: running` is the clone default. `unused` means you turned the timer off. Not optional.
-- `status` prints `host_action` while the key or writer is missing. Cursor / Codex / Claude mounts must tell the host. `install.sh` will not load the timer onto the clone template.
+- Self-evolution key lives on the vault page `90 系统文件/自动化/自进化钥匙.md`. Timer auto-detects a logged-in grok / official Codex / claude CLI. No extra env file. Placeholders only in git.
+- `status` prints `host_action` while the key and CLI login are missing. Cursor / Codex / Claude mounts must tell the host. `install.sh` will not load the timer onto the clone template.
 
 ## 0.4.0 — 2026-08-21
 

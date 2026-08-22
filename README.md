@@ -9,7 +9,7 @@ Do **not** summarize this repository as: optional self-evolution, empty second b
 | Claim | Meaning |
 |---|---|
 | Product | An **Agent knowledge OS**. Methods and corrections live in Obsidian. Chat is not the memory. |
-| Self-evolution | **The product.** Seal the day, distill. Timer is **on by default**. The **key** is an API key or subscription env vars. No key → timer still on, distill does not run. `lamp: unused` = you turned the timer off. `dsh plugin add` is a mount, not the writer. |
+| Self-evolution | **The product.** Seal the day, distill. Timer is **on by default**. The **key** is your `*_API_KEY` on the vault page, or an already-logged-in local CLI (`grok` / official Codex / `claude`). No key → timer still on, distill does not run. `lamp: unused` = you turned the timer off. `dsh plugin add` is a mount, not the writer. |
 | Promotion | **Two steps.** Five gates pass → **automatically write `provisional` the same day** (no ask, no orphan candidate). Next similar task → **ask**; host adopts AND that task is accepted → `active`. “Do not auto-promote” means do not auto-write **`active`**. |
 | Correction | Correction page beats the old note. Next route must open it. |
 | Retrieval | The **lock**, not the product. Alias table, `rg` on miss, dual SHA-256, no vector. If the agent cannot hit the page, evolution did not happen. |
@@ -45,8 +45,8 @@ Full rules: [`PROTOCOL.md`](PROTOCOL.md). Architecture: [`docs/ARCHITECTURE.md`]
 | | This repository (CI / `first_run.sh`) | Your vault |
 |---|---|---|
 | Lock | `search home` → `canonical_id: Q01` + dual SHA | Same contract, **your** nouns |
-| Timer | Writer files + `lamp: running` (on by default). CI does not fire the daily job | Same job. Fill the **key** |
-| Daily seal / distill | Not fired in CI | Unlocked by API key or subscription vars |
+| Timer | Writer files + `lamp: running` (on by default). CI does not fire the daily job | Same job. Your key or CLI login |
+| Daily seal / distill | Not fired in CI | Unlocked by your vault-page key or CLI login |
 | Promotion / correction | Protocol: auto `provisional` when gates pass | Same. Formal `active` still asks. Next route must open that source |
 
 The clone has no author’s notes. Coverage is the alias table (your nouns), not a model.
@@ -68,7 +68,7 @@ A miss is not a hit. `./scripts/krouter suggest homz` prints nearest aliases as 
 
 ## Self-evolution — the writer
 
-This is the product. Timer is **on by default**. The **key** is an API key or subscription env vars — that is what unlocks distill. Pin a local writer CLI (absolute path, not a PATH-level `agent`). Files: [`extras/host-daily-evolution/`](extras/host-daily-evolution/).
+This is the product. Timer is **on by default**. The **key** is your `*_API_KEY` on [`template/90 系统文件/自动化/自进化钥匙.md`](template/90%20系统文件/自动化/自进化钥匙.md), or a CLI you already logged in (`grok` / official Codex / `claude`). The job auto-detects it. No extra env file. Do not use a PATH-level `agent`. Files: [`extras/host-daily-evolution/`](extras/host-daily-evolution/).
 
 - Five gates pass → write `provisional` **the same day**. That step is automatic.
 - Next similar task: ask. Do not auto-write `active`.
@@ -84,7 +84,7 @@ export OBSIDIAN_VAULT=/path/to/YourVault
 ./scripts/install.sh
 ```
 
-Installs `~/.agents/skills/krouter-obsidian` and `~/.cursor/rules/krouter-obsidian.mdc`. The Cursor rule runs `status` first and **must tell the host** if `host_action` is present (key or writer missing). Pass `--force` to replace. Does not overwrite a live `obsidian-knowledge-router`. Copy `template/` first; put **your** nouns in the alias table (the template ships eight samples). Set `OBSIDIAN_VAULT` to that vault **before** `install.sh`, or the timer will not load.
+Installs `~/.agents/skills/krouter-obsidian` and `~/.cursor/rules/krouter-obsidian.mdc`. The Cursor rule runs `status` first and **must tell the host** if `host_action` is present (no vault-page key and no CLI login). Pass `--force` to replace. Does not overwrite a live `obsidian-knowledge-router`. Copy `template/` first; put **your** nouns in the alias table (the template ships eight samples). Set `OBSIDIAN_VAULT` to that vault **before** `install.sh`, or the timer will not load. If that machine already has `grok` / Codex / `claude` logged in, distill runs with no further setup.
 
 | Mount | What ships |
 |---|---|
@@ -106,12 +106,12 @@ Requires `python3`, `rg`, PyYAML. Tests: `python3 -m pip install -r requirements
 |---|---|---|
 | After a good day | Distill; five gates → auto `provisional`; next time ask → maybe `active` | Auto-inject a summary into the next prompt |
 | After a correction | Edit the canonical page. Next call must open it | Re-embed, hope the old chunk decays |
-| Self-evolution key | API key or subscription vars | Hosted memory API |
-| 免维护 | No vector DB, no reindex | Indexes, sync, injection, expiry |
+| Self-evolution key | Vault page `*_API_KEY` or CLI login | Hosted memory API |
+| 免维护 | No vector DB, no extra env, auto-detect CLI | Indexes, sync, injection, expiry |
 
 ## Who should clone this
 
-Beginners included. **Self-evolution** in a local Obsidian vault. **免维护.** Fill the **key**: an API key (for example DeepSeek) **or** subscription env vars (Cursor / Codex / Claude). That key is what turns the writer on. Put it on the OS job, not in the vault.
+Beginners included. **Self-evolution** in a local Obsidian vault. **免维护.** Paste **your** API key on the vault page, **or** already be logged in to `grok` / official Codex / `claude`. Each clone uses its own key and its own subscription. Do not commit a live key.
 
 Skip this if you want auto-inject chat memory, a hosted memory API, or a filled second brain on clone.
 

@@ -1,0 +1,494 @@
+#!/usr/bin/env python3
+"""Resolve the self-evolution key from the vault page and a local CLI login.
+
+The knowledge-base page is the config. No extra env file. No pin required.
+Timer auto-detects a logged-in grok / official Codex / claude / opencode / …
+CLI, or loads *_API_KEY from the vault page into the writer process.
+
+Never prints secrets. Never writes keys into git.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import re
+import subprocess
+import sys
+import urllib.error
+import urllib.parse
+import urllib.request
+from pathlib import Path
+
+PLACEHOLDERS = ("YOUR_", "CHANGE_ME", "REPLACE", "TODO", "sk-your", "PASTE_")
+TIMEOUT = 12
+CLI_KIND_RE = re.compile(r"^[a-z][a-z0-9_-]{0,40}$")
+KEY_LINE = re.compile(r"^(?:export\s+)?([A-Z][A-Z0-9_]+)=(.*)$")
+GEMINI_NAMES = frozenset(
+    {"GEMINI_API_KEY", "GOOGLE_API_KEY", "GOOGLE_GENERATIVE_AI_API_KEY"}
+)
+BEARER_URLS = {
+    "OPENAI_API_KEY": "https://api.openai.com/v1/models",
+    "DEEPSEEK_API_KEY": "https://api.deepseek.com/models",
+    "XAI_API_KEY": "https://api.x.ai/v1/models",
+    "GROQ_API_KEY": "https://api.groq.com/openai/v1/models",
+    "OPENROUTER_API_KEY": "https://openrouter.ai/api/v1/models",
+    "TOGETHER_API_KEY": "https://api.together.xyz/v1/models",
+    "FIREWORKS_API_KEY": "https://api.fireworks.ai/inference/v1/models",
+    "MISTRAL_API_KEY": "https://api.mistral.ai/v1/models",
+    "MOONSHOT_API_KEY": "https://api.moonshot.ai/v1/models",
+    "KIMI_API_KEY": "https://api.moonshot.ai/v1/models",
+    "DASHSCOPE_API_KEY": "https://dashscope.aliyuncs.com/compatible-mode/v1/models",
+    "ZHIPUAI_API_KEY": "https://open.bigmodel.cn/api/paas/v4/models",
+    "GLM_API_KEY": "https://open.bigmodel.cn/api/paas/v4/models",
+    "SILICONFLOW_API_KEY": "https://api.siliconflow.cn/v1/models",
+    "CEREBRAS_API_KEY": "https://api.cerebras.ai/v1/models",
+    "PERPLEXITY_API_KEY": "https://api.perplexity.ai/models",
+    "COHERE_API_KEY": "https://api.cohere.com/v1/models",
+    "NVIDIA_API_KEY": "https://integrate.api.nvidia.com/v1/models",
+}
+GENERIC_PROBE_TAILS = (
+    ("auth", "status"),
+    ("auth", "list"),
+    ("login", "status"),
+    ("models",),
+    ("status",),
+)
+
+
+def vault_root() -> Path:
+    raw = os.environ.get("OBSIDIAN_VAULT", "").strip()
+    if not raw:
+        raise SystemExit("OBSIDIAN_VAULT is not set")
+    return Path(raw)
+
+
+def key_page(vault: Path) -> Path:
+    return vault / "90 系统文件" / "自动化" / "自进化钥匙.md"
+
+
+def usable(val: str) -> bool:
+    val = (val or "").strip().strip('"').strip("'")
+    if not val:
+        return False
+    upper = val.upper()
+    return not any(val.startswith(p) or upper.startswith(p.upper()) for p in PLACEHOLDERS)
+
+
+def is_key_name(name: str) -> bool:
+    if name in GEMINI_NAMES or name in {"HF_TOKEN", "OPENAI_BASE_URL", "OPENAI_API_BASE"}:
+        return True
+    return name.endswith("_API_KEY") or name.endswith("_API_TOKEN")
+
+
+def parse_vault_page(text: str) -> dict[str, str]:
+    """Pull KEY=value from fenced env blocks and bare lines. No secrets logged."""
+    found: dict[str, str] = {}
+    for raw in text.splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#") or line.startswith("```"):
+            continue
+        m = KEY_LINE.match(line)
+        if not m:
+            continue
+        name, val = m.group(1), m.group(2).strip().strip('"').strip("'")
+        if is_key_name(name) and usable(val):
+            found[name] = val
+    return found
+
+
+def extra_urls(keys: dict[str, str]) -> dict[str, str]:
+    extra: dict[str, str] = {}
+    for name in ("OPENAI_BASE_URL", "OPENAI_API_BASE"):
+        val = keys.get(name) or os.environ.get(name, "")
+        if usable(val):
+            extra[name] = val.strip().strip('"').strip("'")
+    return extra
+
+
+def models_url(name: str, extra: dict[str, str]) -> str | None:
+    if name in GEMINI_NAMES or name in {"ANTHROPIC_API_KEY", "CURSOR_API_KEY"}:
+        return None
+    if name == "OPENAI_API_KEY":
+        base = extra.get("OPENAI_BASE_URL") or extra.get("OPENAI_API_BASE") or "https://api.openai.com/v1"
+        return base.rstrip("/") + "/models"
+    if name in BEARER_URLS:
+        return BEARER_URLS[name]
+    base = extra.get("OPENAI_BASE_URL") or extra.get("OPENAI_API_BASE")
+    if base:
+        return base.rstrip("/") + "/models"
+    return None
+
+
+def probe_key(name: str, key: str, extra: dict[str, str] | None = None) -> str:
+    extra = extra or {}
+    if name == "CURSOR_API_KEY":
+        return "unprobed"
+    if name == "ANTHROPIC_API_KEY":
+        url = "https://api.anthropic.com/v1/models"
+        headers = {
+            "x-api-key": key,
+            "anthropic-version": "2023-06-01",
+            "Accept": "application/json",
+        }
+    elif name in GEMINI_NAMES:
+        q = urllib.parse.urlencode({"key": key})
+        url = f"https://generativelanguage.googleapis.com/v1beta/models?{q}"
+        headers = {"Accept": "application/json"}
+    else:
+        url = models_url(name, extra)
+        if not url:
+            return "unprobed"
+        headers = {"Authorization": f"Bearer {key}", "Accept": "application/json"}
+        if name == "OPENROUTER_API_KEY":
+            headers["HTTP-Referer"] = "https://github.com/398894496-arch/runtime36"
+            headers["X-Title"] = "DSH-KRouter"
+    req = urllib.request.Request(url, headers=headers, method="GET")
+    opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+    try:
+        with opener.open(req, timeout=TIMEOUT) as resp:
+            code = getattr(resp, "status", 200) or 200
+    except urllib.error.HTTPError as exc:
+        code = exc.code
+    except (urllib.error.URLError, TimeoutError, OSError):
+        return "network"
+    if code in (200, 204, 429):
+        return str(code)
+    return str(code)
+
+
+def detect_candidates() -> list[Path]:
+    home = Path.home()
+    return [
+        home / ".grok/bin/grok",
+        Path("/Applications/ChatGPT.app/Contents/Resources/codex"),
+        Path("/Applications/Codex.app/Contents/Resources/codex"),
+        Path("/opt/homebrew/bin/claude"),
+        home / ".local/bin/claude",
+        Path("/usr/local/bin/claude"),
+        home / ".cursor/bin/cursor-agent",
+        home / ".cursor/bin/agent",
+        Path("/opt/homebrew/bin/opencode"),
+        home / ".opencode/bin/opencode",
+        Path("/opt/homebrew/bin/kimi"),
+        home / ".local/bin/kimi",
+        Path("/opt/homebrew/bin/pi"),
+        Path("/opt/homebrew/bin/vibe"),
+        Path("/opt/homebrew/bin/antigravity"),
+    ]
+
+
+def writer_probe_argv(writer: str) -> tuple[str, list[str] | None]:
+    name = os.path.basename(writer).lower().replace(".exe", "")
+    posix = writer.replace("\\", "/")
+    if name == "grok":
+        return "grok", [writer, "models"]
+    if name == "agent":
+        if "/.grok/" in posix:
+            return "grok", [writer, "models"]
+        if "/.cursor/" in posix:
+            return "cursor", [writer, "status"]
+        return "path-agent", None
+    if name == "cursor-agent":
+        return "cursor", [writer, "status"]
+    if name == "codex":
+        return "codex", [writer, "login", "status"]
+    if name in {"claude", "claude-max"}:
+        return "claude", [writer, "auth", "status"]
+    if name == "opencode":
+        return "opencode", [writer, "auth", "list"]
+    if name == "kimi":
+        return "kimi", [writer, "auth", "status"]
+    if name == "pi":
+        return "pi", [writer, "login", "status"]
+    if name == "vibe":
+        return "vibe", [writer, "auth", "status"]
+    if name == "antigravity":
+        return "antigravity", [writer, "auth", "status"]
+    if CLI_KIND_RE.match(name):
+        return name, None
+    return "other", None
+
+
+def _run_cmd(argv: list[str]) -> tuple[int, str]:
+    env = os.environ.copy()
+    env.setdefault("HOME", str(Path.home()))
+    try:
+        proc = subprocess.run(argv, capture_output=True, text=True, timeout=25, env=env)
+    except (OSError, subprocess.TimeoutExpired):
+        return -1, "network"
+    return proc.returncode, f"{proc.stdout}\n{proc.stderr}".lower()
+
+
+def probe_writer(writer: str) -> str:
+    writer = (writer or "").strip()
+    if not writer:
+        return "unset"
+    if not os.path.isabs(writer):
+        return "relative"
+    if not os.path.isfile(writer) or not os.access(writer, os.X_OK):
+        return "not-exec"
+    kind, argv = writer_probe_argv(writer)
+    if kind == "path-agent":
+        return kind
+    tails = [tuple(argv[1:])] if argv is not None else list(GENERIC_PROBE_TAILS)
+    last = f"{kind}:exit1"
+    for tail in tails:
+        code, text = _run_cmd([writer, *tail])
+        if text == "network" and code == -1:
+            return "network"
+        if (
+            "not authenticated" in text
+            or "authentication required" in text
+            or "not logged in" in text
+            or "loggedin false" in text
+            or "logged_in: false" in text
+        ):
+            return f"{kind}:unauth"
+        if code == 0:
+            return f"{kind}:ok"
+        last = f"{kind}:exit{code}"
+    return last
+
+
+def writer_ok(result: str) -> bool:
+    return result.endswith(":ok")
+
+
+def writer_kind(result: str) -> str:
+    return result.split(":", 1)[0] if ":" in result else result
+
+
+def detect_writer(pinned: str = "") -> tuple[str, str]:
+    """Return (path, probe_result). Prefer a pinned absolute binary, else first logged-in CLI."""
+    if pinned.strip():
+        return pinned.strip(), probe_writer(pinned.strip())
+    first_existing = ""
+    first_existing_result = "unset"
+    for path in detect_candidates():
+        result = probe_writer(str(path))
+        if result == "path-agent":
+            continue
+        if writer_ok(result):
+            return str(path), result
+        if path.is_file() and os.access(path, os.X_OK) and not first_existing:
+            first_existing = str(path)
+            first_existing_result = result
+    if first_existing:
+        return first_existing, first_existing_result
+    return "", "unset"
+
+
+def live_keys(keys: dict[str, str], extra: dict[str, str], probe: bool) -> tuple[dict[str, str], str]:
+    """Return (live_key_map, field) where field is present|missing|dead|unknown."""
+    secret_names = [n for n in keys if n not in {"OPENAI_BASE_URL", "OPENAI_API_BASE"}]
+    if not secret_names:
+        return {}, "missing"
+    if not probe:
+        return {n: keys[n] for n in secret_names}, "present"
+    live: dict[str, str] = {}
+    network = False
+    dead = False
+    for name in secret_names:
+        result = probe_key(name, keys[name], extra)
+        if result in {"200", "204", "429", "unprobed"}:
+            live[name] = keys[name]
+        elif result == "network":
+            network = True
+        elif result.isdigit():
+            dead = True
+    if live:
+        return live, "present"
+    if network:
+        return {}, "unknown"
+    if dead:
+        return {}, "dead"
+    return {}, "missing"
+
+
+def writer_field_of(writer: str, wr: str) -> str:
+    if wr == "path-agent":
+        return "missing"
+    if writer and Path(writer).is_file() and os.access(writer, os.X_OK):
+        return "present"
+    return "missing"
+
+
+def writer_invoke(writer: str, prompt: Path, vault: Path) -> list[str]:
+    kind, _ = writer_probe_argv(writer)
+    vault_s = str(vault)
+    prompt_s = str(prompt)
+    if kind == "grok":
+        return [
+            writer,
+            "--prompt-file",
+            prompt_s,
+            "--always-approve",
+            "--permission-mode",
+            "acceptEdits",
+            "--cwd",
+            vault_s,
+        ]
+    if kind == "codex":
+        return [
+            writer,
+            "exec",
+            "--skip-git-repo-check",
+            "--sandbox",
+            "workspace-write",
+            "-C",
+            vault_s,
+            "--add-dir",
+            vault_s,
+            "-",
+        ]
+    if kind == "claude":
+        return [
+            writer,
+            "--print",
+            "--dangerously-skip-permissions",
+            "--add-dir",
+            vault_s,
+            prompt.read_text(encoding="utf-8"),
+        ]
+    if kind == "opencode":
+        return [writer, "run", "--auto", "--dir", vault_s, prompt.read_text(encoding="utf-8")]
+    if kind in {"kimi", "pi", "vibe", "antigravity", "cursor"}:
+        return [writer, "--print", prompt.read_text(encoding="utf-8")]
+    return [writer, "--print", prompt_s]
+
+
+def status_payload(detect: bool, probe: bool) -> dict[str, str]:
+    vault = vault_root()
+    page = key_page(vault)
+    keys: dict[str, str] = {}
+    if page.is_file():
+        keys = parse_vault_page(page.read_text(encoding="utf-8", errors="replace"))
+    extra = extra_urls(keys)
+    live, key_field = live_keys(keys, extra, probe=probe)
+    pinned = os.environ.get("KROUTER_WRITER", "").strip()
+    writer, wr = ("", "unset")
+    if detect:
+        writer, wr = detect_writer(pinned)
+    elif pinned:
+        writer, wr = pinned, probe_writer(pinned) if probe else "skipped"
+    cli_ok = writer_ok(wr)
+    writer_field = writer_field_of(writer, wr)
+    if cli_ok:
+        key_field = "present"
+    return {
+        "key_page": str(page),
+        "key": key_field,
+        "writer": writer_field,
+        "writer_path": writer,
+        "writer_probe": wr,
+        "lane": "cli-login" if cli_ok else ("api-key" if live else "none"),
+        "kind": writer_kind(wr) if wr not in {"unset", "skipped"} else "",
+    }
+
+
+def patch_health(vault: Path, key_field: str, writer_field: str) -> None:
+    health = vault / "90 系统文件" / "自动化" / "日更健康.md"
+    patch = Path(__file__).resolve().parent / "patch_health.py"
+    if not health.is_file() or not patch.is_file():
+        return
+    if key_field:
+        subprocess.run(
+            [sys.executable, str(patch), str(health), "self_evolution_key", key_field],
+            check=False,
+        )
+    subprocess.run(
+        [sys.executable, str(patch), str(health), "krouter_writer", writer_field],
+        check=False,
+    )
+
+
+def distill_gate(payload: dict[str, str]) -> tuple[bool, int, str]:
+    """Whether to exec the writer. Exit 0 = timer on, skip; 1 = config still short."""
+    page = payload.get("key_page", "90 系统文件/自动化/自进化钥匙.md")
+    cli_ok = writer_ok(payload.get("writer_probe", ""))
+    key = payload.get("key", "missing")
+    writer = payload.get("writer", "missing")
+    if cli_ok or (key == "present" and writer == "present"):
+        return True, 0, ""
+    if key == "unknown" and not cli_ok:
+        return (
+            False,
+            0,
+            "DSH-KRouter: timer on; key probe network failed. Distill skipped.",
+        )
+    if key == "present" and writer != "present":
+        return (
+            False,
+            1,
+            "DSH-KRouter: key present; install grok or official Codex or claude once. No other config.",
+        )
+    return (
+        False,
+        0,
+        f"DSH-KRouter: timer on; distill skipped. "
+        f"Log in grok/codex/claude once, or put your *_API_KEY on {page}.",
+    )
+
+
+def apply_live_env(vault: Path, probe: bool) -> tuple[dict[str, str], dict[str, str]]:
+    page = key_page(vault)
+    keys: dict[str, str] = {}
+    if page.is_file():
+        keys = parse_vault_page(page.read_text(encoding="utf-8", errors="replace"))
+    extra = extra_urls(keys)
+    live, _ = live_keys(keys, extra, probe=probe)
+    for name, val in live.items():
+        os.environ[name] = val
+    for name, val in extra.items():
+        os.environ[name] = val
+    return live, extra
+
+
+def exec_distill(probe: bool) -> int:
+    vault = vault_root()
+    payload = status_payload(detect=True, probe=probe)
+    patch_health(vault, payload["key"], payload["writer"])
+    ok, code, msg = distill_gate(payload)
+    if not ok:
+        print(msg, file=sys.stderr)
+        return code
+    apply_live_env(vault, probe=probe)
+    writer = payload["writer_path"]
+    prompt = Path(__file__).resolve().parent / "PROMPT.md"
+    argv = writer_invoke(writer, prompt, vault)
+    os.environ.setdefault("HOME", str(Path.home()))
+    os.chdir(str(vault))
+    kind = writer_probe_argv(writer)[0]
+    if kind == "codex":
+        fd = os.open(prompt, os.O_RDONLY)
+        os.dup2(fd, 0)
+        os.close(fd)
+    os.execv(argv[0], argv)
+    return 1
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Resolve DSH-KRouter self-evolution key and writer")
+    parser.add_argument("--exec", action="store_true", help="timer entry: detect, then run the writer")
+    parser.add_argument("--status", action="store_true", help="print JSON status, no secrets")
+    parser.add_argument("--sync-health", action="store_true", help="patch the health page from local detect")
+    parser.add_argument("--offline", action="store_true", help="do not HTTP-probe API keys")
+    parser.add_argument("--no-detect", action="store_true", help="do not spawn CLI login probes")
+    args = parser.parse_args()
+    probe = not args.offline
+    if args.exec:
+        return exec_distill(probe=probe)
+    payload = status_payload(detect=not args.no_detect, probe=probe)
+    if args.sync_health:
+        patch_health(vault_root(), payload["key"], payload["writer"])
+    if args.status or args.sync_health:
+        print(json.dumps(payload, ensure_ascii=False))
+        return 0
+    print(json.dumps(payload, ensure_ascii=False))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

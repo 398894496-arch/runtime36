@@ -2,7 +2,7 @@
 
 Read-only **DeepSeek Harness** plugin. **DeepSeek Harness memory system · Agent second brain · Obsidian knowledge base · self-evolution · Cursor / Codex / Claude Code.** It does not create a second vault. All four share `OBSIDIAN_VAULT`.
 
-Uninstalling the plugin does not delete notes. **`dsh plugin add` is a mount, not the writer.** Self-evolution is [`extras/host-daily-evolution/`](../host-daily-evolution/). Timer on by default; the key is an API key or subscription vars.
+Uninstalling the plugin does not delete notes. **`dsh plugin add` is a mount, not the writer.** Self-evolution is [`extras/host-daily-evolution/`](../host-daily-evolution/). Timer on by default; the key is your vault-page API key or a logged-in CLI.
 
 ## Local test (before `dsh plugin add`)
 
@@ -32,7 +32,7 @@ Local checkout:
 dsh plugin add /absolute/path/to/runtime36/extras/dsh
 ```
 
-Tools: `krouter_status` (includes `host_action` when the key or writer is missing — tell the host), `krouter_preference`, `krouter_correction`, `krouter_memory`, `krouter_project`, `krouter_search`, `krouter_suggest`.
+Tools: `krouter_status` (includes `host_action` when the vault-page key and CLI login are missing — tell the host), `krouter_preference`, `krouter_correction`, `krouter_memory`, `krouter_project`, `krouter_search`, `krouter_suggest`.
 
 If `canonical_match` is true, open `canonical_source`. Suggestions are hints, not hits.
 

@@ -108,7 +108,7 @@ fi
 
 printf '%s\n' ""
 printf '%s\n' "First run passed on $OBSIDIAN_VAULT"
-printf '%s\n' "Lock is proven. Self-evolution timer is on by default; fill API key or subscription vars (the key)."
+printf '%s\n' "Lock is proven. Self-evolution timer is on by default; paste *_API_KEY on the vault key page or log in grok/codex/claude."
 printf '%s\n' "Next: copy template/ to your Obsidian vault, rewrite skill/krouter-obsidian/scripts/canonical_sources.psv with your own topics, keep OBSIDIAN_VAULT pointed at that vault."
 
 [ "$fail" -eq 0 ]

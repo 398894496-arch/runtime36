@@ -2,7 +2,7 @@
 
 This is the protocol detail. README is the entry; [`PROTOCOL.md`](../PROTOCOL.md) is the invariant list. The author’s private notes are not in this repository.
 
-**Product (do not skip):** self-evolution (seal → distill) → two-step promotion (auto `provisional` the same day when five gates pass; `active` only after ask + adopt + accepted task) → correction-first → retrieval as the lock. Timer is on by default. The key is an API key or subscription env vars. `lamp: unused` = you turned the timer off. Author-vault scores below are not clone scores.
+**Product (do not skip):** self-evolution (seal → distill) → two-step promotion (auto `provisional` the same day when five gates pass; `active` only after ask + adopt + accepted task) → correction-first → retrieval as the lock. Timer is on by default. The key is your vault-page `*_API_KEY` or an already-logged-in local CLI. `lamp: unused` = you turned the timer off. Author-vault scores below are not clone scores.
 
 KRouter splits knowledge into **four write-up maturity layers** and **five spatial zones**. Layers answer how far this claim can be trusted. Zones answer where the file lives. Agents must read the vault through layer 4. Chat memory and vector indexes are not a second source of truth.
 
@@ -66,7 +66,7 @@ Landings:
 - Derived notes with `source_ref`, `verified_at`, and scope
 
 1. **Derived notes keep source, time, scope, trust, and limits.**
-2. **The daily writer is a pinned local CLI binary.** Do not use a PATH-level `agent`. Timer is on by default. The self-evolution key is an API key or subscription env vars on the OS job. Mounted agents run `status` and tell the host if `host_action` is present. An in-vault chat plugin is not the writer. On failure, leave a to-summarize note. Do not switch shells and rewrite.
+2. **The daily writer auto-detects a logged-in local CLI.** Do not use a PATH-level `agent`. Timer is on by default. The self-evolution key lives on the vault page `90 系统文件/自动化/自进化钥匙.md`, or that CLI login. No extra env file. Chat/IDE login is not the timer. Mounted agents run `status` and tell the host if `host_action` is present. An in-vault chat plugin is not the writer. On failure, leave a to-summarize note. Do not switch shells and rewrite.
 3. **The writer lives in** `extras/host-daily-evolution/`. DSH (`extras/dsh`) is a mount on the same `OBSIDIAN_VAULT`, not the writer. Uninstalling that plugin does not delete notes and does not stop the timer.
 4. Distillation may propose candidates. **It must not write formal `02`.**
 

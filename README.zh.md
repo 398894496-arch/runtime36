@@ -9,7 +9,7 @@
 | 命题 | 含义 |
 |---|---|
 | 产品 | **Agent 知识操作系统**。方法和纠错在 Obsidian 里。聊天不是记忆。 |
-| 自进化 | **就是产品。** 封当天、蒸馏。定时器**默认开**。**钥匙**是 API key 或订阅环境变量。没填钥匙：定时器仍开，蒸馏不跑。`lamp: unused` = 你把定时器关了。`dsh plugin add` 是挂载，不是写入器。 |
+| 自进化 | **就是产品。** 封当天、蒸馏。定时器**默认开**。**钥匙**是知识库页上你自己的 `*_API_KEY`，或本机已登录的 CLI（`grok` / 官方 Codex / `claude`）。没填钥匙：定时器仍开，蒸馏不跑。`lamp: unused` = 你把定时器关了。`dsh plugin add` 是挂载，不是写入器。 |
 | 晋升 | **两步。** 五道门过了 → **当天自动写 `provisional`（准经验）**（不问、不准停在没入口的 candidate）。下次同类 → **先问**；采纳且该次验收 → `active`（正式）。文案里的 “Do not auto-promote” 只禁止自动写 **`active`**。 |
 | 纠错 | 纠错页压过旧笔记。下次路由必须打开它。 |
 | 检索 | **锁**，不是产品。别名表、未命中才 `rg`、双 SHA-256、无向量。打不中那一页，进化就没发生。 |
@@ -45,8 +45,8 @@ flowchart LR
 | | 本仓库（CI / `first_run.sh`） | 你的库 |
 |---|---|---|
 | 锁 | `search home` → `canonical_id: Q01` + 双 SHA | 同一套合同，换**你的**名词 |
-| 定时器 | 写入器文件 + `lamp: running`（默认开）。CI 不打那一枪日更 | 同一份任务。填**钥匙** |
-| 每日封账 / 蒸馏 | CI 里不跑 | API key 或订阅变量打开 |
+| 定时器 | 写入器文件 + `lamp: running`（默认开）。CI 不打那一枪日更 | 同一份任务。知识库页钥匙或 CLI 登录 |
+| 每日封账 / 蒸馏 | CI 里不跑 | 知识库页上的钥匙或本机 CLI 登录打开 |
 | 晋升 / 纠错 | 协议：门过了当天自动 `provisional` | 一样。正式 `active` 仍要问。下次路由必须打开那一页 |
 
 clone 没有作者的笔记。覆盖率是别名表（你的名词），不是模型。
@@ -66,7 +66,7 @@ python3 -m pip install -r requirements.txt
 
 ## 自进化 — 写入器
 
-这就是产品。定时器**默认开**。**钥匙**是 API key 或订阅环境变量——蒸馏靠它打开。钉死本地写入器 CLI（绝对路径，不要用 PATH 上的 `agent`）。文件：[`extras/host-daily-evolution/`](extras/host-daily-evolution/)。
+这就是产品。定时器**默认开**。**钥匙**是 [`template/90 系统文件/自动化/自进化钥匙.md`](template/90%20系统文件/自动化/自进化钥匙.md) 上你自己的 `*_API_KEY`，或本机已经 `grok login` / 官方 Codex / `claude auth login`。定时器每次自动认。没有第二份 env，也不用钉路径。不要用 PATH 上的 `agent`。文件：[`extras/host-daily-evolution/`](extras/host-daily-evolution/)。
 
 - 五道门过了 → **当天自动写 `provisional`**
 - 正式 `active` 不自动：下次同类先问，采纳且该次验收才升
@@ -82,7 +82,7 @@ export OBSIDIAN_VAULT=/path/to/YourVault
 ./scripts/install.sh
 ```
 
-装到 `~/.agents/skills/krouter-obsidian` 和 `~/.cursor/rules/krouter-obsidian.mdc`。Cursor 规则先跑 `status`，收据里有 `host_action` **必须告诉宿主**（缺钥匙或未钉写入器）。`--force` 才覆盖。不会覆盖正在用的 `obsidian-knowledge-router`。先拷 `template/`，别名表换成**你的**名词（模板只有八个样例）。**先**把 `OBSIDIAN_VAULT` 指到那座库再跑 `install.sh`，否则不挂定时器。
+装到 `~/.agents/skills/krouter-obsidian` 和 `~/.cursor/rules/krouter-obsidian.mdc`。Cursor 规则先跑 `status`，收据里有 `host_action` **必须告诉宿主**（知识库页没钥匙、本机也没 CLI 登录）。`--force` 才覆盖。不会覆盖正在用的 `obsidian-knowledge-router`。先拷 `template/`，别名表换成**你的**名词（模板只有八个样例）。**先**把 `OBSIDIAN_VAULT` 指到那座库再跑 `install.sh`，否则不挂定时器。这台机器如果已经登录了 `grok` / Codex / `claude`，不用再配，蒸馏会自己跑。
 
 | 挂载 | 仓库里有什么 |
 |---|---|
@@ -104,12 +104,12 @@ dsh plugin add github:398894496-arch/runtime36
 |---|---|---|
 | 过完好的一天 | 蒸馏；五道门过了当天自动 `provisional`；下次先问 → 可能 `active` | 摘要自动灌进下一轮提示词 |
 | 过完一次纠错 | 改权威页。下次必须打开它 | 重新嵌入，盼着旧块自己烂掉 |
-| 自进化的钥匙 | API key 或订阅变量 | 云记忆 API |
-| 免维护 | 没有向量库，没有索引要重建 | 索引、同步、注入、过期 |
+| 自进化的钥匙 | 知识库页上的 `*_API_KEY` 或 CLI 登录 | 云记忆 API |
+| 免维护 | 没有向量库，没有额外 env，自动认 CLI | 索引、同步、注入、过期 |
 
 ## 谁该 clone
 
-新手小白也能用。**自进化。免维护。** 填**钥匙**：API key（例如 DeepSeek），**或者**订阅环境变量（Cursor / Codex / Claude）。钥匙写在系统定时任务上，不要写进库。
+新手小白也能用。**自进化。免维护。** 在知识库页贴**你自己的** API key，**或者**本机已经登录 `grok` / 官方 Codex / `claude`。每个下载的人用自己的订阅和自己的 key。不要把活 key 提交进 git。
 
 想要聊天自动灌记忆、云记忆 API、或 clone 完就是装满的第二大脑，跳过。
 

@@ -19,10 +19,10 @@
   <dict>
     <key>OBSIDIAN_VAULT</key>
     <string>__VAULT__</string>
-    <key>KROUTER_WRITER</key>
-    <string>__WRITER__</string>
-    <key>DEEPSEEK_API_KEY</key>
-    <string></string>
+    <key>HOME</key>
+    <string>__HOME__</string>
+    <key>PATH</key>
+    <string>/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/usr/local/bin</string>
   </dict>
 </dict>
 </plist>

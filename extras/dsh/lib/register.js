@@ -42,7 +42,7 @@ const TOOLS = [
     route: "status",
     needsQuery: false,
     description:
-      "Agent second brain home / vault status. Includes lamp and self-evolution key. If host_action is present, tell the host. Read-only. Cite the receipt source.",
+      "Agent second brain home / vault status. Includes lamp and self-evolution key. If host_action is present, tell the host (vault-page key or CLI login). Read-only. Cite the receipt source.",
   },
   {
     name: "krouter_preference",

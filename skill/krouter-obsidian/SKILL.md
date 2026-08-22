@@ -11,7 +11,7 @@ Router script (after install): `$HOME/.agents/skills/krouter-obsidian/scripts/ro
 
 ## Workflow
 
-1. Run `route_knowledge.sh status`. If the receipt has `host_action:`, tell the host that line (fill API key or subscription env vars on the OS job; pin `KROUTER_WRITER`; not in the vault). Do not print secrets. Then continue the user's question.
+1. Run `route_knowledge.sh status`. If the receipt has `host_action:`, tell the host that line (paste `*_API_KEY` on `90 系统文件/自动化/自进化钥匙.md`, or log in `grok` / official Codex / `claude` once). Do not print secrets. Then continue the user's question.
 2. Choose one route: `status` for current system state; otherwise `preference`, `correction`, `memory`, `project`, or `search`.
 3. Send one contiguous distinguishing noun or short phrase. Do not send the full question. Do not join several words with spaces as if they were AND.
 4. Run the router script: `route_knowledge.sh <route> [query]`.

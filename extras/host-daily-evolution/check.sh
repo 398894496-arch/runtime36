@@ -33,12 +33,23 @@ case "$lamp" in
     ;;
 esac
 
-for f in README.md PROMPT.md check.sh run.sh patch_health.py launchd.example.plist cron.example; do
+for f in README.md PROMPT.md check.sh run.sh resolve.py patch_health.py launchd.example.plist cron.example; do
   p="$ROOT/extras/host-daily-evolution/$f"
   if [ ! -f "$p" ]; then
     printf '%s\n' "FAIL missing writer file: $p" >&2
     exit 1
   fi
 done
+
+KEY_PAGE="$VAULT/90 系统文件/自动化/自进化钥匙.md"
+if [ ! -f "$KEY_PAGE" ]; then
+  printf '%s\n' "FAIL missing key page: $KEY_PAGE" >&2
+  exit 1
+fi
+if grep -E '^(export[[:space:]]+)?[A-Z][A-Z0-9_]+=(sk-|AIza|xai-)' "$KEY_PAGE" >/dev/null 2>&1; then
+  printf '%s\n' "FAIL key page must ship placeholders only, not a live key" >&2
+  exit 1
+fi
+printf '%s\n' "ok self-evolution key page present (placeholders only)"
 
 printf '%s\n' "ok self-evolution writer files present (this check does not fire the job)"

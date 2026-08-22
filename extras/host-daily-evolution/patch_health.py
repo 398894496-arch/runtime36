@@ -15,7 +15,7 @@ def main() -> None:
     value = sys.argv[3]
     if field not in {"lamp", "self_evolution_key", "krouter_writer"}:
         raise SystemExit("field not allowed")
-    if value not in {"running", "unused", "missing", "present"}:
+    if value not in {"running", "unused", "missing", "present", "dead", "unknown"}:
         raise SystemExit("value not allowed")
     if not path.is_file():
         raise SystemExit(0)
