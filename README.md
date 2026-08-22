@@ -68,7 +68,7 @@ A miss is not a hit. `./scripts/krouter suggest homz` prints nearest aliases as 
 
 ## Self-evolution — the writer
 
-This is the product. Timer is **on by default**. The **key** is your `*_API_KEY` on [`template/90 系统文件/自动化/自进化钥匙.md`](template/90%20系统文件/自动化/自进化钥匙.md), or a CLI you already logged in (`grok` / official Codex / `claude`). The job auto-detects it. No extra env file. Do not use a PATH-level `agent`. Files: [`extras/host-daily-evolution/`](extras/host-daily-evolution/).
+This is the product. Timer is **on by default**. The **key** is your `*_API_KEY` on [`template/90 系统文件/自动化/自进化钥匙.md`](template/90%20系统文件/自动化/自进化钥匙.md), or a CLI you already logged in (`grok` / official Codex / `claude`). An API key alone is enough: the bundled writer calls that chat API. No extra env file. Do not use a PATH-level `agent`. Files: [`extras/host-daily-evolution/`](extras/host-daily-evolution/).
 
 - Five gates pass → write `provisional` **the same day**. That step is automatic.
 - Next similar task: ask. Do not auto-write `active`.
@@ -107,7 +107,7 @@ Requires `python3`, `rg`, PyYAML. Tests: `python3 -m pip install -r requirements
 | After a good day | Distill; five gates → auto `provisional`; next time ask → maybe `active` | Auto-inject a summary into the next prompt |
 | After a correction | Edit the canonical page. Next call must open it | Re-embed, hope the old chunk decays |
 | Self-evolution key | Vault page `*_API_KEY` or CLI login | Hosted memory API |
-| 免维护 | No vector DB, no extra env, auto-detect CLI | Indexes, sync, injection, expiry |
+| 免维护 | No vector DB, no extra env, API key or auto-detect CLI | Indexes, sync, injection, expiry |
 
 ## Who should clone this
 

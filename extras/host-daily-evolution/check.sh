@@ -33,7 +33,7 @@ case "$lamp" in
     ;;
 esac
 
-for f in README.md PROMPT.md check.sh run.sh resolve.py patch_health.py launchd.example.plist cron.example; do
+for f in README.md PROMPT.md check.sh run.sh resolve.py api_writer.py patch_health.py launchd.example.plist cron.example; do
   p="$ROOT/extras/host-daily-evolution/$f"
   if [ ! -f "$p" ]; then
     printf '%s\n' "FAIL missing writer file: $p" >&2

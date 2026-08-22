@@ -10,7 +10,8 @@ There is no extra env file. The job auto-detects the CLI each run. Do not commit
 |---|---|
 | `check.sh` | Proves writer files exist and reads `lamp:`. Default `running`. Does not fire the job. |
 | `run.sh` | OS job entry. Calls `resolve.py --exec`. Skips distill if the key and CLI login are both missing. |
-| `resolve.py` | Reads the vault key page; auto-detects a logged-in CLI; loads live `*_API_KEY` into the writer. Never prints secrets. |
+| `resolve.py` | Reads the vault key page; auto-detects a logged-in CLI; otherwise runs the bundled API writer. Never prints secrets. |
+| `api_writer.py` | Distill with only a vault-page `*_API_KEY`. No grok / Codex / claude required. |
 | `patch_health.py` | Updates health fields (`present` / `missing` / `dead` / `unknown`). Never the secret. |
 | `PROMPT.md` | Writer contract. Passed to the detected CLI. |
 | `launchd.example.plist` | macOS example. Only `OBSIDIAN_VAULT`, `HOME`, `PATH`. No key slot. |
@@ -37,4 +38,4 @@ export OBSIDIAN_VAULT=/path/to/runtime36/template
 6. On failure, leave a to-summarize note.
 7. Uninstalling a Cursor / Codex / Claude Code / DSH mount does not stop this job. Disable the OS schedule yourself, then set `lamp: unused`.
 
-API-only with **no** coding CLI still cannot run `PROMPT.md`. Install `grok` or official Codex or `claude` once; after that, the key page or the login is enough.
+Paste a live `*_API_KEY` on the vault page, **or** log in a coding CLI. Either lane distills. The bundled `api_writer.py` is what makes API-key-only work.

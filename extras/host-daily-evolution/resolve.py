@@ -373,10 +373,16 @@ def status_payload(detect: bool, probe: bool) -> dict[str, str]:
         writer, wr = detect_writer(pinned)
     elif pinned:
         writer, wr = pinned, probe_writer(pinned) if probe else "skipped"
-    cli_ok = writer_ok(wr)
+    cli_ok = writer_ok(wr) and not wr.startswith("api-writer")
     writer_field = writer_field_of(writer, wr)
     if cli_ok:
         key_field = "present"
+    elif live:
+        bundled = Path(__file__).resolve().parent / "api_writer.py"
+        if bundled.is_file():
+            writer_field = "present"
+            writer = str(bundled)
+            wr = "api-writer:ok"
     return {
         "key_page": str(page),
         "key": key_field,
@@ -384,7 +390,7 @@ def status_payload(detect: bool, probe: bool) -> dict[str, str]:
         "writer_path": writer,
         "writer_probe": wr,
         "lane": "cli-login" if cli_ok else ("api-key" if live else "none"),
-        "kind": writer_kind(wr) if wr not in {"unset", "skipped"} else "",
+        "kind": "api-writer" if wr.startswith("api-writer") else (writer_kind(wr) if wr not in {"unset", "skipped"} else ""),
     }
 
 
@@ -405,24 +411,18 @@ def patch_health(vault: Path, key_field: str, writer_field: str) -> None:
 
 
 def distill_gate(payload: dict[str, str]) -> tuple[bool, int, str]:
-    """Whether to exec the writer. Exit 0 = timer on, skip; 1 = config still short."""
+    """Whether to run distill. Exit 0 = timer on, skip. API key alone is enough."""
     page = payload.get("key_page", "90 系统文件/自动化/自进化钥匙.md")
-    cli_ok = writer_ok(payload.get("writer_probe", ""))
+    probe = payload.get("writer_probe", "")
+    cli_ok = writer_ok(probe) and not probe.startswith("api-writer")
     key = payload.get("key", "missing")
-    writer = payload.get("writer", "missing")
-    if cli_ok or (key == "present" and writer == "present"):
+    if cli_ok or key == "present":
         return True, 0, ""
     if key == "unknown" and not cli_ok:
         return (
             False,
             0,
             "DSH-KRouter: timer on; key probe network failed. Distill skipped.",
-        )
-    if key == "present" and writer != "present":
-        return (
-            False,
-            1,
-            "DSH-KRouter: key present; install grok or official Codex or claude once. No other config.",
         )
     return (
         False,
@@ -454,19 +454,25 @@ def exec_distill(probe: bool) -> int:
     if not ok:
         print(msg, file=sys.stderr)
         return code
-    apply_live_env(vault, probe=probe)
-    writer = payload["writer_path"]
-    prompt = Path(__file__).resolve().parent / "PROMPT.md"
-    argv = writer_invoke(writer, prompt, vault)
-    os.environ.setdefault("HOME", str(Path.home()))
-    os.chdir(str(vault))
-    kind = writer_probe_argv(writer)[0]
-    if kind == "codex":
-        fd = os.open(prompt, os.O_RDONLY)
-        os.dup2(fd, 0)
-        os.close(fd)
-    os.execv(argv[0], argv)
-    return 1
+    live, extra = apply_live_env(vault, probe=probe)
+    probe_result = payload.get("writer_probe", "")
+    writer = payload.get("writer_path", "")
+    if writer_ok(probe_result) and not probe_result.startswith("api-writer") and writer:
+        prompt = Path(__file__).resolve().parent / "PROMPT.md"
+        argv = writer_invoke(writer, prompt, vault)
+        os.environ.setdefault("HOME", str(Path.home()))
+        os.chdir(str(vault))
+        kind = writer_probe_argv(writer)[0]
+        if kind == "codex":
+            fd = os.open(prompt, os.O_RDONLY)
+            os.dup2(fd, 0)
+            os.close(fd)
+        os.execv(argv[0], argv)
+        return 1
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from api_writer import run as run_api
+
+    return run_api(live, extra)
 
 
 def main() -> int:

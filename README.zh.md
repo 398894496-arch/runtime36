@@ -66,7 +66,7 @@ python3 -m pip install -r requirements.txt
 
 ## 自进化 — 写入器
 
-这就是产品。定时器**默认开**。**钥匙**是 [`template/90 系统文件/自动化/自进化钥匙.md`](template/90%20系统文件/自动化/自进化钥匙.md) 上你自己的 `*_API_KEY`，或本机已经 `grok login` / 官方 Codex / `claude auth login`。定时器每次自动认。没有第二份 env，也不用钉路径。不要用 PATH 上的 `agent`。文件：[`extras/host-daily-evolution/`](extras/host-daily-evolution/)。
+这就是产品。定时器**默认开**。**钥匙**是 [`template/90 系统文件/自动化/自进化钥匙.md`](template/90%20系统文件/自动化/自进化钥匙.md) 上你自己的 `*_API_KEY`，或本机已经 `grok login` / 官方 Codex / `claude auth login`。只有 API key 也够：仓库自带写入器直接调那个聊天接口。没有第二份 env。不要用 PATH 上的 `agent`。文件：[`extras/host-daily-evolution/`](extras/host-daily-evolution/)。
 
 - 五道门过了 → **当天自动写 `provisional`**
 - 正式 `active` 不自动：下次同类先问，采纳且该次验收才升

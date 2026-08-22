@@ -131,3 +131,17 @@ def test_distill_gate_cli_login_is_enough():
     assert ok is True
     assert code == 0
     assert msg == ""
+
+
+def test_distill_gate_api_key_alone_is_enough():
+    ok, code, msg = distill_gate(
+        {
+            "key": "present",
+            "writer": "missing",
+            "writer_probe": "unset",
+            "key_page": "/tmp/key.md",
+        }
+    )
+    assert ok is True
+    assert code == 0
+    assert msg == ""
